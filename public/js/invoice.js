@@ -695,10 +695,12 @@ function ItemTotalValue(element) {
                     }
                 }
             });
-            countTotalTax = parseFloat(stateTaxes) * count;
+            totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
+            countTotalTax = parseFloat(stateTaxes * totalAmount / 100);
+            
             $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
-            totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
+//            totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
             totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
             $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
         }
@@ -723,10 +725,14 @@ function SetTaxableValue(element) {
                 }
             }
         });
-        countTotalTax = parseFloat(stateTaxes) * count;
+        totalAmount =  $('.totalValue').val();
+        alert(totalAmount);
+//        countTotalTax = parseFloat(stateTaxes) * count;
+        countTotalTax = parseFloat(stateTaxes * totalAmount) / 100;
+        alert(countTotalTax);
         $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
-        totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
+//        totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
         totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
         $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
     }

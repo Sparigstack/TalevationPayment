@@ -36,8 +36,7 @@ class StripePaymentController extends Controller {
 
             $customer = Customer::find($invoiceData->customer_id);
 
-            Stripe\Stripe::setApiKey("sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv");
-//            Stripe\Stripe::setApiKey("sk_live_8msRoMMmI8U5Ex6OCICpyOj200Ckjd3cNw");
+            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
             if (isset($customer->stripe_customer_id)) {
                 $PaymentMethod = \Stripe\PaymentMethod::all([
@@ -67,8 +66,7 @@ class StripePaymentController extends Controller {
      }
 //        $token = QbToken::pluck('access_token')->first();
 
-        Stripe\Stripe::setApiKey("sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv");
-//        Stripe\Stripe::setApiKey("sk_live_8msRoMMmI8U5Ex6OCICpyOj200Ckjd3cNw");
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
             $flash_msg .= " 1";
             $Invoice = Invoice::find($request->invoice_id);
