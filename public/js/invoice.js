@@ -470,6 +470,8 @@ function setInvoiceDetails(element) {
     $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
     $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 }
+
+
 function InsertInvoiceItems(element) {
     var isValidateInvoiceTable = false;
     $("#invoiceItemTable").find("tbody").find("tr").each(function (e) {
@@ -616,6 +618,7 @@ function CloneElement(element) {
     $(newtrTag).removeClass('hidden');
     $(newtrTag).addClass('parent');
 }
+
 function DeleteElement(element) {
     var parent = findParent(element);
     $(parent).remove();
@@ -636,24 +639,26 @@ function DeleteElement(element) {
     $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 
     var stateTaxes = 0;
-    var count = 0;
     var countTotalTax = 0;
     var totalAmount = 0;
     var totalBalance = 0;
     stateTaxes = $('.state_name').val();
     if (stateTaxes > 0) {
-        $(".isTaxable").each(function (e) {
-            if (!$(this).parent().parent().hasClass("hidden")) {
-                if ($(this).is(':checked')) {
-                    count++;
-                }
-            }
-        });
-        countTotalTax = parseFloat(stateTaxes) * count;
+        totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
+        countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
+        var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
+
+        if ($(element).is(':checked')) {
+            countTotalTax = countTotalTax + oldVal;
+        } else {
+            countTotalTax = oldVal - countTotalTax;
+        }
+
         $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
-        totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
-        totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
+        var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
+        var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
+        totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
         $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
     }
 }
@@ -682,58 +687,54 @@ function ItemTotalValue(element) {
         $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 
         var stateTaxes = 0;
-        var count = 0;
         var countTotalTax = 0;
         var totalAmount = 0;
         var totalBalance = 0;
         stateTaxes = $('.state_name').val();
         if (stateTaxes > 0) {
-            $(".isTaxable").each(function (e) {
-                if (!$(this).parent().parent().hasClass("hidden")) {
-                    if ($(this).is(':checked')) {
-                        count++;
-                    }
-                }
-            });
-            totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
-            countTotalTax = parseFloat(stateTaxes * totalAmount / 100);
-            
-            $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
+            totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
+            countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
+            var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
 
-//            totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
-            totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
+//            if ($(element).is(':checked')) {
+//                countTotalTax = countTotalTax + oldVal;
+//            } else {
+//                countTotalTax = oldVal - countTotalTax;
+//            }
+
+//            $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
+
+            var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
+            var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
+            totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
             $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
         }
-
     }
 }
 
 function SetTaxableValue(element) {
     var parent = findParent(element);
     var stateTaxes = 0;
-    var count = 0;
     var countTotalTax = 0;
     var totalAmount = 0;
     var totalBalance = 0;
     stateTaxes = $('.state_name').val();
     if (stateTaxes > 0) {
-        $(".isTaxable").each(function (e) {
-            if (!$(this).parent().parent().hasClass("hidden")) {
-                if ($(this).is(':checked')) {
-                    count++;
-//                 counttotaltax = parseFloat(state_taxes) + parseFloat(state_taxes);
-                }
-            }
-        });
-        totalAmount =  $('.totalValue').val();
-        alert(totalAmount);
-//        countTotalTax = parseFloat(stateTaxes) * count;
-        countTotalTax = parseFloat(stateTaxes * totalAmount) / 100;
-        alert(countTotalTax);
+        totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
+        countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
+        var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
+
+        if ($(element).is(':checked')) {
+            countTotalTax = countTotalTax + oldVal;
+        } else {
+            countTotalTax = oldVal - countTotalTax;
+        }
+
         $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
-//        totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
-        totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
+        var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
+        var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
+        totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
         $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
     }
 }
@@ -794,29 +795,30 @@ function editInvoice(element, InvoiceItemObject) {
             totalPriceSum += Number(totalPrice);
         }
     });
-//        alert (totalPriceSum);
     $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
     $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 
     var stateTaxes = 0;
-    var count = 0;
     var countTotalTax = 0;
     var totalAmount = 0;
     var totalBalance = 0;
     stateTaxes = $('.state_name').val();
     if (stateTaxes > 0) {
-        $(".isTaxable").each(function (e) {
-            if (!$(this).parent().parent().hasClass("hidden")) {
-                if ($(this).is(':checked')) {
-                    count++;
-                }
-            }
-        });
-        countTotalTax = parseFloat(stateTaxes) * count;
+        totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
+        countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
+        var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
+
+        if ($(element).is(':checked')) {
+            countTotalTax = countTotalTax + oldVal;
+        } else {
+            countTotalTax = oldVal - countTotalTax;
+        }
+
         $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
-        totalAmount = Number($('.invoiceTotalPrice').text().replace('$', ''));
-        totalBalance = parseFloat(totalAmount) + parseFloat(totalAmount * countTotalTax / 100);
+        var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
+        var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
+        totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
         $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
     }
 
