@@ -404,6 +404,7 @@ function getBaseURL() {
 }
 function showHideInvoiceDetails(element) {
     var isValidate = validateInputs(element);
+   
     if (isValidate == true) {
         var inv_firstname = $("#inv_firstname").val();
         var inv_lastname = $("#inv_lastname").val();
@@ -411,8 +412,20 @@ function showHideInvoiceDetails(element) {
         $("#contentToShow").text(string);
         $("#customer").addClass('hidden');
         $("#InvoiceDetails").addClass('hidden');
+       
         $(".saveInvoice").addClass('hidden');
-        $(".saveInvoiceItems").removeClass('hidden');
+        
+       if($('#invoiceItemTable').hasClass('NewItem')){
+           $('#hiddenTrTag').each(function () {
+               alert($(this));
+            $(this).addClass('hiddenTrTag2');
+        });
+        $('.hiddenTrTag2').each(function () {
+               alert($(this));
+            $(this).remove();
+        });
+       }
+        $(".invoiceItemTable").removeClass('hidden');
         $(".save_send").removeClass('hidden');
         $("#InvoiceItemsDetails").removeClass('hidden');
         $("#edit_customer").removeClass("hidden");
@@ -696,13 +709,13 @@ function ItemTotalValue(element) {
             countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
             var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
 
-//            if ($(element).is(':checked')) {
-//                countTotalTax = countTotalTax + oldVal;
-//            } else {
-//                countTotalTax = oldVal - countTotalTax;
-//            }
+            if ($(element).is(':checked')) {
+                countTotalTax = countTotalTax + oldVal;
+            } else {
+                countTotalTax = oldVal - countTotalTax;
+            }
 
-//            $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
+            $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
 
             var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
             var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
@@ -741,7 +754,7 @@ function SetTaxableValue(element) {
 
 function editInvoice(element, InvoiceItemObject) {
     var parent = findParent(element);
-
+$('#addInvoice_form').removeClass('NewItem');
     $("#InvoiceItemsDetails").addClass('hidden');
     $(".save_send").addClass('hidden');
     $(".saveInvoiceItems").addClass('hidden');

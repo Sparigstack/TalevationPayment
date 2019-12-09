@@ -219,6 +219,7 @@
 <script src="{{asset('/plugins/bootstrap-datatable/js/buttons.colVis.min.js')}}"></script>
 <script>
                                             function refreshModal(){
+                                                $('#invoiceItemTable').addClass('NewItem');
                                             $("#customer").val('');
                                             $("#InvoiceDetails").addClass('hidden');
 //                                            $("#InvoiceDetails").find('input').val('');

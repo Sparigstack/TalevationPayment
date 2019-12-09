@@ -6,11 +6,15 @@
             <file>file:/C:/xampp/htdocs/TalevationPayment/public/js/invoice.js</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/PresetLineItems.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/HomeController.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Masters/invoice_2.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/InvoiceController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/routes/web.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/public/css/app-style.css</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Masters/index.blade.php</file>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/app/InvoiceItem.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/StripePaymentController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/StateTax.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/public/js/index.js</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/.env</file>
         </group>
     </open-files>
 </project-private>
