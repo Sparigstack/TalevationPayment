@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-table"></i> List Of Invoices
-                        <button  onclick="refreshModal();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice_form"><i class="fa fa-plus"></i>Add New</button>
+                        <button  onclick="AddNewInvoice();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice_form"><i class="fa fa-plus"></i>Add New</button>
                     </div>
 
 
@@ -218,30 +218,30 @@
 <script src="{{asset('/plugins/bootstrap-datatable/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('/plugins/bootstrap-datatable/js/buttons.colVis.min.js')}}"></script>
 <script>
-                                            function refreshModal(){
-                                                $('#invoiceItemTable').addClass('NewItem');
-                                            $("#customer").val('');
-                                            $("#InvoiceDetails").addClass('hidden');
-//                                            $("#InvoiceDetails").find('input').val('');
-                                            $("#InvoiceDetails").find('input').each(function (e) {
-                                            var id = $(this).attr('id');
-                                            if (id != 'invoice-date' && id != 'due-date'){
-                                            $(this).val('');
-                                            }
-                                            });
-                                            $("#customer").removeClass("hidden");
-                                            $(".saveInvoiceItems").addClass("hidden");
-                                            $(".save_send").addClass("hidden");
-                                            $(".saveInvoice").removeClass("hidden");
-                                            $("#InvoiceItemsDetails").addClass("hidden");
-                                            $("#contentToShow").text("Lookup  Customer by Email");
-                                            $("#edit_customer").addClass("hidden");
-                                            $("#saveCustomerBtn").addClass('hidden');
-                                            $(".saveCreateInvoice").addClass('hidden');
-                                            $(".saveInvoice").addClass('hidden');
-//END To clear invoice Modal onclose event
-//                                        });
-                                            }
+//                                            function refreshModal(){
+//                                                $('#invoiceItemTable').addClass('NewItem');
+//                                            $("#customer").val('');
+//                                            $("#InvoiceDetails").addClass('hidden');
+////                                            $("#InvoiceDetails").find('input').val('');
+//                                            $("#InvoiceDetails").find('input').each(function (e) {
+//                                            var id = $(this).attr('id');
+//                                            if (id != 'invoice-date' && id != 'due-date'){
+//                                            $(this).val('');
+//                                            }
+//                                            });
+//                                            $("#customer").removeClass("hidden");
+//                                            $(".saveInvoiceItems").addClass("hidden");
+//                                            $(".save_send").addClass("hidden");
+//                                            $(".saveInvoice").removeClass("hidden");
+//                                            $("#InvoiceItemsDetails").addClass("hidden");
+//                                            $("#contentToShow").text("Lookup  Customer by Email");
+//                                            $("#edit_customer").addClass("hidden");
+//                                            $("#saveCustomerBtn").addClass('hidden');
+//                                            $(".saveCreateInvoice").addClass('hidden');
+//                                            $(".saveInvoice").addClass('hidden');
+////END To clear invoice Modal onclose event
+////                                        });
+//                                            }
                                             $(document).ready(function () {
 
 //                                        $(".modal").on("hidden.bs.modal", function() {

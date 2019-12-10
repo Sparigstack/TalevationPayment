@@ -429,12 +429,12 @@
                                                 <tbody>
 
                                                     <tr class="hidden" id="hiddenTrTag">
-                                                        <td>
+                                                        <td class="w13">
                                                             <select onchange='setInvoiceDetails(this);' class="form-control preset_line_items">
-                                                                <option></option> 
+                                                                <option value="-1">--Choose Preset Item(optional)--</option> 
                                                             </select>
                                                         </td>
-                                                        <td class=""><input onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="text" class="form-control descValue"></td>
+                                                        <td class=""><input type="text" class="form-control descValue"></td>
                                                         <td class="w8"><input min="0" type="number" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" class="form-control qtyValue"></td>
 
                                                         <td class="w10">
@@ -446,164 +446,133 @@
                                                                 <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control rateValue">
                                                             </div>
                                                         </td>
-                                                        
+
 <!--                                                        <td class="w10">
-                                                            <div class="input-group">
-                                                                <div class="input-group-prepend">
-                                                                    <span class="input-group-text"><i class="fas fa-percent"></i></span>
-                                                                </div>
-                                                                <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control taxValue"> 
-                                                            </div>
-                                                        </td>-->
-                                                        
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-percent"></i></span>
+        </div>
+        <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control taxValue"> 
+    </div>
+</td>-->
+
                                                         <td class="w8"><input type="checkbox" onkeyup="return SetTaxableValue(this);" onchange="return SetTaxableValue(this);" class="form-control isTaxable ml-4" style="max-width: 20px !important;"></td>
                                                         <td class="w7 text-right"><label  readonly="readonly"  class="totalValue">$0<label></label></label></td>
                                                         <td class="text-right" onclick="DeleteElement(this)"><i class="fas fa-trash mt-8"></i></td>
 
                                                     </tr>
-                                                <input type="hidden" name="deleted_invoiceId" id="deleted_invoiceId">                                            
-                                                <tr class="parent firstChild BlankData">
-                                                    <td class="w13">
-                                                        <select onchange='setInvoiceDetails(this);' class="form-control preset_line_items" id="preset_line_items" style="width: auto !important;">
-                                                            <option></option> 
-                                                        </select>
-                                                    </td>
-                                                    <td class=""><input type="text" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" class="form-control descValue"></td>
-                                                    <td class="w8"><input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control qtyValue"></td>
-                                                    <td class="w10">
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                                            </div>
-                                                            <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control rateValue">
-                                                        </div>
-                                                    </td>
-<!--                                                    <td class="w10">
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-text"><i class="fas fa-percent"></i></span>
-                                                            </div>
-                                                            <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control taxValue"> 
-                                                        </div>
-                                                    </td>-->
-                                                    
-                                                    <td class="w8"><input type="checkbox" onkeyup="return SetTaxableValue(this);"  onchange="return SetTaxableValue(this);" class="form-control isTaxable ml-4" style="max-width: 20px !important;"></td>
-                                                    <td class="w7 text-right"><label readonly="readonly" class="totalValue">$0<label></td>
-                                                                <td class="text-right" onclick="DeleteElement(this)"><i class="user-pointer fas fa-trash mt-8"></i></td>
-                                                                </tr>
 
-                                                                </tbody>
+                                                </tbody>
 
-                                                                </table> 
-                                                                <!--                                                                <div class="">  
-                                                                                                                                    <button class="pull-left btn mt-4" onclick="CloneElement(this);"><i class="fas fa-plus"></i> Add New Item</button>
-                                                                                                                                    <textarea  id="memo" class="form-control col-md-6 pull-left mt-3 ml-1" placeholder="memo" style="width:45%;"></textarea>
-                                                                                                                                    <div class="pull-right gridTable" style="">
-                                                                                                                                                                                                        <div class="totalTable">
-                                                                                                                                                                                                        <p class="mt-4"> Subtotal <label readonly="readonly" class="totalTable pl-5">$1<label></label></label>  </p>
-                                                                                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </div>-->
+                                            </table> 
+                                            <!--                                                                <div class="">  
+                                                                                                                <button class="pull-left btn mt-4" onclick="CloneElement(this);"><i class="fas fa-plus"></i> Add New Item</button>
+                                                                                                                <textarea  id="memo" class="form-control col-md-6 pull-left mt-3 ml-1" placeholder="memo" style="width:45%;"></textarea>
+                                                                                                                <div class="pull-right gridTable" style="">
+                                                                                                                                                                                    <div class="totalTable">
+                                                                                                                                                                                    <p class="mt-4"> Subtotal <label readonly="readonly" class="totalTable pl-5">$1<label></label></label>  </p>
+                                                                                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>-->
 
 
-                                                                <div class="row">  
-                                                                    <div class="col-7 pr-0">     
-                                                                        <button class="pull-left btn mt-4" onclick="CloneElement(this);">
-                                                                            <i class="fas fa-plus" aria-hidden="true"></i> Add New Item</button>
-                                                                        <textarea id="memo" class="form-control col-md-6 pull-left mt-3 ml-1" placeholder="memo" style="/* width: 93%; */max-width: 78%;"></textarea>
-                                                                    </div>
+                                            <div class="row">  
+                                                <div class="col-7 pr-0">     
+                                                    <button class="pull-left btn mt-4" onclick="CloneElement(this);">
+                                                        <i class="fas fa-plus" aria-hidden="true"></i> Add New Item</button>
+                                                    <textarea id="memo" class="form-control col-md-6 pull-left mt-3 ml-1" placeholder="memo" style="/* width: 93%; */max-width: 78%;"></textarea>
+                                                </div>
 
-                                                                    <div class="pull-right col-5 row" style="">
-                                                                        <div class="col-9 mt-3 totalTable " style="text-align: right;">Total Amount </div>
-                                                                        <div class="col-3 invoiceTotalPrice totalTable totalTablesData  mt-3 totalTable">$0</div>
-                                                                        <div class="col-9 mt-2 totalTable " style="text-align: right;">Total Tax </div>
-                                                                        <div class="col-3 invoiceTotalTax totalTable totalTablesData  mt-2 totalTable">$0</div>
-                                                                        <div class="col-9 mt-2 totalTable totalTablesData" style="text-align: right;"> Balance Due </div>
-                                                                        <div class="col-3 invoiceTotalBalance totalTable totalTablesData  mt-2 totalTable">$0</div>
-                                                                    </div>
-                                                                </div>
+                                                <div class="pull-right col-5 row" style="">
+                                                    <div class="col-9 mt-3 totalTable " style="text-align: right;">Total Amount </div>
+                                                    <div class="col-3 invoiceTotalPrice totalTable totalTablesData  mt-3 totalTable">$0</div>
+                                                    <div class="col-9 mt-2 totalTable " style="text-align: right;">Total Tax </div>
+                                                    <div class="col-3 invoiceTotalTax totalTable totalTablesData  mt-2 totalTable">$0</div>
+                                                    <div class="col-9 mt-2 totalTable totalTablesData" style="text-align: right;"> Balance Due </div>
+                                                    <div class="col-3 invoiceTotalBalance totalTable totalTablesData  mt-2 totalTable">$0</div>
+                                                </div>
+                                            </div>
 
-                                                                <div class="row">  
-                                                                    <div class="col-9 pr-0">       </div>
+                                            <div class="row">  
+                                                <div class="col-9 pr-0">       </div>
 
-                                                                    <div class="col-3 row pt-3" style="">
-                                                                        <div class="col-10 " style="">
-                                                                            <select class="form-control state_name" style="" name="state_taxes" id="state_taxes" onchange="return SetTaxableValue(this);">
-                                                                                <option selected=""></option>
-                                                                                <option></option>
-                                                                            </select>   
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                <div class="col-3 row pt-3" style="">
+                                                    <div class="col-10 " style="">
+                                                        <select class="form-control state_name" style="" name="state_taxes" id="state_taxes" onchange="return SetTaxableValue(this);">
+                                                            <option value="-1">--Choose State Tax--</option>                                                            
+                                                        </select>   
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                                </div>
-                                                                </div>
-                                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                                </div>
-                                                                <!--End Step 2-->
-                                                                <?php
+                            </div>
+                            <!--End Step 2-->
+                            <?php
 //                            $clickHere = "<a href='http://localhost:8080/TalevationPayment/public/payment?token=$uniqid'> Click Here </a>";
-                                                                ?>
-                                                                <div class="form-group">
-                                                                    <input type="button" onclick="return showHideInvoiceDetails(this);" class="hidden btn btn-info saveInvoice  m-1 pull-right"   value="Next"/>
-                                                                    <input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden saveInvoiceItems  m-1 pull-right"   value="Save"/>
+                            ?>
+                            <div class="form-group">
+                                <input type="button" onclick="return showHideInvoiceDetails(this);" class="hidden btn btn-info saveInvoice  m-1 pull-right"   value="Next"/>
+                                <input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden saveInvoiceItems  m-1 pull-right"   value="Save"/>
 
-                                                                    <a class="save_send_href" href="JavaScript:Void(0);"><input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden save_send  m-1 pull-right"   value="Save & Send"/></a>
+                                <a class="save_send_href" href="JavaScript:Void(0);"><input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden save_send  m-1 pull-right"   value="Save & Send"/></a>
 
-                                                                    <input type="hidden" class="LastInsertedInvoiceId" value="LastInsertedInvoiceId">
-                                                                </div>
-
-
-
-
-                                                                </div>
-
-                                                                </div>
-                                                                </div>
-                                                                </div>
-                                                                <!--End Modal-->
+                                <input type="hidden" class="LastInsertedInvoiceId" value="LastInsertedInvoiceId">
+                            </div>
 
 
 
-                                                                <!--Start footer-->
-                                                                <footer class="footer">
-                                                                    <div class="container">
-                                                                        <div class="text-center">
-                                                                            Copyright © <?php echo date("Y"); ?> Talevation Payments
-                                                                        </div>
-                                                                    </div>
-                                                                </footer>
-                                                                <!--End footer-->
 
-                                                                </div><!--End wrapper-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--End Modal-->
 
 
 
-                                                                <!-- Bootstrap core JavaScrip        t-->
-                                                                <script src="{{asset('/js/jquery.min.js')}}"></script>
-                                                                <script src="{{asset('/js/popper.min.js')}}"></script>
-                                                                <script src="{{asset('/js/bootstrap.min.js')}}"></script>
+            <!--Start footer-->
+            <footer class="footer">
+                <div class="container">
+                    <div class="text-center">
+                        Copyright © <?php echo date("Y"); ?> Talevation Payments
+                    </div>
+                </div>
+            </footer>
+            <!--End footer-->
 
-                                                                <!-- sidebar-menu js -->
-                                                                <script src="{{asset('/js/sidebar-menu.js')}}"></script>
-                                                                <!-- Custom scripts -->
-                                                                <script src="{{asset('/js/app-script.js')}}"></script>
-                                                                <!-- Vector map JavaScript -->
-                                                                <script src="{{asset('/plugins/vectormap/jquery-jvectormap-2.0.2.min.js')}}"></script>
-                                                                <script src="{{asset('/plugins/vectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-
-                                                                <!-- Index js -->
-                                                                <script src="{{asset('/js/index.js')}}"></script>
-                                                                <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
+        </div><!--End wrapper-->
 
 
 
-                                                                <script src="{{asset('/js/customer.js')}}"></script>
-                                                                <!--Bootstrap Datepicker Js-->
-                                                                <script src="{{asset('/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-                                                                <script src="{{asset('/js/invoice.js')}}"></script>
-                                                                @yield('scriptPageWiseSection')
-                                                                </body>
-                                                                </html>
+        <!-- Bootstrap core JavaScrip        t-->
+        <script src="{{asset('/js/jquery.min.js')}}"></script>
+        <script src="{{asset('/js/popper.min.js')}}"></script>
+        <script src="{{asset('/js/bootstrap.min.js')}}"></script>
+
+        <!-- sidebar-menu js -->
+        <script src="{{asset('/js/sidebar-menu.js')}}"></script>
+        <!-- Custom scripts -->
+        <script src="{{asset('/js/app-script.js')}}"></script>
+        <!-- Vector map JavaScript -->
+        <script src="{{asset('/plugins/vectormap/jquery-jvectormap-2.0.2.min.js')}}"></script>
+        <script src="{{asset('/plugins/vectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
+
+        <!-- Index js -->
+        <script src="{{asset('/js/index.js')}}"></script>
+        <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
+
+
+
+        <script src="{{asset('/js/customer.js')}}"></script>
+        <!--Bootstrap Datepicker Js-->
+        <script src="{{asset('/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{asset('/js/invoice.js')}}"></script>
+        @yield('scriptPageWiseSection')
+    </body>
+</html>
 
