@@ -26,7 +26,7 @@ function OnEmailSearch(element) {
         //async: false,
         data: {_token: CSRF_TOKEN, email: val},
         success: function (response) {
-                
+
             $("#a2Emailautocomplete-list").remove();
             var a, b, i,
                     //alert(response);
@@ -108,7 +108,7 @@ function OnEmailSearch(element) {
 
                         if ($(".searchContent").attr("sitenumber") != '')
                             $("#siteNumber").val($(".searchContent").attr("sitenumber"));
-                        
+
                         if ($(".searchContent").attr("phone") != '')
                             $("#phone").val($(".searchContent").attr("phone"));
 
@@ -315,13 +315,16 @@ function saveCreateInvoice(element) {
 
 function createCustomer(element) {
     var parent = findParent(element);
+    $("#invoiceItemTable").find('tbody').find('.clonnedInvoiceItem').remove();
+
     $("#InvoiceItemsDetails").addClass('hidden');
     $(".save_send").addClass('hidden');
     $(".saveInvoiceItems").addClass('hidden');
+    $("#InvoiceDetails").removeClass('hidden');
     $("#addInvoice_saveCreateInvoice").click();
+
     var invId = $("#customerId_fromcreateInvoice").val($(parent).find(".fromInv_customerId").val());
     $("#customer").val($(parent).find('.email_customer').text());
-    $("#InvoiceDetails").removeClass('hidden');
     $("#Email").val($(parent).find('.email_customer').text());
     $("#inv_firstname").val($(parent).find('.fname_customer').val());
     $("#inv_lastname").val($(parent).find('.lname_customer').val());
@@ -357,6 +360,8 @@ function createCustomer(element) {
 
     $("#inv_zip").val($(parent).find('.zipcode_customer').val());
     $(".saveInvoice").removeClass('hidden');
+
+    checkForPresetItems('addnew');
 
 }
 

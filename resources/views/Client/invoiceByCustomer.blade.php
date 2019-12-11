@@ -63,12 +63,10 @@
 
                                         <?php
                                         $body_line = " %0D%0A ";
-//                                      $invoiceDataLink = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public' . "/payment?token=" . $invoiceData->GUID;
                                         $invoiceDataLink = $utility->projectBaseUrl() . '/public' . "/payment?token=" . $invoiceData->GUID;
 
                                         $due_date = date("m-d-Y", strtotime($invoiceData->due_date));
                                         $invoice_date = date("m-d-Y", strtotime($invoiceData->invoice_date));
-//                                        $clickHere = "<a href='http://localhost:8080/TalevationPayment/public/payment?token=$invoiceData->GUID'> Click Here </a>";
                                         $clickHere = "Hello " . $invoiceData->first_name . " " . $invoiceData->last_name . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $invoiceDataLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";
 
                                         $clickHere = nl2br($clickHere);
@@ -97,7 +95,6 @@
                                         <td>
                                             <?php if ($status == 0) { ?>
                                                 <?php
-                                                // $link = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public/previewInvoice?token=' . $invoiceData->GUID;
                                                 $link = $utility->projectBaseUrl() . '/public/previewInvoice?token=' . $invoiceData->GUID;
                                                 ?>
                                                 <a href="{{$link}}" target="_blank"> <button class="btn btn-success m-1"><i class="fa fa-credit-card" aria-hidden="true"></i>Pay Now</button></a>

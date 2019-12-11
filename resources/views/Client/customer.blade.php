@@ -70,7 +70,7 @@
                                 <?php //$link = 'http://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public/InvoiceByCustomer?id=' . $customer->GUID; ?>
                                 <?php
                                 $utility = new \App\Utility;
-                                $link = $utility->projectBaseUrl() . '/public/InvoiceByCustomer?id=' . $customer->GUID;
+                                $link = $utility->projectBaseUrl() . '/public/InvoiceByCustomer/' . $customer->GUID;
                                 ?>
                                 <td class="" style="text-align: center;"><a target="_blank" href="{{$link}}" class="">{{count($customer->customer_has_invoices)}}</a></td>
                                 <td><i onclick="return createCustomer(this);" title="Create Invoice" class="far fa-plus-square" style="cursor: pointer;font-size: 18px;margin: 0 auto;display: table;"></i></td>

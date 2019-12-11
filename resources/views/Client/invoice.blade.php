@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-table"></i> List Of Invoices
-                        <button onclick="return refreshModal();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice2"><i class="fa fa-plus"></i>Add New</button>
+                        <button onclick="return AddNewInvoice();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice2"><i class="fa fa-plus"></i>Add New</button>
                     </div>
 
 
@@ -76,9 +76,7 @@
                                     $body_line = " %0D%0A ";
 
                                     $utility = new \App\Utility;
-                                    $InvoiceLink = "something here";
-                                    //$InvoiceLink = $utility->projectBaseUrl() . '/public/payment?token=' . $invoice->GUID;
-                                    //$InvoiceLink = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public' . "/payment?token=" . $invoice->GUID;
+                                    $InvoiceLink = $utility->projectBaseUrl() . '/public/payment?token=' . $invoice->GUID;
                                     $due_date = date("m-d-Y", strtotime($invoice->due_date));
                                     $invoice_date = date("m-d-Y", strtotime($invoice->invoice_date));
                                     $addBgColor = '';
@@ -87,10 +85,7 @@
                                     <tr class="parent">
 
                                         <?php
-//                                        $clickHere = "<a href='http://localhost:8080/TalevationPayment/public/payment?token=$invoice->GUID'> Click Here </a>";
-                                        //$clickHere = "Hello " . $invoice->first_name . " " . $invoice->last_name . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $InvoiceLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";
-                                        $clickHere = "nothing";
-
+                                        $clickHere = "Hello " . $invoice->first_name . " " . $invoice->last_name . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $InvoiceLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";                                        
                                         $clickHere = nl2br($clickHere);
                                         $status = $invoice->status;
                                         $Amount = 0;

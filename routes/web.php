@@ -19,7 +19,8 @@ Route::get('/', 'HomeController@invoicePage');
 Auth::routes();
 
 //Route::get('InvoiceByCustomer/{id}','InvoiceController@InvoiceByCustomer');
-Route::get('InvoiceByCustomer','InvoiceController@InvoiceByCustomer');
+Route::get('InvoiceByCustomer/{id}','InvoiceController@InvoiceByCustomer');
+Route::get('myInvoices/{id}','InvoiceController@myInvoices');
 
 //Route for Invoice Page
 //Route::get('/home', 'HomeController@index')->name('home');

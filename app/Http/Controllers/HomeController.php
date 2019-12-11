@@ -29,8 +29,8 @@ class HomeController extends Controller {
 
 //        $this->middleware('auth');
         $utility = new \App\Utility;
-        $ClientID = 'ABr9OwbD6M7ooMJiALq4kazXzALuMZB1gDSM2JRJDUZWKYXZoA';
-        $ClientSecretKey = 'AETbLV8JHViIdJ6vdwaokUtTxbYS9p8DpkltDDE7';
+        $ClientID = env('QB_APP_ID');
+        $ClientSecretKey = env('QB_APP_SECRET');
         $dataService = DataService::Configure(array(
                     'auth_mode' => 'oauth2',
                     'ClientID' => $ClientID,
@@ -61,7 +61,8 @@ class HomeController extends Controller {
 
     public function qbrefresh() {
 
-        $QbToken = QbToken::first();
+        $QbToken = QbToken::first();       
+        
         $OAuth2Login_Helper = $this->OAuth2LoginHelper;
         //if (isset($QbToken) && !empty($QbToken)) {
         if ($QbToken) {

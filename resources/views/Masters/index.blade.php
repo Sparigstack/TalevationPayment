@@ -1,3 +1,4 @@
+<?php $utility = new \App\Utility; ?>
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
@@ -50,7 +51,7 @@
                 <nav class="navbar navbar-expand fixed-top">
                     <ul class="navbar-nav mr-auto align-items-center">
                         <li class="nav-item">
-                            <a href=<?php $_SERVER['HTTP_HOST'] ?>"/TalevationPayment/public/invoice">
+                            <a href='{{$utility->projectBaseUrl()}}/public/invoice'>
                                 <img src="{{url('logo/TalevationLogo.png')}}" class="logo-icon" alt="logo icon">
                                 <!--<h5 class="logo-text"></h5>-->
                             </a>
@@ -511,9 +512,7 @@
 
                             </div>
                             <!--End Step 2-->
-                            <?php
-//                            $clickHere = "<a href='http://localhost:8080/TalevationPayment/public/payment?token=$uniqid'> Click Here </a>";
-                            ?>
+                            
                             <div class="form-group">
                                 <input type="button" onclick="return showHideInvoiceDetails(this);" class="hidden btn btn-info saveInvoice  m-1 pull-right"   value="Next"/>
                                 <input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden saveInvoiceItems  m-1 pull-right"   value="Save"/>

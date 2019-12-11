@@ -33,7 +33,7 @@ class InvoiceItemController extends Controller {
             $InvoiceItem->discription = $invoice_Items[$i]['discription'];
             $InvoiceItem->quantity = (float) $invoice_Items[$i]['quantity'];
             $InvoiceItem->rate = (float) $invoice_Items[$i]['rate'];
-            $InvoiceItem->tax = (float) $invoice_Items[$i]['tax'];
+            $InvoiceItem->is_taxable= $invoice_Items[$i]['is_taxable'];
             $InvoiceItem->save();
         }
         return 'success';

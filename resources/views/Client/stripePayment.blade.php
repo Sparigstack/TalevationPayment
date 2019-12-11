@@ -364,7 +364,7 @@
                                                                 <td>{{$invoiceItems->quantity}}</td>
                                                                 <td>${{$invoiceItems->rate}}</td>
                                                                 <td><?php
-                                                                    if ((isset($invoiceItems->tax)) && $invoiceItems->tax > 0)
+                                                                    if ((isset($invoiceItems->is_taxable)) && $invoiceItems->is_taxable > 0)
                                                                         echo $invoiceItems->tax . '%';
                                                                     else
                                                                         echo 'NA';
@@ -602,9 +602,8 @@
             <footer class="footer">
                 <div class="container">
                     <?php
-                    // $link = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public/InvoiceByCustomer?id=' . $invoiceData->customer->GUID;
                     $utility = new \App\Utility;
-                    $link = $utility->projectBaseUrl() . '/public/InvoiceByCustomer?id=' . $invoiceData->customer->GUID;
+                    $link = $utility->projectBaseUrl() . '/public/myInvoices/' . $invoiceData->customer->GUID;
                     ?>
                     <div class="text-center">You can check your other invoices at <a href="{{$link}}" class="" target="_blank"> <i class="fas fa-clipboard-list"></i> My Invoices</a></div>
                     <div class="text-center">

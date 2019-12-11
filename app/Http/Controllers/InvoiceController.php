@@ -102,14 +102,25 @@ class InvoiceController extends Controller {
         $invoice->save();
     }
 
-    public function InvoiceByCustomer() {
-        $GUID = $_GET['id'];
+    public function InvoiceByCustomer($id) {
+        //$GUID = $_GET['id'];
+        $GUID = $id;
         if (isset($GUID))
             $Customer = Customer::where('GUID', $GUID)->first();
         $Invoices = $Customer->customer_has_invoices;
-//        $termsList = Term::all();
-//        return view('Client/invoiceByCustomer', compact('Invoices', 'termsList'));
-         return view('Client/myInvoices', compact('Invoices'));
+        $termsList = Term::all();
+        return view('Client/invoiceByCustomer', compact('Invoices', 'termsList'));
+
+    }
+    public function myInvoices($id) {
+        //$GUID = $_GET['id'];
+        $GUID = $id;
+        if (isset($GUID))
+            $Customer = Customer::where('GUID', $GUID)->first();
+        $Invoices = $Customer->customer_has_invoices;
+        //$termsList = Term::all();
+        return view('Client/myInvoices', compact('Invoices'));
+
     }
 
     public function preset_line_items(Request $request) {

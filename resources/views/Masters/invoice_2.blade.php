@@ -85,7 +85,6 @@
                                     $icount++;
                                     $todayDate = date('m-d-Y');
                                     $body_line = " %0D%0A ";
-//                                    $InvoiceLink = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public' . "/payment?token=" . $invoice->GUID;
                                     $utility = new \App\Utility;
                                     $InvoiceLink = $utility->projectBaseUrl() . '/public' . "/payment?token=" . $invoice->GUID;
                                     $due_date = date("m-d-Y", strtotime($invoice->due_date));
@@ -96,7 +95,6 @@
                                     <tr class="parent">
 
                                         <?php
-//                                        $clickHere = "<a href='http://localhost:8080/TalevationPayment/public/payment?token=$invoice->GUID'> Click Here </a>";
                                         $clickHere = "Hello " . $invoice->first_name . " " . $invoice->last_name . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $InvoiceLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";
 
                                         $clickHere = nl2br($clickHere);

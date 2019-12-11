@@ -514,7 +514,6 @@
             <footer class="footer">
                 <div class="container">
                     <?php
-                    // $link = 'https://' . $_SERVER['HTTP_HOST'] . '/TalevationPayment/public/InvoiceByCustomer/' . $invoiceData->customer_id;
                     $utility = new \App\Utility;
                     $link = $utility->projectBaseUrl() . '/public/InvoiceByCustomer/' . $invoiceData->customer_id;
                     ?>
