@@ -412,7 +412,6 @@ function showHideInvoiceDetails(element) {
         $("#contentToShow").text(string);
         $("#customer").addClass('hidden');
         $("#InvoiceDetails").addClass('hidden');
-
         $(".saveInvoice").addClass('hidden');
 
 //        if ($('#invoiceItemTable').hasClass('NewItem')) {
@@ -426,6 +425,7 @@ function showHideInvoiceDetails(element) {
 //            });
 //        }
         $(".invoiceItemTable").removeClass('hidden');
+        $(".saveInvoiceItems").removeClass('hidden');
         $(".save_send").removeClass('hidden');
         $("#InvoiceItemsDetails").removeClass('hidden');
         $("#edit_customer").removeClass("hidden");
@@ -449,7 +449,6 @@ function setInvoiceDetails(element) {
     $(parent).find(".descValue").val($(presetItems).attr('desc'));
     $(parent).find(".qtyValue").val('1');
     $(parent).find(".rateValue").val($(presetItems).attr('price'));
-//    $(parent).find(".taxValue").val('0');
     var Total = parseFloat(1 * $(presetItems).attr('price') + 0);
 //    alert(Total);
     $(parent).find(".totalValue").text('$' + Total);
@@ -470,11 +469,10 @@ function InsertInvoiceItems(element) {
     $("#invoiceItemTable").find("tbody").find("tr").each(function (e) {
         if ($(this).hasClass("hidden") != true) {
             if ($(this).hasClass("parent") == true) {
+                var presetItemValuefeild = $(this).find(".preset_line_items").val();
                 var descValuefeild = $(this).find(".descValue").val();
                 var qtyValuefeild = $(this).find(".qtyValue").val();
                 var rateValuefeild = $(this).find(".rateValue").val();
-//                var taxValuefeild = $(this).find(".taxValue").val();
-                var taxValuefeild = $(this).find(".isTaxable").val();
                 Number($('.invoiceTotalTax').text().replace('$', ''));
                 if (descValuefeild != "" && rateValuefeild !== "" && qtyValuefeild !== "")
                     isValidateInvoiceTable = true;
@@ -533,7 +531,7 @@ function InsertInvoiceItems(element) {
         $("#InvoiceItemsDetails").removeClass('hidden');
 
         var InvoiceIdFromEditIcon = $("#Inv_id_fromEditIcon").val();
-//        alert(InvoiceIdFromEditIcon);
+        //alert(InvoiceIdFromEditIcon);
         var customerId_fromcreateInvoice = $("#customerId_fromcreateInvoice").val();
         showLoader();
         $.ajax({
@@ -558,7 +556,7 @@ function InsertInvoiceItems(element) {
                 //Save Invoice Items
                 var invoiceItems = new Array();
                 var invoiceItem;
-                var descValue, qtyValue, rateValue, dbinvoice_itemid, deletedInvoiceId;
+                var presetItemId, presetItemValue, descValue, qtyValue, rateValue, dbinvoice_itemid, deletedInvoiceId;
                 deletedInvoiceId = $("#deleted_invoiceId").val();
                 $("#invoiceItemTable").find("tbody").find("tr").each(function (e) {
 
@@ -566,6 +564,14 @@ function InsertInvoiceItems(element) {
                     if (!$(this).hasClass("hidden")) {
 
                         //LastInsertedInvoiceId = $(".LastInsertedInvoiceId").val();
+                        presetItemId = $(this).find(".preset_line_items option:selected").attr("id");
+                        presetItemValue = $(this).find(".preset_line_items").val();
+                        
+                        if(presetItemId == -1 && presetItemValue == -1){
+                            presetItemId = '';
+                            presetItemValue = '';
+                        }
+                        
                         descValue = $(this).find(".descValue").val();
                         qtyValue = $(this).find(".qtyValue").val();
                         rateValue = $(this).find(".rateValue").val();
@@ -573,6 +579,8 @@ function InsertInvoiceItems(element) {
                         {
                             invoiceItem = new Object();
                             dbinvoice_itemid = $(this).attr("dbInvoice_itemId");
+                            invoiceItem.preset_line_item_id = presetItemId;
+                            invoiceItem.part_number = presetItemValue;
                             invoiceItem.invoice_id = parseInt(response);
                             invoiceItem.discription = descValue;
                             invoiceItem.quantity = qtyValue;
@@ -715,8 +723,8 @@ function SetTaxableValue(element) {
     var totalAmount = 0;
     var totalBalance = 0;
     stateTaxes = $('.state_name').val();
-    if(stateTaxes > 0){
-                var totalNewTax = 0;
+    if (stateTaxes > 0) {
+        var totalNewTax = 0;
         $(".isTaxable").each(function (e) {
             if (!$(this).parent().parent().hasClass("hidden")) {
                 if ($(this).is(':checked')) {
@@ -731,10 +739,10 @@ function SetTaxableValue(element) {
         var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
         totalBalance = parseFloat(totalNewTax) + parseFloat(totalPrice);
         $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
-    }else{
+    } else {
         $(".invoiceTotalTax").text('$0');
     }
-    
+
 //    if (stateTaxes > 0 && !$(element).hasClass('state_name')) {
 //        totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
 //        countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
@@ -818,7 +826,7 @@ function editInvoice(element, InvoiceItemObject) {
         isTaxable = InvoiceItemObject[k]['is_taxable'] == 1 ? 'checked' : '';
         //$("#invoiceItemTable").find('tbody').find(".BlankData").remove();
         $("#invoiceItemTable").find('tbody').append('<tr dbInvoice_itemId="' + InvoiceItemObject[k]['id'] + '"class="parent clonnedInvoiceItem">\n\
-<td class="w13"><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + presetItemsStr + ' </select></td>\n\
+<td class="w13"><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + '<option value="-1" id="-1">--Choose Preset Item(optional)--</option>'  + presetItemsStr + ' </select></td>\n\
 <td class=""><input type="text" value="' + InvoiceItemObject[k]['discription'] + '" class="form-control descValue"></td>\n\
 <td class="w8"><input min="0" onkeyup="return ItemTotalValue(this);"  onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['quantity'] + '" type="number" class="form-control qtyValue"></td><td class="w10"><div class="input-group">\n\
 <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span></div>\n\
@@ -842,7 +850,7 @@ function editInvoice(element, InvoiceItemObject) {
     });
     $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
     $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
-    
+
 //    SetTaxableValue();
 
 //    var totalBalance = 0;
@@ -889,6 +897,7 @@ function AddNewInvoice() {
     $(".saveCreateInvoice").addClass('hidden');
     $(".saveInvoice").addClass('hidden');
     $("#customer").val('');
+    $("#Inv_id_fromEditIcon").val('');
 
     //
     $("#InvoiceDetails").find('input').each(function (e) {

@@ -30,6 +30,8 @@ class InvoiceItemController extends Controller {
                 $InvoiceItem->id = $invoice_Items[$i]['dbinvoice_itemid'];
             }
             $InvoiceItem->invoice_id = $invoice_Items[$i]['invoice_id'];
+            $InvoiceItem->preset_line_item_id = $invoice_Items[$i]['preset_line_item_id'];
+            $InvoiceItem->part_number = $invoice_Items[$i]['part_number'];
             $InvoiceItem->discription = $invoice_Items[$i]['discription'];
             $InvoiceItem->quantity = (float) $invoice_Items[$i]['quantity'];
             $InvoiceItem->rate = (float) $invoice_Items[$i]['rate'];

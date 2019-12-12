@@ -10,4 +10,8 @@ class InvoiceItem extends Model
     public function invoice(){
         return $this->belongsTo('App\Invoice');
     }
+    
+    public function preset_line_item(){
+        return $this->belongsTo('App\PresetLineItems');
+    }
 }
