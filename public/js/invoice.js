@@ -424,14 +424,13 @@ function showHideInvoiceDetails(element) {
 //                $(this).remove();
 //            });
 //        }
-        $(".invoiceItemTable").removeClass('hidden');
+        $("#invoiceItemTable").removeClass('hidden');
         $(".saveInvoiceItems").removeClass('hidden');
         $(".save_send").removeClass('hidden');
         $("#InvoiceItemsDetails").removeClass('hidden');
         $("#edit_customer").removeClass("hidden");
 
         var inv_state = $("#InvoiceDetails").find("#inv_state").val();
-
         $(".state_name option").each(function () {
             var matchFound = $(this).text().toLowerCase().indexOf(inv_state.toLowerCase());
             if (matchFound >= 0)
@@ -440,27 +439,39 @@ function showHideInvoiceDetails(element) {
                 $(this).prop('selected', false);
             //, 'selected');
         });
+
         SetTaxableValue();
     }
 }
 function setInvoiceDetails(element) {
     var presetItems = $('option:selected', element);
     var parent = findParent(element);
-    $(parent).find(".descValue").val($(presetItems).attr('desc'));
-    $(parent).find(".qtyValue").val('1');
-    $(parent).find(".rateValue").val($(presetItems).attr('price'));
-    var Total = parseFloat(1 * $(presetItems).attr('price') + 0);
-//    alert(Total);
-    $(parent).find(".totalValue").text('$' + Total);
-    var totalPriceSum = 0;
-    $(".totalValue").each(function (e) {
-        if (!$(this).parent().parent().hasClass("hidden")) {
-            var totalPrice = $(this).text().replace('$', '');
-            totalPriceSum += Number(totalPrice);
-        }
-    });
-    $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
-    $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
+    var presetItem = presetItems.val();
+    if (presetItem == -1) {
+        $(parent).find(".descValue").val('');
+        $(parent).find(".qtyValue").val('');
+        $(parent).find(".rateValue").val('');
+        $(parent).find(".totalValue").text('$' + 0);
+//        $(parent).find(".isTaxable").prop('checked', false);
+        
+    } else {
+        $(parent).find(".descValue").val($(presetItems).attr('desc'));
+        $(parent).find(".qtyValue").val('1');
+        $(parent).find(".rateValue").val($(presetItems).attr('price'));
+        var Total = parseFloat(1 * $(presetItems).attr('price') + 0);
+        $(parent).find(".totalValue").text('$' + Total);
+        SetTaxableValue();
+    }
+
+//    var totalPriceSum = 0;
+//    $(".totalValue").each(function (e) {
+//        if (!$(this).parent().parent().hasClass("hidden")) {
+//            var totalPrice = $(this).text().replace('$', '');
+//            totalPriceSum += Number(totalPrice);
+//        }
+//    });
+//    $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
+//    $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 }
 
 
@@ -566,12 +577,12 @@ function InsertInvoiceItems(element) {
                         //LastInsertedInvoiceId = $(".LastInsertedInvoiceId").val();
                         presetItemId = $(this).find(".preset_line_items option:selected").attr("id");
                         presetItemValue = $(this).find(".preset_line_items").val();
-                        
-                        if(presetItemId == -1 && presetItemValue == -1){
+
+                        if (presetItemId == -1 && presetItemValue == -1) {
                             presetItemId = '';
                             presetItemValue = '';
                         }
-                        
+
                         descValue = $(this).find(".descValue").val();
                         qtyValue = $(this).find(".qtyValue").val();
                         rateValue = $(this).find(".rateValue").val();
@@ -675,7 +686,7 @@ function ItemTotalValue(element) {
     var qtyValue = $(parent).find('.qtyValue').val();
     var descValue = $(parent).find('.descValue').val();
 
-    if (rateValue != "" && qtyValue != "" && descValue != "") {
+    if (rateValue != "" && qtyValue != "") {
 //        total = parseFloat(rateValue * qtyValue) + parseFloat(rateValue * qtyValue * taxValue / 100);
         total = parseFloat(rateValue * qtyValue);
         $(parent).find(".totalValue").text('$' + total.toFixed(2));
@@ -690,29 +701,20 @@ function ItemTotalValue(element) {
 //        alert (totalPriceSum);
         $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
         $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
+        
+        SetTaxableValue();
 
-        var stateTaxes = 0;
-        var countTotalTax = 0;
-        var totalAmount = 0;
-        var totalBalance = 0;
-        stateTaxes = $('.state_name').val();
-        if (stateTaxes > 0) {
-//            totalAmount = Number($(parent).find('.totalValue').text().replace('$', ''));
-//            countTotalTax = parseFloat(((stateTaxes * totalAmount) / 100).toFixed(2));
-//            var oldVal = parseFloat($('.invoiceTotalTax ').text().replace('$', ''));
-//
-//            if ($(element).is(':checked')) {
-//                countTotalTax = countTotalTax + oldVal;
-//            } else {
-//                countTotalTax = oldVal - countTotalTax;
-//            }
-//            $(".invoiceTotalTax").text('$' + countTotalTax.toFixed(2));
-
-            var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
-            var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
-            totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
-            $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
-        }
+//        var stateTaxes = 0;
+//        var countTotalTax = 0;
+//        var totalAmount = 0;
+//        var totalBalance = 0;
+//        stateTaxes = $('.state_name').val();
+//        if (stateTaxes > 0) {
+//            var totalPrice = Number($('.invoiceTotalPrice').text().replace('$', ''));
+//            var totalTax = Number($('.invoiceTotalTax').text().replace('$', ''));
+//            totalBalance = parseFloat(totalPrice) + parseFloat(totalTax);
+//            $(".invoiceTotalBalance").text('$' + totalBalance.toFixed(2));
+//        }
     }
 }
 
@@ -816,17 +818,37 @@ function editInvoice(element, InvoiceItemObject) {
     var presetItemsStr = "";
     var hiddenInvoiceItem = $("#InvoiceItemsDetails").find("#invoiceItemTable").find("#hiddenTrTag");
     var presetLineItems = $(hiddenInvoiceItem).find(".preset_line_items");
-    if (presetLineItems.find('option').length > 1) {
-        presetLineItems.find('option').each(function () {
-            presetItemsStr += "<option  price='" + $(this).attr("price") + "'desc='" + $(this).attr("desc") + "' id='" + $(this).attr("id") + "'>" + $(this).text() + "</option>";
-        });
-    }
+//    if (presetLineItems.find('option').length > 1) {
+//        presetLineItems.find('option').each(function () {
+//            presetItemsStr += "<option  price='" + $(this).attr("price") + "'desc='" + $(this).attr("desc") + "' id='" + $(this).attr("id") + "'>" + $(this).text() + "</option>";
+//        });
+//    }
     var isTaxable = '';
+    var selectedItem = '';
+    var OptionID = '';
     for (var k = 0; k < InvoiceItemObject.length; k++) {
-        isTaxable = InvoiceItemObject[k]['is_taxable'] == 1 ? 'checked' : '';
+        if (presetLineItems.find('option').length > 1) {
+            presetLineItems.find('option').each(function () {
+                presetItemsStr = '';
+                selectedItem = '';
+
+                if (InvoiceItemObject[k]['preset_line_item_id'] == null) {
+                    OptionID = null;
+                } else {
+                    OptionID = $(this).attr("id");
+                }
+                if (OptionID == InvoiceItemObject[k]['preset_line_item_id']) {
+//                    console.log("in select");
+//                    selectedItem = 'selected';
+                }
+                presetItemsStr += "<option " + selectedItem + " price='" + $(this).attr("price") + "'desc='" + $(this).attr("desc") + "' id='" + $(this).attr("id") + "'>" + $(this).text() + "</option>";
+            });
+        }
+
         //$("#invoiceItemTable").find('tbody').find(".BlankData").remove();
+        isTaxable = InvoiceItemObject[k]['is_taxable'] == 1 ? 'checked' : '';
         $("#invoiceItemTable").find('tbody').append('<tr dbInvoice_itemId="' + InvoiceItemObject[k]['id'] + '"class="parent clonnedInvoiceItem">\n\
-<td class="w13"><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + '<option value="-1" id="-1">--Choose Preset Item(optional)--</option>'  + presetItemsStr + ' </select></td>\n\
+<td class="w13"><input type="hidden" value="' + InvoiceItemObject[k]['preset_line_item_id'] + '" id="preset_line_item_id" /><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + '<option value="-1" id="-1" selected>--Choose Preset Item(optional)--</option>' + presetItemsStr + ' </select></td>\n\
 <td class=""><input type="text" value="' + InvoiceItemObject[k]['discription'] + '" class="form-control descValue"></td>\n\
 <td class="w8"><input min="0" onkeyup="return ItemTotalValue(this);"  onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['quantity'] + '" type="number" class="form-control qtyValue"></td><td class="w10"><div class="input-group">\n\
 <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span></div>\n\
@@ -834,7 +856,10 @@ function editInvoice(element, InvoiceItemObject) {
 \n\<td class="w8"><input type="checkbox" ' + isTaxable + ' onkeyup="return SetTaxableValue(this);" onchange="return SetTaxableValue(this);" class="form-control isTaxable ml-4" style="max-width: 20px !important;"></td>\n\
 <td class="w7 text-right"><label readonly="readonly" class="totalValue">$' + parseFloat(InvoiceItemObject[k]['quantity'] * InvoiceItemObject[k]['rate']) + '<label></label></label></td>\n\
 <td class="text-right" onclick="DeleteElement(this)"><i class="user-pointer fas fa-trash mt-8" aria-hidden="true"></i></td></tr>\n');
+
     }
+
+
 
 //    + (InvoiceItemObject[k]['quantity'] * InvoiceItemObject[k]['rate'] * InvoiceItemObject[k]['tax'] / 100)).toFixed(2) 
 
@@ -981,10 +1006,14 @@ function checkForPresetItems(calledFrom) {
 
                 for (var k = 0; k < response.preset_line_items.length; k++) {
                     $(presetLineItems).append("<option  price='" + response.preset_line_items[k].price + "'desc='" + response.preset_line_items[k].description + "' id='" + response.preset_line_items[k].id + "'>" + response.preset_line_items[k].part_number + "</option>")
-
+                    var selectedPresetItem = '';
                     if (calledFrom == "editinvoice") {
                         $(clonnedInvoiceItem).each(function () {
-                            $(this).find(".preset_line_items").append("<option  price='" + response.preset_line_items[k].price + "'desc='" + response.preset_line_items[k].description + "' id='" + response.preset_line_items[k].id + "'>" + response.preset_line_items[k].part_number + "</option>")
+                            selectedPresetItem = '';
+                            var preset_line_item_id = $(this).find("#preset_line_item_id").val();
+                            if (preset_line_item_id == response.preset_line_items[k].id)
+                                selectedPresetItem = 'selected';
+                            $(this).find(".preset_line_items").append("<option " + selectedPresetItem + " price='" + response.preset_line_items[k].price + "'desc='" + response.preset_line_items[k].description + "' id='" + response.preset_line_items[k].id + "'>" + response.preset_line_items[k].part_number + "</option>")
                         });
                     }
                 }
