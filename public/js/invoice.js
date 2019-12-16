@@ -446,32 +446,33 @@ function showHideInvoiceDetails(element) {
 function setInvoiceDetails(element) {
     var presetItems = $('option:selected', element);
     var parent = findParent(element);
-    var presetItem = presetItems.val();
+    var presetItem = presetItems.attr('id');
     if (presetItem == -1) {
         $(parent).find(".descValue").val('');
         $(parent).find(".qtyValue").val('');
         $(parent).find(".rateValue").val('');
         $(parent).find(".totalValue").text('$' + 0);
 //        $(parent).find(".isTaxable").prop('checked', false);
-        
+
     } else {
         $(parent).find(".descValue").val($(presetItems).attr('desc'));
         $(parent).find(".qtyValue").val('1');
         $(parent).find(".rateValue").val($(presetItems).attr('price'));
         var Total = parseFloat(1 * $(presetItems).attr('price') + 0);
         $(parent).find(".totalValue").text('$' + Total);
-        SetTaxableValue();
     }
 
-//    var totalPriceSum = 0;
-//    $(".totalValue").each(function (e) {
-//        if (!$(this).parent().parent().hasClass("hidden")) {
-//            var totalPrice = $(this).text().replace('$', '');
-//            totalPriceSum += Number(totalPrice);
-//        }
-//    });
-//    $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
-//    $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
+    var totalPriceSum = 0;
+    $(".totalValue").each(function (e) {
+        if (!$(this).parent().parent().hasClass("hidden")) {
+            var totalPrice = $(this).text().replace('$', '');
+            totalPriceSum += Number(totalPrice);
+        }
+    });
+    $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
+    $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
+
+    //     SetTaxableValue();
 }
 
 
@@ -701,7 +702,7 @@ function ItemTotalValue(element) {
 //        alert (totalPriceSum);
         $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
         $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
-        
+
         SetTaxableValue();
 
 //        var stateTaxes = 0;
@@ -828,18 +829,18 @@ function editInvoice(element, InvoiceItemObject) {
     var OptionID = '';
     for (var k = 0; k < InvoiceItemObject.length; k++) {
         if (presetLineItems.find('option').length > 1) {
+            presetItemsStr = '';
             presetLineItems.find('option').each(function () {
-                presetItemsStr = '';
-                selectedItem = '';
 
+                selectedItem = '';
+//
                 if (InvoiceItemObject[k]['preset_line_item_id'] == null) {
                     OptionID = null;
                 } else {
                     OptionID = $(this).attr("id");
                 }
                 if (OptionID == InvoiceItemObject[k]['preset_line_item_id']) {
-//                    console.log("in select");
-//                    selectedItem = 'selected';
+                    selectedItem = 'selected';
                 }
                 presetItemsStr += "<option " + selectedItem + " price='" + $(this).attr("price") + "'desc='" + $(this).attr("desc") + "' id='" + $(this).attr("id") + "'>" + $(this).text() + "</option>";
             });
@@ -848,7 +849,7 @@ function editInvoice(element, InvoiceItemObject) {
         //$("#invoiceItemTable").find('tbody').find(".BlankData").remove();
         isTaxable = InvoiceItemObject[k]['is_taxable'] == 1 ? 'checked' : '';
         $("#invoiceItemTable").find('tbody').append('<tr dbInvoice_itemId="' + InvoiceItemObject[k]['id'] + '"class="parent clonnedInvoiceItem">\n\
-<td class="w13"><input type="hidden" value="' + InvoiceItemObject[k]['preset_line_item_id'] + '" id="preset_line_item_id" /><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + '<option value="-1" id="-1" selected>--Choose Preset Item(optional)--</option>' + presetItemsStr + ' </select></td>\n\
+<td class="w13"><input type="hidden" value="' + InvoiceItemObject[k]['preset_line_item_id'] + '" id="preset_line_item_id" /><select onchange="setInvoiceDetails(this);" class="form-control preset_line_items">' + presetItemsStr + ' </select></td>\n\
 <td class=""><input type="text" value="' + InvoiceItemObject[k]['discription'] + '" class="form-control descValue"></td>\n\
 <td class="w8"><input min="0" onkeyup="return ItemTotalValue(this);"  onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['quantity'] + '" type="number" class="form-control qtyValue"></td><td class="w10"><div class="input-group">\n\
 <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span></div>\n\
@@ -1007,15 +1008,23 @@ function checkForPresetItems(calledFrom) {
                 for (var k = 0; k < response.preset_line_items.length; k++) {
                     $(presetLineItems).append("<option  price='" + response.preset_line_items[k].price + "'desc='" + response.preset_line_items[k].description + "' id='" + response.preset_line_items[k].id + "'>" + response.preset_line_items[k].part_number + "</option>")
                     var selectedPresetItem = '';
-                    if (calledFrom == "editinvoice") {
-                        $(clonnedInvoiceItem).each(function () {
+
+                }
+
+                if (calledFrom == "editinvoice") {
+                    $(clonnedInvoiceItem).each(function () {
+
+                        var presetItemsContainer = $(this);
+                        var preset_line_item_id = $(presetItemsContainer).find("#preset_line_item_id").val();
+                        presetLineItems.find('option').each(function () {
                             selectedPresetItem = '';
-                            var preset_line_item_id = $(this).find("#preset_line_item_id").val();
-                            if (preset_line_item_id == response.preset_line_items[k].id)
+                            
+                            if (preset_line_item_id == $(this).attr("id")) {
                                 selectedPresetItem = 'selected';
-                            $(this).find(".preset_line_items").append("<option " + selectedPresetItem + " price='" + response.preset_line_items[k].price + "'desc='" + response.preset_line_items[k].description + "' id='" + response.preset_line_items[k].id + "'>" + response.preset_line_items[k].part_number + "</option>")
+                            }
+                            $(presetItemsContainer).find(".preset_line_items").append("<option " + selectedPresetItem + " price='" + $(this).attr("price") + "'desc='" + $(this).attr("desc") + "' id='" + $(this).attr("id") + "'>" + $(this).text() + "</option>");
                         });
-                    }
+                    });
                 }
 
                 if (calledFrom == "addnew") {

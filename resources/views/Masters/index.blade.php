@@ -432,7 +432,7 @@
                                                     <tr class="hidden" id="hiddenTrTag">
                                                         <td class="w13">
                                                             <select onchange='setInvoiceDetails(this);' class="form-control preset_line_items">
-                                                                <option value="-1" id="-1">--Choose Preset Item(optional)--</option> 
+                                                                <option id="-1" value="-1">--Choose Preset Item(optional)--</option> 
                                                             </select>
                                                         </td>
                                                         <td class=""><input type="text" class="form-control descValue"></td>
