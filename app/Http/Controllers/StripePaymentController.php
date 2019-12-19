@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Customer;
 use App\Invoice;
 use App\InvoiceItem;
+use App\StateTax;
 use Session;
 use Stripe;
 use App\Utility;
@@ -24,18 +26,35 @@ class StripePaymentController extends Controller {
         $stripePaymentId = "Blank";
         $Invoice = "";
         $PaymentMethod = '';
+        
+        $stateTaxes = new StateTax;
+        $stateTaxes->state_name = 'N/A';
+        $stateTaxes->tax_rate = 0;
+        
         if (isset($_GET['token'])) {
             $invoiceData = Invoice::where('GUID', '=', $_GET['token'])->first();
+
             if ($invoiceData) {
                 if (!isset($invoiceData->due_date)) {
                     $due_date = date("Y-m-d", strtotime(date('m/d/Y')));
                     $invoiceData->due_date = $due_date;
                     $invoiceData->save();
                 }
+                
+                if(isset($invoiceData->state_tax_id)){
+                    $stateTaxes = StateTax::find($invoiceData->state_tax_id);
+                }
             }
-
+           
             $customer = Customer::find($invoiceData->customer_id);
 
+//            $stateTaxes = DB::table('state_taxes AS st')
+//                    ->leftJoin('invoices AS i', 'st.id', '=', 'i.state_tax_id')
+//                    ->select('st.id', 'i.state_tax_id', 'st.state_name', 'st.tax_rate')
+//                    ->where('st.id', '=', $invoiceData->state_tax_id)
+//                    ->first();
+            
+           
             Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
             if (isset($customer->stripe_customer_id)) {
@@ -47,7 +66,7 @@ class StripePaymentController extends Controller {
 
 //return $PaymentMethod." 2424 ".$currentPath." 2424 ".$invoiceData." 2424 ".$stripePaymentId." 2424 ".$Invoice;
 //return view('test', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stripePaymentId', 'Invoice'));
-            return view('Client/stripePayment', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stripePaymentId', 'Invoice'));
+            return view('Client/stripePayment', compact('PaymentMethod', 'currentPath', 'invoiceData' , 'stateTaxes' ,'stripePaymentId', 'Invoice'));
         }
     }
 
@@ -55,15 +74,15 @@ class StripePaymentController extends Controller {
         $flash_msg = "";
         $customerEmail = '';
         $customer_id = '';
-        $appId = '';$token='';
+        $appId = '';
+        $token = '';
 
         $QbToken = QbToken::all();
-     for($i=0;$i<count($QbToken);$i++){
-         $id=$QbToken[$i]->id;
-         $token=$QbToken[$i]->access_token;
-         $appId=$QbToken[$i]->realm_id;
-         
-     }
+        for ($i = 0; $i < count($QbToken); $i++) {
+            $id = $QbToken[$i]->id;
+            $token = $QbToken[$i]->access_token;
+            $appId = $QbToken[$i]->realm_id;
+        }
 //        $token = QbToken::pluck('access_token')->first();
 
         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));

@@ -72,6 +72,7 @@ class InvoiceController extends Controller {
         $invoice_created_date = date("Y-m-d", strtotime($request->invoice_created_date));
         $invoice->invoice_date = $invoice_created_date;
         $invoice->terms = $request->inv_terms;
+        $invoice->state_tax_id = $request->state_tax_id == -1 ? null : $request->state_tax_id;
         $invoice->GUID = $request->inv_GUID;
         $invoice->memo = $request->memo;
         $invoice->status = 0;
@@ -110,8 +111,8 @@ class InvoiceController extends Controller {
         $Invoices = $Customer->customer_has_invoices;
         $termsList = Term::all();
         return view('Client/invoiceByCustomer', compact('Invoices', 'termsList'));
-
     }
+
     public function myInvoices($id) {
         //$GUID = $_GET['id'];
         $GUID = $id;
@@ -120,14 +121,13 @@ class InvoiceController extends Controller {
         $Invoices = $Customer->customer_has_invoices;
         //$termsList = Term::all();
         return view('Client/myInvoices', compact('Invoices'));
-
     }
 
     public function preset_line_items(Request $request) {
         $preset_line_items = PresetLineItems::all();
         $state_taxes = StateTax::all();
-        $response = \Illuminate\Support\Facades\Response::json(array('preset_line_items'=>$preset_line_items, 'state_taxes'=>$state_taxes));
+        $response = \Illuminate\Support\Facades\Response::json(array('preset_line_items' => $preset_line_items, 'state_taxes' => $state_taxes));
         return $response;
     }
-    
+
 }

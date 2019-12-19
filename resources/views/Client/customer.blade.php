@@ -72,8 +72,20 @@
                                 $utility = new \App\Utility;
                                 $link = $utility->projectBaseUrl() . '/public/InvoiceByCustomer/' . $customer->GUID;
                                 ?>
-                                <td class="" style="text-align: center;"><a target="_blank" href="{{$link}}" class="">{{count($customer->customer_has_invoices)}}</a></td>
-                                <td><i onclick="return createCustomer(this);" title="Create Invoice" class="far fa-plus-square" style="cursor: pointer;font-size: 18px;margin: 0 auto;display: table;"></i></td>
+                                <td class="" style="text-align: center;">
+                                    <?php
+                                    $count = count($customer->customer_has_invoices);
+                                    if ($count == 0) {
+                                        ?>
+                                        {{count($customer->customer_has_invoices)}}
+                                    <?php } else { ?>
+                                        <a target="_blank" href="{{$link}}" class="">{{count($customer->customer_has_invoices)}}</a>
+                                    <?php } ?>
+
+
+                                    <!--<a target="_blank" href="{{$link}}" class="">{{count($customer->customer_has_invoices)}}</a>-->
+                                </td>
+                                <td><i data-toggle="modal" data-target="#addInvoice_form" onclick="return createCustomer(this);" title="Create Invoice" class="far fa-plus-square" style="cursor: pointer;font-size: 18px;margin: 0 auto;display: table;"></i></td>
 
                                 </tr>
                                 @endforeach

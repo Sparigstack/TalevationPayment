@@ -342,6 +342,9 @@ function appendClick(element, from) {
         $("#inv_anniversary_Date").val(element['anniversary_date']);
         $("#InvoiceDetails").removeClass('hidden');
         $(".saveInvoice").removeClass('hidden');
+
+        //AddNewInvoice();
+        //checkForPresetItems('addnew');
     }
 }
 function datesByTerms(element) {
@@ -404,6 +407,7 @@ function getBaseURL() {
 }
 function showHideInvoiceDetails(element) {
     var isValidate = validateInputs(element);
+    var parent = findParent(element);
 
     if (isValidate == true) {
         var inv_firstname = $("#inv_firstname").val();
@@ -431,14 +435,32 @@ function showHideInvoiceDetails(element) {
         $("#edit_customer").removeClass("hidden");
 
         var inv_state = $("#InvoiceDetails").find("#inv_state").val();
-        $(".state_name option").each(function () {
-            var matchFound = $(this).text().toLowerCase().indexOf(inv_state.toLowerCase());
-            if (matchFound >= 0)
-                $(this).prop('selected', true);
-            else
-                $(this).prop('selected', false);
-            //, 'selected');
-        });
+        var state_tax_id = $(parent).find("#state_tax_id").val();
+        var matchFound = false;
+
+        var selectedItem = $(".state_name option[id='" + state_tax_id + "']");
+        if (selectedItem != null && selectedItem.length > 0) {
+            $(".state_name option[id='" + state_tax_id + "']").attr("selected", "selected");
+        } else {
+            $(".state_name option").each(function () {
+                if (state_tax_id == $(this).attr("id"))
+                    matchFound = true;
+                else if ($(this).text().toLowerCase().indexOf(inv_state.toLowerCase()) >= 0)
+                    matchFound = true;
+
+                if (matchFound) {
+                    $(this).prop('selected', true);
+                    return false;
+                } else {
+                    $(this).prop('selected', false);
+                }
+                //, 'selected');
+            });
+        }
+
+
+
+
 
         SetTaxableValue();
     }
@@ -472,7 +494,7 @@ function setInvoiceDetails(element) {
     $(".invoiceTotalPrice").text('$' + totalPriceSum.toFixed(2));
     $(".invoiceTotalBalance").text('$' + totalPriceSum.toFixed(2));
 
-    //     SetTaxableValue();
+    SetTaxableValue();
 }
 
 
@@ -520,6 +542,7 @@ function InsertInvoiceItems(element) {
         var inv_city = $("#inv_city").val();
         var inv_zip = $("#inv_zip").val();
         var inv_terms = $("#inv_terms").val();
+        var state_tax_id = $("#state_taxes option:selected").attr('id');
         var inv_due_date = null;
         if (inv_terms != 'Due On Receipt') {
             inv_due_date = $("#due-date").val();
@@ -530,9 +553,9 @@ function InsertInvoiceItems(element) {
 
         var customerDb_id = $("#customerDb_id").val();
 
-        if (customerDb_id == "" || customerDb_id == null || customerDb_id == undefined) {
-            customerDb_id = $(".edit_customerDb_Id").val();
-        }
+//        if (customerDb_id == "" || customerDb_id == null || customerDb_id == undefined) {
+//            customerDb_id = $(".edit_customerDb_Id").val();
+//        }
 
 
         var inv_GUID = $("#inv_GUID").val();
@@ -552,8 +575,8 @@ function InsertInvoiceItems(element) {
             data: {_token: CSRF_TOKEN, customerId_fromcreateInvoice: customerId_fromcreateInvoice, InvoiceIdFromEditIcon: InvoiceIdFromEditIcon, customer: customer, inv_firstname: inv_firstname,
                 inv_lastname: inv_lastname, Email: Email, inv_add1: inv_add1, inv_add2: inv_add2
                 , inv_state: inv_state, inv_city: inv_city, inv_zip: inv_zip,
-                inv_due_date: inv_due_date, invoice_created_date: invoice_created_date, inv_terms: inv_terms,
-                customerDb_id, customerDb_id, inv_GUID: inv_GUID, companyName_Invoice: companyName_Invoice, memo: memo},
+                inv_due_date: inv_due_date, invoice_created_date: invoice_created_date, inv_terms: inv_terms, state_tax_id: state_tax_id,
+                customerDb_id: customerDb_id, inv_GUID: inv_GUID, companyName_Invoice: companyName_Invoice, memo: memo},
             success: function (response) {
 
                 if (!parseInt(response)) {
@@ -719,7 +742,7 @@ function ItemTotalValue(element) {
     }
 }
 
-function SetTaxableValue(element) {
+function SetTaxableValue() {
 //    var parent = findParent(element);
     var stateTaxes = 0;
     var countTotalTax = 0;
@@ -789,10 +812,11 @@ function editInvoice(element, InvoiceItemObject) {
     $(".save_send").addClass('hidden');
     $(".saveInvoiceItems").addClass('hidden');
     $("#InvoiceDetails").removeClass('hidden');
-    $("#addInvoice_saveCreateInvoice").click();
-
+    //$("#addInvoice_saveCreateInvoice").click();
 
     $("#addInvoice_form").find("#customer").val($(parent).find('.edit_Email').text());
+    $("#addInvoice_form").find("#customerDb_id").val($(parent).find('.edit_customerDb_Id').val());
+    $("#addInvoice_form").find("#state_tax_id").val($(parent).find('.edit_state_tax_id').val());
 
     $("#addInvoice_form").find("#customer").val($(parent).find('.edit_Email').text());
     $("#addInvoice_form").find("#Email").val($(parent).find('.edit_Email').text());
@@ -809,6 +833,7 @@ function editInvoice(element, InvoiceItemObject) {
     $("#addInvoice_form").find("#invoice-date").val($(parent).find('.edit_invoice_date').val());
     $("#addInvoice_form").find("#due-date").val($(parent).find('.edit_due_date').val());
     $("#addInvoice_form").find("#inv_terms").val($(parent).find('.edit_terms').val());
+
 
     $("#memo").val($(parent).find('.edit_memo').val());
     $(".saveInvoice").removeClass('hidden');
@@ -1018,7 +1043,7 @@ function checkForPresetItems(calledFrom) {
                         var preset_line_item_id = $(presetItemsContainer).find("#preset_line_item_id").val();
                         presetLineItems.find('option').each(function () {
                             selectedPresetItem = '';
-                            
+
                             if (preset_line_item_id == $(this).attr("id")) {
                                 selectedPresetItem = 'selected';
                             }

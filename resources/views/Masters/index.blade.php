@@ -255,7 +255,7 @@
 
 
             <!--Start Modal-->
-            <button class="btn m-1 pull-right hidden" id="addInvoice_saveCreateInvoice" data-toggle="modal" data-target="#addInvoice_form"><i class="fa fa-plus" aria-hidden="true"></i>Add New</button>
+            <button class="btn m-1 pull-right hidden" onclick="AddNewInvoice()" id="addInvoice_saveCreateInvoice" data-toggle="modal" data-target="#addInvoice_form"><i class="fa fa-plus" aria-hidden="true"></i>Add New</button>
             <!--Start Modal-->
 
             <div class="modal fade"  id="addInvoice_form">
@@ -272,6 +272,7 @@
                             <button id="AddNewCustomer" class="btn m-1 pull-right hidden" data-toggle="modal" data-target="#addCustomer"><i class="fa fa-plus" aria-hidden="true"></i>Add New</button>
                             <input autocomplete="false" name="hidden" type="text" style="display:none;">
                             <input type="hidden" name="customerDb_id" id="customerDb_id">
+                            <input type="hidden" name="state_tax_id" id="state_tax_id">
                             <input type="hidden" id="Inv_id_fromEditIcon" name="Inv_id_fromEditIcon">
                             <input type="hidden" id="customerId_fromcreateInvoice" name="customerId_fromcreateInvoice">
                             {{ csrf_field() }}
@@ -500,7 +501,7 @@
                                                 <div class="col-3 row pt-3" style="">
                                                     <div class="col-10 " style="">
                                                         <select class="form-control state_name" style="" name="state_taxes" id="state_taxes" onchange="return SetTaxableValue(this);">
-                                                            <option value="-1">--Choose State Tax--</option>                                                            
+                                                            <option id="-1" value="-1">--Choose State Tax--</option>                                                            
                                                         </select>   
                                                     </div>
                                                 </div>
@@ -546,7 +547,7 @@
 
         </div><!--End wrapper-->
 
-
+<?php $v = "1.0.2"; ?>
 
         <!-- Bootstrap core JavaScrip        t-->
         <script src="{{asset('/js/jquery.min.js')}}"></script>
@@ -562,15 +563,15 @@
         <script src="{{asset('/plugins/vectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
 
         <!-- Index js -->
-        <script src="{{asset('/js/index.js')}}"></script>
+        <script src="{{asset('/js/index.js?v=').$v}}"></script>
         <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
 
 
 
-        <script src="{{asset('/js/customer.js')}}"></script>
+        <script src="{{asset('/js/customer.js?v=').$v}}"></script>
         <!--Bootstrap Datepicker Js-->
         <script src="{{asset('/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
-        <script src="{{asset('/js/invoice.js')}}"></script>
+        <script src="{{asset('/js/invoice.js?v=').$v}}"></script>
         @yield('scriptPageWiseSection')
     </body>
 </html>

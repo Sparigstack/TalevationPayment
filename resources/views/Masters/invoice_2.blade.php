@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fa fa-table"></i> List Of Invoices
-                        <button  onclick="AddNewInvoice();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice_form"><i class="fa fa-plus"></i>Add New</button>
+                        <button id="addNewInvoice"  onclick="AddNewInvoice();" class="btn m-1 pull-right" data-toggle="modal"  data-target="#addInvoice_form"><i class="fa fa-plus"></i>Add New</button>
                     </div>
 
 
@@ -142,6 +142,7 @@
                                 <input type="hidden" class="hidden edit_invoice_date" value="{{date("m/d/Y",strtotime($invoice->invoice_date))}}" />
                                 <input type="hidden" class="hidden edit_due_date" value="{{date("m/d/Y",strtotime($invoice->due_date))}}" />
                                 <input type="hidden" class="hidden edit_terms" value="{{$invoice->terms}}">
+                                <input type="hidden" class="hidden edit_state_tax_id" value="{{$invoice->state_tax_id}}">
 
 
                                 <td class="edit_cName <?php echo $addBgColor; ?>">{{$invoice->name}}</td>
@@ -158,7 +159,7 @@
                                 <td style="display: flex;" class="<?php echo $addBgColor; ?>">
                                     <a title="Send Invoice to Customer" href="mailto:{{$invoice->email}}?subject=Talevation: Pay Invoice!&body={{$clickHere}}"><i class="fas fa-envelope-square"></i></a>
                                     <a title="Preview Invoice"  href="{{url($PreviewLink)}}" target="_blank"><i class="fas fa-eye"></i></a>
-                                    <a title="Edit Invoice" style="color:#14abef;"  onclick="editInvoice(this,{{$invoice->invoice_items}});"><i class="fas fa-edit"></i></a>
+                                    <a title="Edit Invoice" style="color:#14abef;"  onclick="editInvoice(this,{{$invoice->invoice_items}});" data-toggle="modal" data-target="#addInvoice_form"><i class="fas fa-edit"></i></a>
                                     <?php if ($showMarkPaid) { ?>
                                         <input class="csrf-token" type="hidden" value="{{ csrf_token() }}">
                                         <a title="Mark Invoice Paid" style="color: green;" db-id="{{$invoice->id}}" onclick="markInvoicePaid(this);"><i class="fas fa-check"></i></a>        

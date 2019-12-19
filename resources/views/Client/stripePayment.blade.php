@@ -344,7 +344,7 @@
                                                                 <th>Invoice Item</th>
                                                                 <th>Qty</th>
                                                                 <th>Rate</th>
-                                                                <th>Tax</th>
+                                                                <th>isTaxable</th>
                                                                 <th>Subtotal</th>
                                                             </tr>
                                                         </thead>
@@ -352,11 +352,27 @@
                                                             <?php
                                                             $subTotal = 0;
                                                             $TotalAmount = 0;
+                                                            $totalTax = 0;
+                                                            $totalDue = 0;
                                                             ?>
                                                             @foreach($invoiceData->invoice_items as $invoiceItems)
                                                             <?php
-                                                            $subTotal = ($invoiceItems->quantity * $invoiceItems->rate) + ($invoiceItems->quantity * $invoiceItems->rate * $invoiceItems->tax / 100);
+                                                            $subTotal = $invoiceItems->quantity * $invoiceItems->rate;
+//                                                            + ($invoiceItems->quantity * $invoiceItems->rate * $invoiceItems->tax / 100);
                                                             $TotalAmount += $subTotal;
+
+                                                            $tax = 0;
+
+                                                            if ($invoiceItems->is_taxable == 1) {
+                                                                
+                                                                $tax = ($subTotal * $stateTaxes->tax_rate) / 100;
+                                                                
+                                                                $taxValue = str_replace(',', '', number_format($tax, 2));
+                                                                $totalTax += $taxValue;
+
+                                                                
+                                                            }
+                                                            
                                                             ?>
                                                             <tr class="row" style="display: table-row;">       
 
@@ -364,10 +380,10 @@
                                                                 <td>{{$invoiceItems->quantity}}</td>
                                                                 <td>${{$invoiceItems->rate}}</td>
                                                                 <td><?php
-                                                                    if ((isset($invoiceItems->is_taxable)) && $invoiceItems->is_taxable > 0)
-                                                                        echo $invoiceItems->tax . '%';
+                                                                    if ($invoiceItems->is_taxable == 0)
+                                                                        echo 'No';
                                                                     else
-                                                                        echo 'NA';
+                                                                        echo 'Yes';
                                                                     ?>
                                                                 </td>
                                                                 <!--<td>El snort testosterone trophy driving gloves handsome</td>-->
@@ -375,6 +391,7 @@
 
                                                             </tr>
                                                             @endforeach
+                                                            <?php $totalDue = $TotalAmount + $totalTax; ?>
                                                         </tbody>
                                                     </table>
                                                 </div><!-- /.col -->
@@ -382,7 +399,7 @@
 
                                             <div class="row">
                                                 <!-- accepted payments column -->
-                                                <div class="col-lg-8 payment-icons mt-3">
+                                                <div class="col-lg-7 payment-icons mt-3">
 
                                                     <?php
                                                     if (!empty($invoiceData->memo)) {
@@ -397,12 +414,28 @@
 <img class="paymentIconCss" src="{{asset('/payment-icons/american-dark.png')}}" alt="American Express">
 <img class="paymentIconCss" src="{{asset('/payment-icons/Mastercard-Download-PNG.png')}}" alt="Paypal">-->
 
+
+                                                    <b> State Tax : </b>{{$stateTaxes->state_name}} ({{$stateTaxes->tax_rate}}% tax)
                                                 </div><!-- /.col -->
-                                                <div class="col-lg-4">
+                                                <div class="col-lg-5">
                                                     <!--<p class="lead">Amount Due ${{number_format($TotalAmount,2)}}</p>-->
                                                     <div class="table-responsive">
                                                         <table class="table">
                                                             <tbody>
+
+                                                                <?php
+//                                                                $tax = 0;
+//                                                                $totalTax = 0;
+//                                                                $totalDue = 0;
+//                                                                
+//                                                                $tax = $TotalAmount + (($TotalAmount * $stateTaxes->tax_rate) / 100);
+//                                                                
+//                                                                $taxValue = str_replace(',', '', number_format($tax, 2));
+//                                                                $totalTax += $taxValue;
+//                                                                
+//                                                                $totalDue = $TotalAmount + $totalTax;
+                                                                ?>
+
                                                                 <tr>
                                                                     <th style="width:56%">Subtotal:</th>
                                                                     <td class="invoice_Total">${{number_format($TotalAmount,2)}}</td>
@@ -412,13 +445,14 @@
                                                                     <td>-</td>
                                                                 </tr>-->
                                                                 <tr>
-                                                                    <th>Shipping:</th>
-                                                                    <td>$0</td>
+                                                                    <th>Total Tax:</th>
+                                                                    <td>${{number_format($totalTax,2)}}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Total Due:</th>
-                                                                    <td>${{number_format($TotalAmount,2)}}</td>
+                                                                    <td class="totalDue">${{number_format($totalDue,2)}}</td>
                                                                 </tr>
+
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -437,7 +471,7 @@
 
                                                     </div>
                                                 </div>
-                                                <?php // }     ?>
+                                                <?php // }      ?>
                                             </div>
                                         </section><!-- /.content -->
                                     </div>
@@ -548,7 +582,7 @@
                                                     <div class='row mt-3'>
                                                         <div class='col-md-12'>
                                                             <div class='fr'>
-                                                                <input type="hidden" name="totalPrice" id="totalPrice" value="{{$TotalAmount}}">
+                                                                <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
                                                                 <h3 class="totalPrice">Total: $14.99/month</h3>
                                                             </div>
                                                         </div>
@@ -585,7 +619,7 @@
 
 
                             </div>
-                            <?php // }        ?>
+                            <?php // }         ?>
 
 
 
@@ -614,7 +648,8 @@
             <!--End footer-->
 
         </div><!--End wrapper-->
-
+        
+        </div>
 
 
         <!-- Bootstrap core JavaScript-->
@@ -708,7 +743,7 @@
                                                         function invoicePayment(element, fromWhere) {
                                                             $("#generateInvoice").addClass('hidden');
                                                             $("#stripePaymentUI").removeClass('hidden');
-                                                            var invoice_Total = $(".invoice_Total").text();
+                                                            var invoice_Total = $(".totalDue").text();
 
                                                             $(".totalPrice").text("Total: " + invoice_Total);
                                                             if (fromWhere == 'back') {

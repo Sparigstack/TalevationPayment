@@ -321,7 +321,7 @@ function createCustomer(element) {
     $(".save_send").addClass('hidden');
     $(".saveInvoiceItems").addClass('hidden');
     $("#InvoiceDetails").removeClass('hidden');
-    $("#addInvoice_saveCreateInvoice").click();
+    //$("#addInvoice_saveCreateInvoice").click();
 
     var invId = $("#customerId_fromcreateInvoice").val($(parent).find(".fromInv_customerId").val());
     $("#customer").val($(parent).find('.email_customer').text());
