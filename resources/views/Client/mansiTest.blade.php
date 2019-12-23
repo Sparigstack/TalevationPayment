@@ -231,6 +231,150 @@
             .whiteFont{
                 color: #fff !important;
             }
+
+
+            [class*="icheck-material"] {
+                min-height: 22px;
+                margin-top: 6px;
+                margin-bottom: 6px 
+                    padding-left: 0px; }
+            [class*="icheck-material"] > label {
+                padding-left: 29px !important;
+                min-height: 22px;
+                line-height: 22px;
+                display: inline-block;
+                position: relative;
+                vertical-align: top;
+                margin-bottom: 0;
+                font-weight: normal;
+                cursor: pointer; }
+            [class*="icheck-material"] > input:first-child {
+                position: absolute !important;
+                opacity: 0;
+                margin: 0;
+                background-color: #787878;
+                border-radius: 50%;
+                appearance: none;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                -ms-appearance: none;
+                display: block;
+                width: 22px;
+                height: 22px;
+                outline: none;
+                transform: scale(2);
+                -ms-transform: scale(2);
+                transition: opacity 0.3s, transform 0.3s; }
+            [class*="icheck-material"] > input:first-child:disabled {
+                cursor: default; }
+            [class*="icheck-material"] > input:first-child:disabled + label,
+            [class*="icheck-material"] > input:first-child:disabled + input[type="hidden"] + label,
+            [class*="icheck-material"] > input:first-child:disabled + label::before,
+            [class*="icheck-material"] > input:first-child:disabled + input[type="hidden"] + label::before {
+                pointer-events: none;
+                cursor: default;
+                filter: alpha(opacity=65);
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                opacity: .65; }
+            [class*="icheck-material"] > input:first-child + label::before,
+            [class*="icheck-material"] > input:first-child + input[type="hidden"] + label::before {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: 2px solid rgba(0, 0, 0, 0.46);
+                border-radius: .25rem;
+                margin-left: -29px;
+                box-sizing: border-box; }
+            [class*="icheck-material"] > input:first-child:checked + label::after,
+            [class*="icheck-material"] > input:first-child:checked + input[type="hidden"] + label::after {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 7px;
+                height: 10px;
+                border: solid 2px #fff;
+                border-left: none;
+                border-top: none;
+                transform: translate(7.75px, 4.5px) rotate(45deg);
+                -ms-transform: translate(7.75px, 4.5px) rotate(45deg);
+                box-sizing: border-box; }
+            [class*="icheck-material"] > input:first-child:not(:checked):not(:disabled):hover + label::before,
+            [class*="icheck-material"] > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+                border-width: 2px; }
+            [class*="icheck-material"] > input:first-child::-ms-check {
+                opacity: 0;
+                border-radius: 50%; }
+            [class*="icheck-material"] > input:first-child:active {
+                transform: scale(0);
+                -ms-transform: scale(0);
+                opacity: 1;
+                transition: opacity 0s, transform 0s; }
+            [class*="icheck-material"] > input[type="radio"]:first-child + label::before,
+            [class*="icheck-material"] > input[type="radio"]:first-child + input[type="hidden"] + label::before {
+                border-radius: 50%; }
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + label::before,
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + input[type="hidden"] + label::before {
+                background-color: transparent; }
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + label::after,
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + input[type="hidden"] + label::after {
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                border: none;
+                top: 5px;
+                left: 5px;
+                transform: none;
+                -ms-transform: none; }
+            [class*="icheck-material"] > input[type="checkbox"]:first-child:checked + label::after,
+            [class*="icheck-material"] > input[type="checkbox"]:first-child:checked + input[type="hidden"] + label::after {
+                width: 6px;
+                height: 12px;
+                transform: translate(7px, 2px) rotate(45deg);
+                -ms-transform: translate(7px, 2px) rotate(45deg); }
+
+            .icheck-inline {
+                display: inline-block; }
+            .icheck-inline + .icheck-inline {
+                margin-left: .75rem;
+                margin-top: 6px; }
+
+            .icheck-material-primary > input:first-child {
+                background-color: #14abef; }
+            .icheck-material-primary > input:first-child::-ms-check {
+                background-color: #14abef; }
+            .icheck-material-primary > input:first-child:not(:checked):not(:disabled):hover + label::before,
+            .icheck-material-primary > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+                border-color: #14abef; }
+            .icheck-material-primary > input:first-child:checked + label::before,
+            .icheck-material-primary > input:first-child:checked + input[type="hidden"] + label::before {
+                background-color: #14abef;
+                border-color: #14abef; }
+            .icheck-material-primary > input:first-child:checked + label::after,
+            .icheck-material-primary > input:first-child:checked + input[type="hidden"] + label::after {
+                border-bottom-color: #fff;
+                border-right-color: #fff; }
+
+            .icheck-material-primary > input[type="radio"]:first-child:checked + label::after,
+            .icheck-material-primary > input[type="radio"]:first-child:checked + input[type="hidden"] + label::after {
+                background-color: #14abef; }
+
+            .paymentOptionUI{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                align-content: center;
+                padding-bottom: 15px;
+                width: 40%;
+                margin: 0 auto;
+            }
+
         </style>
 
         <!--Font awesome css-->
@@ -474,10 +618,21 @@
                                     </div>
                                 </div>
 
-
-
                                 <div class="card hidden" id="stripePaymentUI">
                                     <div class="card-body">
+                                        <div class="col-md-12 col-lg-12 col-sm-12">
+                                            <div class="paymentOptionUI">
+                                                <div class="icheck-material-primary">
+                                                    <input type="radio" id="primary1" name="primaryname" checked="" onclick="changePaymentProcess(this);" data-payment="credit-card">
+                                                    <label for="primary1">Credit Card Payment</label>
+                                                </div>
+                                                <div class="icheck-material-primary">
+                                                    <input type="radio" id="primary2" name="primaryname" onclick="changePaymentProcess(this);" data-payment="bank-payment">
+                                                    <label for="primary2">Bank Payment</label>
+                                                </div> 
+                                            </div>
+                                        </div>
+
                                         <div class="card-title">Kindly pay your Talevation Invoice!</div>
                                         <hr>
 
@@ -512,7 +667,6 @@
                                                 </div>
                                             <?php } else { ?>
 
-
                                                 <div class="">
                                                     <label for="card-element">
                                                         Credit or debit card
@@ -524,10 +678,6 @@
                                                     <!-- Used to display form errors. -->
                                                     <div id="card-errors" role="alert"></div>
                                                 </div>
-
-
-
-
 
                                                 <!--                                                <div class='form-row row'>
                                                                                                     <div class="col-xs-12 col-md-4 form-group cvc required">
@@ -560,9 +710,6 @@
                                                 </div>
                                             </div>
 
-
-
-
                                             <div class='form-row mb-3'>
                                                 <div class='col-md-12 mt-3 '>
 
@@ -572,9 +719,6 @@
 
                                                         </div>
 
-
-
-
                                                     </div>
                                                     <div class='row mt-3'>
                                                         <div class='col-md-12'>
@@ -583,12 +727,8 @@
                                                                 <h3 class="totalPrice">Total: $14.99/month</h3>
                                                             </div>
                                                         </div>
-
                                                     </div>
-
-
                                                 </div>
-
                                             </div>
                                             <hr>
                                             <div class="col-md-12">
@@ -600,60 +740,69 @@
                                                     </div>
                                                 </div>
 
+                                            </div>
 
+                                            <div class="creditCardDiv">
                                                 <div class="form-group">
+                                                    <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
                                                     <?php if (isset($stripe_payment_id)) { ?>
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
                                                     <?php } else { ?>
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
                                                     <?php } ?>
                                                     <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
-
                                                 </div>
+                                            </div>
+                                            
+                                            <div class="bankPaymentDiv hidden">
+                                                <div class="form-group">
+                                                    <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
+                                                    <?php if (isset($stripe_payment_id)) { ?>
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay 1</button>
+                                                    <?php } else { ?>
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now 1</button>
+                                                    <?php } ?>
+                                                    <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                </div>
+                                            </div>
                                         </form>
+
+
                                     </div>
                                 </div>
-
-
                             </div>
-                            <?php // }          ?>
-
-
-
-
                         </div>
                     </div>
-                </div>
 
-            </div><!--End content-wrapper-->
-
+                </div><!--End content-wrapper-->
 
 
-            <!--Start footer-->
-            <footer class="footer">
-                <div class="container">
-                    <?php
-                    $utility = new \App\Utility;
-                    $link = $utility->projectBaseUrl() . '/public/myInvoices/' . $invoiceData->customer->GUID;
-                    ?>
-                    <div class="text-center">You can check your other invoices at <a href="{{$link}}" class="" target="_blank"> <i class="fas fa-clipboard-list"></i> My Invoices</a></div>
-                    <div class="text-center">
-                        Copyright © <?php echo date("Y"); ?> Talevation Payments
+
+                <!--Start footer-->
+                <footer class="footer">
+                    <div class="container">
+                        <?php
+                        $utility = new \App\Utility;
+                        $link = $utility->projectBaseUrl() . '/public/myInvoices/' . $invoiceData->customer->GUID;
+                        ?>
+                        <div class="text-center">You can check your other invoices at <a href="{{$link}}" class="" target="_blank"> <i class="fas fa-clipboard-list"></i> My Invoices</a></div>
+                        <div class="text-center">
+                            Copyright © <?php echo date("Y"); ?> Talevation Payments
+                        </div>
                     </div>
-                </div>
-            </footer>
-            <!--End footer-->
+                </footer>
+                <!--End footer-->
 
-        </div><!--End wrapper-->
+            </div><!--End wrapper-->
 
-    </div>
+        </div>
 
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{asset('/js/jquery.min.js')}}"></script>
-    <script src="{{asset('/js/bootstrap.min.js')}}"></script>
-    <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
-    <script type="text/javascript">
+        <!-- Bootstrap core JavaScript-->
+        <script src="{{asset('/js/jquery.min.js')}}"></script>
+        <script src="{{asset('/js/bootstrap.min.js')}}"></script>
+        <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
+        <script type="text/javascript">
                                                         $(function () {
                                                             $(window).on('load', function () {
                                                                 $('#pageloader-overlay').fadeOut(1000);
@@ -670,60 +819,60 @@
                                                                 $('[data-toggle="tooltip"]').tooltip()
                                                             })
                                                             $("#paymentMethodId").val($("#paymentMethod option:first").attr('id'));
-//                                                            var stripe_customer_id = $("#stripe_customer_id").val();
-//                                                            if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
+                                                            //                                                            var stripe_customer_id = $("#stripe_customer_id").val();
+                                                            //                                                            if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
 
-//                                                                var $form = $(".require-validation");
-//                                                                $('form.require-validation').bind('submit', function (e) {
-//                                                                    var $form = $(".require-validation"),
-//                                                                            inputSelector = ['input[type=email]', 'input[type=password]',
-//                                                                                'input[type=text]', 'input[type=file]',
-//                                                                                'textarea'].join(', '),
-//                                                                            $inputs = $form.find('.required').find(inputSelector),
-//                                                                            $errorMessage = $form.find('div.error'),
-//                                                                            valid = true;
-//                                                                    $errorMessage.addClass('hidden');
-//
-//                                                                    $('.has-error').removeClass('has-error');
-//                                                                    $inputs.each(function (i, el) {
-//                                                                        var $input = $(el);
-//                                                                        if ($input.val() === '') {
-//                                                                            $input.parent().addClass('has-error');
-//                                                                            $errorMessage.removeClass('hidden');
-//                                                                            e.preventDefault();
-//                                                                        }
-//                                                                    });
-//
-//                                                                    if (!$form.data('cc-on-file')) {
-//
-//                                                                        e.preventDefault();
-//                                                                        Stripe.setPublishableKey($form.data('stripe-publishable-key'));
-//                                                                        Stripe.createToken({
-//                                                                            number: $('.card-number').val(),
-//                                                                            cvc: $('.card-cvc').val(),
-//                                                                            exp_month: $('.card-expiry-month').val(),
-//                                                                            exp_year: $('.card-expiry-year').val()
-//                                                                        }, stripeResponseHandler);
-//                                                                    }
-//
-//                                                                });
+                                                            //                                                                var $form = $(".require-validation");
+                                                            //                                                                $('form.require-validation').bind('submit', function (e) {
+                                                            //                                                                    var $form = $(".require-validation"),
+                                                            //                                                                            inputSelector = ['input[type=email]', 'input[type=password]',
+                                                            //                                                                                'input[type=text]', 'input[type=file]',
+                                                            //                                                                                'textarea'].join(', '),
+                                                            //                                                                            $inputs = $form.find('.required').find(inputSelector),
+                                                            //                                                                            $errorMessage = $form.find('div.error'),
+                                                            //                                                                            valid = true;
+                                                            //                                                                    $errorMessage.addClass('hidden');
+                                                            //
+                                                            //                                                                    $('.has-error').removeClass('has-error');
+                                                            //                                                                    $inputs.each(function (i, el) {
+                                                            //                                                                        var $input = $(el);
+                                                            //                                                                        if ($input.val() === '') {
+                                                            //                                                                            $input.parent().addClass('has-error');
+                                                            //                                                                            $errorMessage.removeClass('hidden');
+                                                            //                                                                            e.preventDefault();
+                                                            //                                                                        }
+                                                            //                                                                    });
+                                                            //
+                                                            //                                                                    if (!$form.data('cc-on-file')) {
+                                                            //
+                                                            //                                                                        e.preventDefault();
+                                                            //                                                                        Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+                                                            //                                                                        Stripe.createToken({
+                                                            //                                                                            number: $('.card-number').val(),
+                                                            //                                                                            cvc: $('.card-cvc').val(),
+                                                            //                                                                            exp_month: $('.card-expiry-month').val(),
+                                                            //                                                                            exp_year: $('.card-expiry-year').val()
+                                                            //                                                                        }, stripeResponseHandler);
+                                                            //                                                                    }
+                                                            //
+                                                            //                                                                });
 
-//                                                                function stripeResponseHandler(status, response) {
-//                                                                    if (response.error) {
-//                                                                        $('.error')
-//                                                                                .removeClass('hidden')
-//                                                                                .find('.alert')
-//                                                                                .text(response.error.message);
-//                                                                    } else {
-//                                                                        // token contains id, last4, and card type
-//                                                                        var token = response['id'];
-//                                                                        // insert the token into the form so it gets submitted to the server
-//                                                                        $form.find('input[type=text]').empty();
-//                                                                        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-//                                                                        $form.get(0).submit();
-//                                                                    }
-//                                                                }
-//                                                            }
+                                                            //                                                                function stripeResponseHandler(status, response) {
+                                                            //                                                                    if (response.error) {
+                                                            //                                                                        $('.error')
+                                                            //                                                                                .removeClass('hidden')
+                                                            //                                                                                .find('.alert')
+                                                            //                                                                                .text(response.error.message);
+                                                            //                                                                    } else {
+                                                            //                                                                        // token contains id, last4, and card type
+                                                            //                                                                        var token = response['id'];
+                                                            //                                                                        // insert the token into the form so it gets submitted to the server
+                                                            //                                                                        $form.find('input[type=text]').empty();
+                                                            //                                                                        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+                                                            //                                                                        $form.get(0).submit();
+                                                            //                                                                    }
+                                                            //                                                                }
+                                                            //                                                            }
 
                                                         });
                                                         function setPaymentId(element) {
@@ -764,21 +913,21 @@
                                                             $("#paymentMethodId").val(option);
                                                         }
 
-    </script>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
+        </script>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
                                                         //Test UI JS
                                                         $(function () {
                                                             var stripe_customer_id = $("#stripe_customer_id").val();
                                                             if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
 
                                                                 var stripe = Stripe('pk_test_r8hQgZhHiSDMnMFn9Apy5aAk');
-//var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
-// Create an instance of Elements.
+                                                                //var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
+                                                                // Create an instance of Elements.
                                                                 var elements = stripe.elements();
 
-// Custom styling can be passed to options when creating an Element.
-// (Note that this demo uses a wider set of styles than the guide below.)
+                                                                // Custom styling can be passed to options when creating an Element.
+                                                                // (Note that this demo uses a wider set of styles than the guide below.)
                                                                 var style = {
                                                                     base: {
                                                                         color: '#32325d',
@@ -795,13 +944,13 @@
                                                                     }
                                                                 };
 
-// Create an instance of the card Element.
+                                                                // Create an instance of the card Element.
                                                                 var card = elements.create('card', {style: style});
 
-// Add an instance of the card Element into the `card-element` <div>.
+                                                                // Add an instance of the card Element into the `card-element` <div>.
                                                                 card.mount('#card-element');
 
-// Handle real-time validation errors from the card Element.
+                                                                // Handle real-time validation errors from the card Element.
                                                                 card.addEventListener('change', function (event) {
                                                                     var displayError = document.getElementById('card-errors');
                                                                     if (event.error) {
@@ -811,7 +960,7 @@
                                                                     }
                                                                 });
 
-// Handle form submission.
+                                                                // Handle form submission.
                                                                 var form = document.getElementById('payment-form');
                                                                 form.addEventListener('submit', function (event) {
                                                                     event.preventDefault();
@@ -828,7 +977,7 @@
                                                                     });
                                                                 });
 
-// Submit the form with the token ID.
+                                                                // Submit the form with the token ID.
                                                                 function stripeTokenHandler(token) {
                                                                     // Insert the token ID into the form so it gets submitted to the server
                                                                     var form = document.getElementById('payment-form');
@@ -844,10 +993,26 @@
 
                                                             }
                                                         });
-    </script>
 
 
-</body>
+                                                        function changePaymentProcess(element) {
+                                                            if ($(element).is(":checked"))
+                                                            {
+                                                                // it is checked
+                                                                var paymentMethod = $(element).attr('data-payment');
+                                                                if (paymentMethod == 'credit-card') {
+                                                                    $('.creditCardDiv').removeClass("hidden");
+                                                                    $('.bankPaymentDiv').addClass("hidden");
+                                                                } else {
+                                                                    $('.creditCardDiv').addClass("hidden");
+                                                                    $('.bankPaymentDiv').removeClass("hidden");
+                                                                }
+                                                            }
+                                                        }
+        </script>
+
+
+    </body>
 </html>
 
 

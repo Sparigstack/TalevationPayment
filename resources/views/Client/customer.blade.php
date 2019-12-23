@@ -138,6 +138,7 @@
                                         $("#a2Email").val('');
                                         $("#CustomerDetails").addClass('hidden');
                                         $("#CustomerDetails").find('input').val('');
+                                        $("#CustomerDetails").find('textarea').val('');
                                         $("#saveCustomerBtn").addClass('hidden');
                                         $(".saveCreateInvoice").addClass('hidden');
                                     }

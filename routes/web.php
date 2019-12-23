@@ -48,6 +48,9 @@ Route::get('logout', 'HomeController@logout');
 //Route for stripe Payment Page
 Route::get('payment', 'StripePaymentController@payment');
 Route::post('paymentPlan', 'StripePaymentController@paymentPlan')->name('stripe.post');
+
+//Route::post('bankPayment', 'StripePaymentController@bankPayment')->name('stripe.post1');
+
 Route::post('createPaymentAPI', 'StripePaymentController@createPaymentAPI')->name('createPaymentAPI');
 
 

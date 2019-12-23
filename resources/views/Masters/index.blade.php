@@ -235,6 +235,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                                <label for="input-4">Note</label>
+                                                <textarea maxlength="200" required type="text" value="" class="required form-control" id="note" name="note" placeholder="Note"> </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <!--<input type="button" data-dismiss="modal" class="btn  btn-inverse-primary  m-1 pull-right pb-2" value="Close"/>-->

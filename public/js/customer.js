@@ -26,7 +26,6 @@ function OnEmailSearch(element) {
         //async: false,
         data: {_token: CSRF_TOKEN, email: val},
         success: function (response) {
-
             $("#a2Emailautocomplete-list").remove();
             var a, b, i,
                     //alert(response);
@@ -57,11 +56,11 @@ function OnEmailSearch(element) {
                     b.innerHTML += arr[i]['Email'].substr(parseInt(stringindex + val.length));
                     /*insert a input field that will hold the current array item's value:*/
 //                        b.innerHTML += "<input  type='hidden' class='searchContent' value='" + arr[i]['Email'] + "'id='" + arr[i]['id'] + "'>";
-                    b.innerHTML += "<input  type='hidden' class='searchContent' SiteNumber ='" + arr[i]["SiteNumber"] + "'Anniversary_Date='" + arr[i]["Anniversary_Date"] + "'QBID='" + arr[i]["QBID"] + "'AccountID  ='" + arr[i]["AccountID"] + "'ContactID ='" + arr[i]["ContactID"] + "'companyName='" + arr[i]["CompanyName"] + "'lastName='" + arr[i]["Last_Name"] + "'firstName='" + arr[i]["First_Name"] + "'add1='" + arr[i]["Street1"] + "'add2='" + arr[i]["Street2"] + "'city='" + arr[i]["City"] + "'state='" + arr[i]["State"] + "'zipcode='" + arr[i]["Zip"] + "'value='" + arr[i]['Email'] + "'id='" + arr[i]['id'] + "'>";
+                    b.innerHTML += "<input  type='hidden' class='searchContent' SiteNumber ='" + arr[i]["SiteNumber"] + "'Anniversary_Date='" + arr[i]["Anniversary_Date"] + "'QBID='" + arr[i]["QBID"] + "'AccountID  ='" + arr[i]["AccountID"] + "'ContactID ='" + arr[i]["ContactID"] + "'companyName='" + arr[i]["CompanyName"] + "'lastName='" + arr[i]["Last_Name"] + "'firstName='" + arr[i]["First_Name"] + "'add1='" + arr[i]["Street1"] + "'add2='" + arr[i]["Street2"] + "'city='" + arr[i]["City"] + "'state='" + arr[i]["State"] + "'zipcode='" + arr[i]["Zip"] + "'value='" + arr[i]['Email'] + "'id='" + arr[i]['id'] + "'note='" + arr[i]['Note'] + "'>";
                     /*execute a function when someone clicks on the item value (DIV element):*/
                     b.addEventListener("click", function (e) {
                         /*insert the value for the autocomplete text field:*/
-
+                        $("#note").val('');
                         var div = $(this);
                         $("#email").addClass("fromA2");
                         input.value = this.getElementsByTagName("input")[0].value;
@@ -93,6 +92,9 @@ function OnEmailSearch(element) {
 
                         if ($(".searchContent").attr("zipcode") != 'null')
                             $("#zipcode").val($(".searchContent").attr("zipcode"));
+                        
+                        if ($(".searchContent").attr("note") != 'null')
+                            $("#note").val($(".searchContent").attr("note"));
 
                         if ($(".searchContent").attr("accountid") != '')
                             $("#a2_accountId").val($(".searchContent").attr("accountid"));
@@ -266,6 +268,7 @@ function showHideCustomerDetails(showHide) {
         $("#qb_customerId").val("");
         $("#anniversary_Date").val("");
         $("#memo").val("");
+        $("#note").val("");
     }
 
 
@@ -287,6 +290,7 @@ function saveCreateInvoice(element) {
         var state = $("#state").val();
         var city = $("#city").val();
         var zipcode = $("#zipcode").val();
+        var note = $("#note").val();
         var a2_accountId = $(".searchContent").attr('accountid');
         var a2_contactId = $(".searchContent").attr('contactid');
         var qb_customerId = $(".searchContent").attr('qbid');
@@ -299,7 +303,7 @@ function saveCreateInvoice(element) {
         $.ajax({
             url: 'addCustomer',
             type: 'post',
-            data: {_token: CSRF_TOKEN, siteNumber: siteNumber, anniversary_Date: anniversary_Date, cus_GUID: cus_GUID, qb_customerId: qb_customerId, a2_accountId: a2_accountId, a2_contactId: a2_contactId, from: from, companyName: companyName, emailAddress: emailAddress, first_name: first_name, last_name: last_name, add1: add1, add2: add2, state: state, city: city, zipcode: zipcode},
+            data: {_token: CSRF_TOKEN, siteNumber: siteNumber, anniversary_Date: anniversary_Date, cus_GUID: cus_GUID, qb_customerId: qb_customerId, a2_accountId: a2_accountId, a2_contactId: a2_contactId, from: from, companyName: companyName, emailAddress: emailAddress, first_name: first_name, last_name: last_name, add1: add1, add2: add2, state: state, city: city, zipcode: zipcode, note: note},
             success: function (response) {
 
                 appendClick(response, "saveCreateInvoice");

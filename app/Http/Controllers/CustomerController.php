@@ -49,8 +49,7 @@ class CustomerController extends Controller {
         $customers->GUID = $request->cus_GUID;
         $customers->a2_accountId = $request->a2_accountId;
         $customers->a2_contactId = $request->a2_contactId;
-
-
+        $customers->note = $request->note;
 
         $date = date_create($request->anniversary_Date);
 
