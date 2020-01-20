@@ -19,6 +19,14 @@ function hideLoader() {
     $('#pageloader-overlay').fadeOut(1000);
     //$("#pageloader-overlay").css("dispaly","none!important");
 }
+
+function showInputLoader(element){
+    $(element).parent().find(".fa-spin").removeClass("hidden");
+}
+function hideInputLoader(element){
+    $(element).parent().find(".fa-spin").addClass("hidden");
+}
+
 function validateInputs(element)
 {
     isValidate = true;

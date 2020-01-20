@@ -20,12 +20,14 @@ function OnEmailSearch(element) {
     }
     var CSRF_TOKEN = $('input[name="_token"]').val();
     var input = element;
+    showInputLoader(input);
     $.ajax({
         url: 'getEmail',
         type: 'post',
         //async: false,
         data: {_token: CSRF_TOKEN, email: val},
         success: function (response) {
+            hideInputLoader(input);
             $("#a2Emailautocomplete-list").remove();
             var a, b, i,
                     //alert(response);
@@ -44,19 +46,22 @@ function OnEmailSearch(element) {
                 /*check if the item starts with the same letters as the text field value:*/
                 //        if (arr[i]['label'].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
                 var stringtoUpperCase = val.toUpperCase();
-                var Fromarray = arr[i]['Email'].toUpperCase();
+                var Fromarray = arr[i]['label'].toUpperCase();
                 if (Fromarray.includes(stringtoUpperCase)) {
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
                     /*make the matching letters bold:*/
-                    var stringindex = arr[i]['Email'].toLowerCase().indexOf(val.toLowerCase());
-                    b.innerHTML = arr[i]['Email'].substr(0, stringindex);
-                    b.innerHTML += "<strong>" + arr[i]['Email'].substr(stringindex, val.length) + "</strong>";
-                    b.innerHTML += arr[i]['Email'].substr(parseInt(stringindex + val.length));
+                    arr[i]['label'] = arr[i]['label'].replace('<','(');
+                    arr[i]['label'] = arr[i]['label'].replace('>',')');
+                    var stringindex = arr[i]['label'].toLowerCase().indexOf(val.toLowerCase());
+                    b.innerHTML = arr[i]['label'].substr(0, stringindex);
+                    b.innerHTML += "<strong>" + arr[i]['label'].substr(stringindex, val.length) + "</strong>";
+                    b.innerHTML += arr[i]['label'].substr(parseInt(stringindex + val.length));
+//                    b.innerHTML = arr[i]['label'];
                     /*insert a input field that will hold the current array item's value:*/
 //                        b.innerHTML += "<input  type='hidden' class='searchContent' value='" + arr[i]['Email'] + "'id='" + arr[i]['id'] + "'>";
-                    b.innerHTML += "<input  type='hidden' class='searchContent' SiteNumber ='" + arr[i]["SiteNumber"] + "'Anniversary_Date='" + arr[i]["Anniversary_Date"] + "'QBID='" + arr[i]["QBID"] + "'AccountID  ='" + arr[i]["AccountID"] + "'ContactID ='" + arr[i]["ContactID"] + "'companyName='" + arr[i]["CompanyName"] + "'lastName='" + arr[i]["Last_Name"] + "'firstName='" + arr[i]["First_Name"] + "'add1='" + arr[i]["Street1"] + "'add2='" + arr[i]["Street2"] + "'city='" + arr[i]["City"] + "'state='" + arr[i]["State"] + "'zipcode='" + arr[i]["Zip"] + "'value='" + arr[i]['Email'] + "'id='" + arr[i]['id'] + "'note='" + arr[i]['Note'] + "'>";
+                    b.innerHTML += "<input  type='hidden' class='searchContent' SiteNumber ='" + arr[i]["SiteNumber"] + "'Anniversary_Date='" + arr[i]["Anniversary_Date"] + "'QBID='" + arr[i]["QBID"] + "'AccountID  ='" + arr[i]["AccountID"] + "'ContactID ='" + arr[i]["ContactID"] + "'companyName='" + arr[i]["CompanyName"] + "'lastName='" + arr[i]["Last_Name"] + "'firstName='" + arr[i]["First_Name"] + "'add1='" + arr[i]["Street1"] + "'add2='" + arr[i]["Street2"] + "'city='" + arr[i]["City"] + "'state='" + arr[i]["State"] + "'zipcode='" + arr[i]["Zip"] + "'value='" + arr[i]['label'] + "'id='" + arr[i]['id'] + "'note='" + arr[i]['Note'] + "' email='"+ arr[i]['Email']+"'>";
                     /*execute a function when someone clicks on the item value (DIV element):*/
                     b.addEventListener("click", function (e) {
                         /*insert the value for the autocomplete text field:*/
@@ -74,8 +79,8 @@ function OnEmailSearch(element) {
                         $("#companyName").val($(".searchContent").attr("companyName"));
                         $("#first_name").val($(".searchContent").attr("firstname"));
                         $("#last_name").val($(".searchContent").attr("lastname"));
-                        $("#email").val(this.getElementsByTagName("input")[0].value);
-                        $("#emailAddress").val(this.getElementsByTagName("input")[0].value);
+                        $("#email").val($(".searchContent").attr("email"));
+                        $("#emailAddress").val($(".searchContent").attr("email"));
 
 
                         if ($(".searchContent").attr("add1") != 'null')

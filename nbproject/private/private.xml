@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Masters/invoice_2.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/mails/mansiTestVerify.blade.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Client/mansiTest.blade.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/routes/web.php</file>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/public/css/app-style.css</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/StripePaymentController.php</file>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Client/stripePayment.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/CustomClass/MailContent.php</file>
         </group>
     </open-files>
 </project-private>

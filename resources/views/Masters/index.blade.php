@@ -165,8 +165,12 @@
                                             <input type="hidden" name="siteNumber" value="" id="siteNumber">
                                             <input type="hidden" name="a2_contactId" value="" id="a2_contactId">
                                             <input type="hidden" name="qb_customerId" value="" id="qb_customerId">
-                                            <label for="input-4">Lookup AddressTwo Customer by Email</label>
-                                            <input type="text" required name="a2Email" id="a2Email" class="form-control" placeholder="Enter Email" />
+                                            <label for="input-4">Lookup AddressTwo Customer, start typing..</label>
+                                            <div class="inputContainer">
+                                                <input type="text" required name="a2Email" id="a2Email" class="form-control" placeholder="Enter Email" />
+                                                <i class="fa fa-refresh fa-spin hidden" style="float: right;" aria-hidden="true"></i>
+                                            </div>
+
                                             <div id="EmailList">
                                             </div>
                                         </div>
@@ -521,7 +525,7 @@
 
                             </div>
                             <!--End Step 2-->
-                            
+
                             <div class="form-group">
                                 <input type="button" onclick="return showHideInvoiceDetails(this);" class="hidden btn btn-info saveInvoice  m-1 pull-right"   value="Next"/>
                                 <input type="button" onclick="return InsertInvoiceItems(this);" class="btn btn-info hidden saveInvoiceItems  m-1 pull-right"   value="Save"/>
@@ -555,7 +559,7 @@
 
         </div><!--End wrapper-->
 
-<?php $v = "1.0.2"; ?>
+        <?php $v = "1.0.2"; ?>
 
         <!-- Bootstrap core JavaScrip        t-->
         <script src="{{asset('/js/jquery.min.js')}}"></script>

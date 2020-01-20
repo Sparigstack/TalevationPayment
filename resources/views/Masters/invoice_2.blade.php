@@ -274,9 +274,7 @@
                                                         exportOptions: {
                                                         columns: [0, 1, 2, 3, 4, 5, 6]
                                                         }}],
-                                                oLanguage: {
-                                                sSearch: "Quick Filter: "
-                                                },
+                                                bFilter: false,
                                                 aoColumnDefs: [
                                                 {
                                                 bSortable: false,

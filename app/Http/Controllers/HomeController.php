@@ -29,8 +29,8 @@ class HomeController extends Controller {
 
 //        $this->middleware('auth');
         $utility = new \App\Utility;
-        $ClientID = env('QB_APP_ID');
-        $ClientSecretKey = env('QB_APP_SECRET');
+        $ClientID = 'ABr9OwbD6M7ooMJiALq4kazXzALuMZB1gDSM2JRJDUZWKYXZoA';
+        $ClientSecretKey = 'AETbLV8JHViIdJ6vdwaokUtTxbYS9p8DpkltDDE7';
         $dataService = DataService::Configure(array(
                     'auth_mode' => 'oauth2',
                     'ClientID' => $ClientID,
