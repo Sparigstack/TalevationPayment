@@ -47,7 +47,7 @@ function OnEmailSearch(element) {
                 //        if (arr[i]['label'].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
                 var stringtoUpperCase = val.toUpperCase();
                 var Fromarray = arr[i]['label'].toUpperCase();
-//                if (Fromarray.includes(stringtoUpperCase)) {
+                if (Fromarray.includes(stringtoUpperCase)) {
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
@@ -157,7 +157,7 @@ function OnEmailSearch(element) {
 //                    redirectToSpace(this);
                     });
                     a.appendChild(b);
-//                }
+                }
             }
         }
     });
