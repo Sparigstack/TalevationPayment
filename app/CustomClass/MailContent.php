@@ -17,4 +17,5 @@ class MailContent {
     //put your code here
     public $invoiceToken;
     public $email;
+    public $price;
 }

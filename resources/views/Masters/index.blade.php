@@ -195,7 +195,7 @@
                                             </div>
                                             <div class="col-md-6 col-lg-6 col-sm-12">
                                                 <label for="input-4">Email</label>
-                                                <input required type="email"  value="" class="required form-control" name="emailAddress" id="emailAddress" placeholder="Email Address" maxlength="400">
+                                                <input required type="email"  value="" class="required form-control" name="emailAddress" id="emailAddress" placeholder="Email Address" maxlength="400" onchange="checkDuplicateEmail(this);">
                                             </div>
                                         </div>
                                     </div>
@@ -243,15 +243,21 @@
                                         <div class="row">
                                             <div class="col-md-12 col-lg-12 col-sm-12">
                                                 <label for="input-4">Note</label>
-                                                <textarea maxlength="200" required type="text" value="" class="required form-control" id="note" name="note" placeholder="Note"> </textarea>
+                                                <textarea maxlength="200" type="text" value="" class="form-control" id="note" name="note" placeholder="Note"> </textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="modal-footer">
-                                    <!--<input type="button" data-dismiss="modal" class="btn  btn-inverse-primary  m-1 pull-right pb-2" value="Close"/>-->
-                                    <input type="submit" class="btn btn-primary btn-info waves-effect waves-light m-1 pull-right pb-2 hidden" name="submit" id="saveCustomerBtn"  value="Save Customer"/>
-                                    <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
+                                    <div class="col-md-6 col-lg-6 col-sm-12">
+                                        <p class="duplicateEmail hidden"> Email is already exist. </p>
+                                    </div>
+                                        <!--<input type="button" data-dismiss="modal" class="btn  btn-inverse-primary  m-1 pull-right pb-2" value="Close"/>-->
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                        <input type="submit" class="btn btn-primary btn-info waves-effect waves-light m-1 pull-right pb-2 hidden" name="submit" id="saveCustomerBtn"  value="Save Customer"/>
+                                        <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
+                                    </div>
 
                                 </div>
 
@@ -298,7 +304,7 @@
                                         <i class="user-pointer fas fa-edit hidden" onclick="return editCustomer(this);" id="edit_customer" style="font-size: 20px;"></i>
                                         <!--<button class="btn btn-info hidden" onclick="return editCustomer(this);" id="edit_customer">Edit Customer</button>-->
                                         <input class="form-control col-6" required type="text" id="customer" autocomplete="off" name="customer" placeholder="customer">
-
+                                        <i class="fa fa-refresh fa-spin hidden" style="float: right;" aria-hidden="true"></i>
                                     </div>
 
 
@@ -559,7 +565,7 @@
 
         </div><!--End wrapper-->
 
-        <?php $v = "1.0.2"; ?>
+        <?php $v = "1.0.3"; ?>
 
         <!-- Bootstrap core JavaScrip        t-->
         <script src="{{asset('/js/jquery.min.js')}}"></script>

@@ -24,7 +24,6 @@ class Utility {
        
         $data = (object) array('TotalAmt' => $totalPrice, 'CustomerRef' => (object) array('value' => $customerRef));
         $data_json = json_encode($data);
-        //return $data_json;
         $curl = curl_init(); // URL of the call
         // Disable SSL verification
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -36,7 +35,8 @@ class Utility {
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
         $result = curl_exec($curl);
         $response = json_decode($result, true);
-       
+//        return $response;
+//        return $response['Payment']['Id'];
         if (isset($response['Payment']['Id'])) {
             $Invoice = new Invoice;
             $Invoice->exists = true;

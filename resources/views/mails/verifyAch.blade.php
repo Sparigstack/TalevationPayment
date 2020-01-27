@@ -70,37 +70,21 @@
         </style>
     </head>
     <body>
-        <div class="container-fluid" style="width: 70%;">
-            <div class="wrapper">
-                <div class="row" style="min-height: 200px;
-                     margin: 0;
-                     justify-content: center;
-                     ">
-                    <!--background-color: lightgray;-->
-                    <!--                    <a style="display: flex;justify-content: center;align-items: center;height: 100px;" href="{{url('/')}}">
-                                            <img src="{{asset('/images/logo-icon.png')}}" class="logo-icon" alt="logo icon">
-                                            <h5 class="logo-text">GoCoWorq</h5>
-                                        </a>-->
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid" style="width: 50%;margin-top: -100px;min-height: 500px; background-color: white;
-             display: flex; align-items: center;padding: 20px 1rem;box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);flex-direction: column;">
+        
+        <div class="  container-fluid" style="min-height: 500px; background-color: white;
+            padding: 20px 1rem;box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);flex-direction: column;">
             <h3 class="orangeFont">Welcome</h3>
 
             <p>Your ACH payment bank account is encrypted and saved securely with us. You need to verify your account by entering 2 micro deposits you got in your account
                 statement.</p>
             <?php
             $utility = new \App\Utility;
-            $Link = $utility->projectBaseUrl() . '/public' . "/previewInvoice?token=" . $mail_content->invoiceToken . "&p=verify";
+            $Link = $utility->projectBaseUrl() . '/public' . "/previewInvoice?token=" . $mail_content->invoiceToken;
 //            $Link="http://localhost:8081/TalevationPayment/public/previewInvoice?token=".$mail_content->invoiceToken."p=verify";
             ?>
             <p>Please <a href="{{$Link}}">Click Here</a> To verify your account. </p>
 
             <div style="text-align: left;width: 100%">
-<!--                <p style="margin-bottom: 0;">You will be able to login anytime after you generate password for your account and make modifications to your space or track reports for your space anytime!</p>-->
-                <br>
-                <br>
                 <p style="margin-bottom: 0;">Cheers,</p>
                 <p>Talevation Payment Team</p>
             </div>

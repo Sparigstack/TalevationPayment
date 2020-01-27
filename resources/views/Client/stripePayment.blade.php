@@ -231,6 +231,181 @@
             .whiteFont{
                 color: #fff !important;
             }
+
+
+            [class*="icheck-material"] {
+                min-height: 22px;
+                margin-top: 6px;
+                margin-bottom: 6px 
+                    padding-left: 0px; }
+            [class*="icheck-material"] > label {
+                padding-left: 29px !important;
+                min-height: 22px;
+                line-height: 22px;
+                display: inline-block;
+                position: relative;
+                vertical-align: top;
+                margin-bottom: 0;
+                font-weight: normal;
+                cursor: pointer; }
+            [class*="icheck-material"] > input:first-child {
+                position: absolute !important;
+                opacity: 0;
+                margin: 0;
+                background-color: #787878;
+                border-radius: 50%;
+                appearance: none;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                -ms-appearance: none;
+                display: block;
+                width: 22px;
+                height: 22px;
+                outline: none;
+                transform: scale(2);
+                -ms-transform: scale(2);
+                transition: opacity 0.3s, transform 0.3s; }
+            [class*="icheck-material"] > input:first-child:disabled {
+                cursor: default; }
+            [class*="icheck-material"] > input:first-child:disabled + label,
+            [class*="icheck-material"] > input:first-child:disabled + input[type="hidden"] + label,
+            [class*="icheck-material"] > input:first-child:disabled + label::before,
+            [class*="icheck-material"] > input:first-child:disabled + input[type="hidden"] + label::before {
+                pointer-events: none;
+                cursor: default;
+                filter: alpha(opacity=65);
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                opacity: .65; }
+            [class*="icheck-material"] > input:first-child + label::before,
+            [class*="icheck-material"] > input:first-child + input[type="hidden"] + label::before {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border: 2px solid rgba(0, 0, 0, 0.46);
+                border-radius: .25rem;
+                margin-left: -29px;
+                box-sizing: border-box; }
+            [class*="icheck-material"] > input:first-child:checked + label::after,
+            [class*="icheck-material"] > input:first-child:checked + input[type="hidden"] + label::after {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 7px;
+                height: 10px;
+                border: solid 2px #fff;
+                border-left: none;
+                border-top: none;
+                transform: translate(7.75px, 4.5px) rotate(45deg);
+                -ms-transform: translate(7.75px, 4.5px) rotate(45deg);
+                box-sizing: border-box; }
+            [class*="icheck-material"] > input:first-child:not(:checked):not(:disabled):hover + label::before,
+            [class*="icheck-material"] > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+                border-width: 2px; }
+            [class*="icheck-material"] > input:first-child::-ms-check {
+                opacity: 0;
+                border-radius: 50%; }
+            [class*="icheck-material"] > input:first-child:active {
+                transform: scale(0);
+                -ms-transform: scale(0);
+                opacity: 1;
+                transition: opacity 0s, transform 0s; }
+            [class*="icheck-material"] > input[type="radio"]:first-child + label::before,
+            [class*="icheck-material"] > input[type="radio"]:first-child + input[type="hidden"] + label::before {
+                border-radius: 50%; }
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + label::before,
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + input[type="hidden"] + label::before {
+                background-color: transparent; }
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + label::after,
+            [class*="icheck-material"] > input[type="radio"]:first-child:checked + input[type="hidden"] + label::after {
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                border: none;
+                top: 5px;
+                left: 5px;
+                transform: none;
+                -ms-transform: none; }
+            [class*="icheck-material"] > input[type="checkbox"]:first-child:checked + label::after,
+            [class*="icheck-material"] > input[type="checkbox"]:first-child:checked + input[type="hidden"] + label::after {
+                width: 6px;
+                height: 12px;
+                transform: translate(7px, 2px) rotate(45deg);
+                -ms-transform: translate(7px, 2px) rotate(45deg); }
+
+            .icheck-inline {
+                display: inline-block; }
+            .icheck-inline + .icheck-inline {
+                margin-left: .75rem;
+                margin-top: 6px; }
+
+            .icheck-material-primary > input:first-child {
+                background-color: #14abef; }
+            .icheck-material-primary > input:first-child::-ms-check {
+                background-color: #14abef; }
+            .icheck-material-primary > input:first-child:not(:checked):not(:disabled):hover + label::before,
+            .icheck-material-primary > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
+                border-color: #14abef; }
+            .icheck-material-primary > input:first-child:checked + label::before,
+            .icheck-material-primary > input:first-child:checked + input[type="hidden"] + label::before {
+                background-color: #14abef;
+                border-color: #14abef; }
+            .icheck-material-primary > input:first-child:checked + label::after,
+            .icheck-material-primary > input:first-child:checked + input[type="hidden"] + label::after {
+                border-bottom-color: #fff;
+                border-right-color: #fff; }
+
+            .icheck-material-primary > input[type="radio"]:first-child:checked + label::after,
+            .icheck-material-primary > input[type="radio"]:first-child:checked + input[type="hidden"] + label::after {
+                background-color: #14abef; }
+
+            .paymentOptionUI{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                align-content: center;
+                padding-bottom: 15px;
+                width: 40%;
+                margin: 0 auto;
+            }
+
+            .outcome {
+                float: left;
+                width: 100%;
+                padding-top: 8px;
+                min-height: 24px;
+                text-align: center;
+            }
+
+            .success, .error {
+                display: none;
+                font-size: 13px;
+            }
+
+            .success.visible, .error.visible {
+                display: inline;
+            }
+
+            .error {
+                color: #E4584C;
+            }
+
+            .success {
+                color: #666EE8;
+            }
+
+            .success .token {
+                font-weight: 500;
+                font-size: 13px;
+            }
+
+
         </style>
 
         <!--Font awesome css-->
@@ -242,7 +417,10 @@
     <!--<script type="text/javascript" src="https://js.stripe.com/v2/"></script>-->
 
     <body>
-
+        <?php
+        // var_dump($invoiceData);
+//        return;
+        ?>
         <!-- start loader -->
         <div id="pageloader-overlay" class="visible incoming"><div class="loader-wrapper-outer"><div class="loader-wrapper-inner"><div class="loader"></div></div></div></div>
         <!-- end loader -->
@@ -468,159 +646,271 @@
 
                                                     </div>
                                                 </div>
-                                                <?php // }       ?>
+                                                <?php // }         ?>
                                             </div>
                                         </section><!-- /.content -->
                                     </div>
                                 </div>
 
-
-
                                 <div class="card hidden" id="stripePaymentUI">
                                     <div class="card-body">
-                                        <div class="card-title">Kindly pay your Talevation Invoice!</div>
-                                        <hr>
 
-                                        <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form">
-                                            {{ csrf_field() }}
-
-                                            <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
-                                            <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
-                                            <div class="form-group">
-                                                <label for="input-1">Name on Card</label>
-                                                <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="input-1">Email</label>
-                                                <input type="text" class="form-control" required id="email" name="email" placeholder="Enter Your Email" value="{{$invoiceData->email}}">
-                                            </div>
-
-                                            <?php
-                                            $stripe_payment_id = $invoiceData->customer->stripe_customer_id;
-
-                                            if (isset($stripe_payment_id)) {
-                                                ?>
-                                                <input value="{{$invoiceData->customer->stripe_customer_id}}" id="stripe_customer_id" name="stripe_customer_id" type="hidden">
-                                                <div class="form-group">
-                                                    <input type="hidden" value="" name="paymentMethodId" id="paymentMethodId">
-                                                    <label class="col-lg-8 col-sm-12 col-md-8 pade_none" for="input-2">Payment Source</label>
-                                                    <select onclick="setPaymentId(this);" id="paymentMethod" name="paymentMethod" class="form-control col-lg-4 col-sm-12 custom-select"  style="text-transform: lowercase;">
-                                                        @for($i=0;$i<count($PaymentMethod['data']);$i++)
-                                                            <option id="{{$PaymentMethod['data'][$i]->id}}">{{$PaymentMethod['data'][$i]['card']->brand}} ending with {{ $PaymentMethod['data'][$i]['card']->last4}}</option>
-                                                            @endfor
-                                                    </select>
-                                                </div>
-                                            <?php } else { ?>
-
-
-                                                <div class="">
-                                                    <label for="card-element">
-                                                        Credit or debit card
-                                                    </label>
-                                                    <div id="card-element">
-                                                        <!-- A Stripe Element will be inserted here. -->
-                                                    </div>
-
-                                                    <!-- Used to display form errors. -->
-                                                    <div id="card-errors" role="alert"></div>
-                                                </div>
-
-
-
-
-
-                                                <!--                                                <div class='form-row row'>
-                                                                                                    <div class="col-xs-12 col-md-4 form-group cvc required">
-                                                                                                    <label for="input-2">Card Number</label>
-                                                                                                    <input type="text" autocomplete='off' class="form-control card-number" value="" required name="card-number" size='20' id="card-number" placeholder="Enter Your Card Number">
-                                                                                                </div>
-                                                                                                    <div class='col-xs-12 col-md-2 form-group cvc required'>
-                                                                                                        <label class='control-label'>CVC</label>
-                                                                                                        <input autocomplete='off' class='form-control required card-cvc' value="" name="card-cvc" id="card-cvc" placeholder='ex. 311' size='4' type='text'>
-                                                                                                    </div>
-                                                                                                    <div class='col-xs-12 col-md-3 form-group expiration required'>
-                                                                                                        <label class='control-label'>Expiration Month</label> <input
-                                                                                                            class='form-control card-expiry-month' required name="card-expiry-month" value="" id="card-expiry-month" placeholder='MM' size='2'
-                                                                                                            type='text'>
-                                                                                                    </div>
-                                                                                                    <div class='col-xs-12 col-md-3 form-group expiration required'>
-                                                                                                        <label class='control-label'>Expiration Year</label> <input
-                                                                                                            class='form-control card-expiry-year' required name="card-expiry-year" value="" id="card-expiry-year" placeholder='YYYY' size='4'
-                                                                                                            type='text'>
-                                                                                                    </div>
-                                                                                                </div>-->
-
-
-
-                                            <?php } ?>
-                                            <div class='form-row row'>
-                                                <div class='col-md-12 error form-group hidden'>
-                                                    <div class='alert-danger alert p-2'>Please correct the errors and try
-                                                        again.</div>
-                                                </div>
-                                            </div>
-
-
-
-
-                                            <div class='form-row mb-3'>
-                                                <div class='col-md-12 mt-3 '>
-
-                                                    <div class='row mt-3'>
-                                                        <div class='centerElement'>
-                                                            <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
-
-                                                        </div>
-
-
-
-
-                                                    </div>
-                                                    <div class='row mt-3'>
-                                                        <div class='col-md-12'>
-                                                            <div class='fr'>
-                                                                <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
-                                                                <h3 class="totalPrice">Total: $14.99/month</h3>
+                                        <?php if ($invoiceData->isAchVerified == "1" && $invoiceData->customer->stripe_customer_id !== '') {
+                                            ?>
+                                            <div class="paymentVerifyDiv">
+                                                <div class="card-title mt-3">Enter Amount Details</div>
+                                                <hr>
+                                                <form role="form" action="{{ route('stripe.achVerify') }}"  method="post">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
+                                                    <input type="hidden" name="stripe_customer_id_verify" value="{{$invoiceData->customer->stripe_customer_id}}" />
+                                                    <input type="hidden" name="invoiceId" value="{{$invoiceData->id}}" />
+                                                    <input type="hidden" name="price" value="{{$totalDue}}" />
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-lg-6 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label for="input-1">Amount 1</label>
+                                                                <input type="text" class="form-control" required id="amount1" name="amount1" placeholder="Enter Amount" value="">
                                                             </div>
                                                         </div>
-
+                                                        <div class="col-md-6 col-lg-6 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label for="input-1">Amount 2</label>
+                                                                <input type="text" class="form-control" required id="amount2" name="amount2" placeholder="Enter Amount" value="">
+                                                            </div>
+                                                        </div>
                                                     </div>
-
-
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i>Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div> <?php } else {
+                                            ?>
+                                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                                <div class="paymentOptionUI">
+                                                    <div class="icheck-material-primary">
+                                                        <input type="radio" id="primary1" name="primaryname" checked="" onclick="changePaymentProcess(this);" data-payment="credit-card">
+                                                        <label for="primary1">Credit Card Payment</label>
+                                                    </div>
+                                                    <div class="icheck-material-primary">
+                                                        <input type="radio" id="primary2" name="primaryname" onclick="changePaymentProcess(this);" data-payment="bank-payment">
+                                                        <label for="primary2">Bank Payment</label>
+                                                    </div> 
                                                 </div>
-
                                             </div>
+
+                                            <div class="card-title">Kindly pay your Talevation Invoice!</div>
                                             <hr>
-                                            <div class="col-md-12">
-                                                <div class="col-md-8">
-                                                    <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
 
-                                                    <div class="col-md-4 pull-left" style="">
-                                                        <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                            <div class="creditCardDiv">
+                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form">
+                                                    {{ csrf_field() }}
+
+                                                    <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
+                                                    <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
+                                                    <div class="form-group">
+                                                        <label for="input-1">Name on Card</label>
+                                                        <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
                                                     </div>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Email</label>
+                                                        <input type="text" class="form-control" required id="email" name="email" placeholder="Enter Your Email" value="{{$invoiceData->email}}">
+                                                    </div>
 
-
-                                                <div class="form-group">
-                                                    <?php if (isset($stripe_payment_id)) { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
+                                                    <?php
+                                                    $hideNewCard = '';
+                                                    $ccType = '1';
+                                                    $stripe_payment_id = $invoiceData->customer->stripe_customer_id;
+                                                    if (isset($stripe_payment_id) && $stripe_payment_id != '') {
+                                                        $hideNewCard = 'hidden';
+                                                        $ccType = '2';
+                                                        ?>
+                                                        <input value="{{$stripe_payment_id}}" id="stripe_customer_id" name="stripe_customer_id" type="hidden">
+                                                        <div id="existingCreditCard" class="form-group">
+                                                            <input type="hidden" value="" name="paymentMethodId" id="paymentMethodId">
+                                                            <label class="col-lg-8 col-sm-12 col-md-8 pade_none" for="input-2">Payment Source</label>
+                                                            <select onclick="setPaymentId(this);" id="paymentMethod" name="paymentMethod" class="form-control col-lg-4 col-sm-12 custom-select"  style="text-transform: lowercase;">
+                                                                @for($i=0;$i<count($PaymentMethod['data']);$i++)
+                                                                    <option id="{{$PaymentMethod['data'][$i]->id}}">{{$PaymentMethod['data'][$i]['card']->brand}} ending with {{ $PaymentMethod['data'][$i]['card']->last4}}</option>
+                                                                    @endfor
+                                                            </select>
+                                                            <a data-shownew="1" class="m-2 mr-3" href="javascript:void(0);" onclick="return showHideNewCard(this);"><i class="icon-lock"></i> Use New Card</a>
+                                                        </div>
                                                     <?php } else { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
-                                                    <?php } ?>
-                                                    <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
 
-                                                </div>
-                                        </form>
+
+
+                                                        <!--                                                <div class='form-row row'>
+                                                                                                            <div class="col-xs-12 col-md-4 form-group cvc required">
+                                                                                                            <label for="input-2">Card Number</label>
+                                                                                                            <input type="text" autocomplete='off' class="form-control card-number" value="" required name="card-number" size='20' id="card-number" placeholder="Enter Your Card Number">
+                                                                                                        </div>
+                                                                                                            <div class='col-xs-12 col-md-2 form-group cvc required'>
+                                                                                                                <label class='control-label'>CVC</label>
+                                                                                                                <input autocomplete='off' class='form-control required card-cvc' value="" name="card-cvc" id="card-cvc" placeholder='ex. 311' size='4' type='text'>
+                                                                                                            </div>
+                                                                                                            <div class='col-xs-12 col-md-3 form-group expiration required'>
+                                                                                                                <label class='control-label'>Expiration Month</label> <input
+                                                                                                                    class='form-control card-expiry-month' required name="card-expiry-month" value="" id="card-expiry-month" placeholder='MM' size='2'
+                                                                                                                    type='text'>
+                                                                                                            </div>
+                                                                                                            <div class='col-xs-12 col-md-3 form-group expiration required'>
+                                                                                                                <label class='control-label'>Expiration Year</label> <input
+                                                                                                                    class='form-control card-expiry-year' required name="card-expiry-year" value="" id="card-expiry-year" placeholder='YYYY' size='4'
+                                                                                                                    type='text'>
+                                                                                                            </div>
+                                                                                                        </div>-->
+
+
+
+                                                    <?php } ?>
+                                                    <div id="newCreditCard" class="{{$hideNewCard}}">
+                                                        <label for="card-element">
+                                                            Credit or debit card
+                                                        </label>
+                                                        <div id="card-element">
+                                                            <!-- A Stripe Element will be inserted here. -->
+                                                        </div>
+
+                                                        <!-- Used to display form errors. -->
+                                                        <div id="card-errors" role="alert"></div>
+                                                        <?php if (isset($stripe_payment_id) && $stripe_payment_id != '') { ?>
+                                                            <a data-shownew="0" class="m-2 mr-3" href="javascript:void(0);" onclick="return showHideNewCard(this);"><i class="icon-lock"></i> Select Existing Card</a>
+                                                        <?php } ?>
+                                                    </div>
+
+                                                    <input type="hidden" value="{{$ccType}}" name="ccType" id="ccType" />
+
+                                                    <div class='form-row row'>
+                                                        <div class='col-md-12 error form-group hidden'>
+                                                            <div class='alert-danger alert p-2'>Please correct the errors and try
+                                                                again.</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='form-row mb-3'>
+                                                        <div class='col-md-12 mt-3 '>
+                                                            <div class='row mt-3'>
+                                                                <div class='centerElement'>
+                                                                    <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class='row mt-3'>
+                                                                <div class='col-md-12'>
+                                                                    <div class='fr'>
+                                                                        <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
+                                                                        <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-8">
+                                                            <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
+
+                                                            <div class="col-md-4 pull-left" style="">
+                                                                <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
+                                                        <?php if (isset($stripe_payment_id) && $stripe_payment_id != '') { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
+                                                        <?php } else { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
+                                                        <?php } ?>
+                                                        <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div class="bankPaymentDiv hidden">
+                                                <form action="{{ route('stripe.post1') }}" class="" method="post" id="payment-formbank">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="source" />
+                                                    <input type="hidden" name="email" value="{{$invoiceData->email}}" />
+                                                    <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id_verify">
+                                                    <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
+                                                    <div class="form-group">
+                                                        <label for="input-1">Name</label>
+                                                        <input id="name" name="bankHolderName" class="form-control field" required value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}" placeholder="Jenny Rosen" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Type</label>
+                                                        <select id="type" class="form-control field" required name="type">
+                                                            <option value="individual">Individual</option>
+                                                            <option value="company">Company</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Routing number</label>
+                                                        <input id="routing-number" name="routing_number" class="form-control field" value="110000000" placeholder="110000000" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Account number</label>
+                                                        <input id="account-number" name="account_number" class="form-control field" value='000123456789' placeholder="000123456789" />
+                                                    </div>
+                                                    <!--                                                <div class="outcome">
+                                                                                                        <div class="error"></div>
+                                                                                                        <div class="success">
+                                                                                                            Success! Your Stripe token is <span class="token"></span>
+                                                                                                        </div>
+                                                                                                    </div>-->
+
+                                                    <div class='form-row row'>
+                                                        <div class='col-md-12 error form-group hidden'>
+                                                            <div class='alert-danger alert p-2'>Please correct the errors and try
+                                                                again.</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='form-row mb-3'>
+                                                        <div class='col-md-12 mt-3 '>
+                                                            <div class='row'>
+                                                                <div class='centerElement'>
+                                                                    <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class='row mt-3'>
+                                                                <div class='col-md-12'>
+                                                                    <div class='fr'>
+                                                                        <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
+                                                                        <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-8">
+                                                            <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
+
+                                                            <div class="col-md-4 pull-left" style="">
+                                                                <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
+                                                        <?php if (isset($stripe_payment_id)) { ?>
+                                                            <input type="submit" class="btn btn-info mr-1 px-5 pull-right" value="Pay">
+                                                        <?php } else { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
+                                                        <?php } ?>
+                                                        <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
-
-
                             </div>
-                            <?php // }          ?>
-
-
-
-
                         </div>
                     </div>
                 </div>
@@ -670,60 +960,7 @@
                                                                 $('[data-toggle="tooltip"]').tooltip()
                                                             })
                                                             $("#paymentMethodId").val($("#paymentMethod option:first").attr('id'));
-//                                                            var stripe_customer_id = $("#stripe_customer_id").val();
-//                                                            if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
 
-//                                                                var $form = $(".require-validation");
-//                                                                $('form.require-validation').bind('submit', function (e) {
-//                                                                    var $form = $(".require-validation"),
-//                                                                            inputSelector = ['input[type=email]', 'input[type=password]',
-//                                                                                'input[type=text]', 'input[type=file]',
-//                                                                                'textarea'].join(', '),
-//                                                                            $inputs = $form.find('.required').find(inputSelector),
-//                                                                            $errorMessage = $form.find('div.error'),
-//                                                                            valid = true;
-//                                                                    $errorMessage.addClass('hidden');
-//
-//                                                                    $('.has-error').removeClass('has-error');
-//                                                                    $inputs.each(function (i, el) {
-//                                                                        var $input = $(el);
-//                                                                        if ($input.val() === '') {
-//                                                                            $input.parent().addClass('has-error');
-//                                                                            $errorMessage.removeClass('hidden');
-//                                                                            e.preventDefault();
-//                                                                        }
-//                                                                    });
-//
-//                                                                    if (!$form.data('cc-on-file')) {
-//
-//                                                                        e.preventDefault();
-//                                                                        Stripe.setPublishableKey($form.data('stripe-publishable-key'));
-//                                                                        Stripe.createToken({
-//                                                                            number: $('.card-number').val(),
-//                                                                            cvc: $('.card-cvc').val(),
-//                                                                            exp_month: $('.card-expiry-month').val(),
-//                                                                            exp_year: $('.card-expiry-year').val()
-//                                                                        }, stripeResponseHandler);
-//                                                                    }
-//
-//                                                                });
-
-//                                                                function stripeResponseHandler(status, response) {
-//                                                                    if (response.error) {
-//                                                                        $('.error')
-//                                                                                .removeClass('hidden')
-//                                                                                .find('.alert')
-//                                                                                .text(response.error.message);
-//                                                                    } else {
-//                                                                        // token contains id, last4, and card type
-//                                                                        var token = response['id'];
-//                                                                        // insert the token into the form so it gets submitted to the server
-//                                                                        $form.find('input[type=text]').empty();
-//                                                                        $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
-//                                                                        $form.get(0).submit();
-//                                                                    }
-//                                                                }
-//                                                            }
 
                                                         });
                                                         function setPaymentId(element) {
@@ -731,11 +968,6 @@
 
                                                             $("#paymentMethodId").val(option);
                                                         }
-
-
-
-
-
 
                                                         function invoicePayment(element, fromWhere) {
                                                             $("#generateInvoice").addClass('hidden');
@@ -772,78 +1004,185 @@
                                                             var stripe_customer_id = $("#stripe_customer_id").val();
                                                             if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
 
-                                                                var stripe = Stripe('pk_test_r8hQgZhHiSDMnMFn9Apy5aAk');
-//var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
-// Create an instance of Elements.
-                                                                var elements = stripe.elements();
+                                                                //card payment
+                                                                cardPayment();
 
-// Custom styling can be passed to options when creating an Element.
-// (Note that this demo uses a wider set of styles than the guide below.)
-                                                                var style = {
-                                                                    base: {
-                                                                        color: '#32325d',
-                                                                        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                                                                        fontSmoothing: 'antialiased',
-                                                                        fontSize: '16px',
-                                                                        '::placeholder': {
-                                                                            color: '#aab7c4'
-                                                                        }
-                                                                    },
-                                                                    invalid: {
-                                                                        color: '#fa755a',
-                                                                        iconColor: '#fa755a'
-                                                                    }
-                                                                };
+                                                                // bank payment
+                                                                var form2 = document.getElementById('payment-formbank');
 
-// Create an instance of the card Element.
-                                                                var card = elements.create('card', {style: style});
-
-// Add an instance of the card Element into the `card-element` <div>.
-                                                                card.mount('#card-element');
-
-// Handle real-time validation errors from the card Element.
-                                                                card.addEventListener('change', function (event) {
-                                                                    var displayError = document.getElementById('card-errors');
-                                                                    if (event.error) {
-                                                                        displayError.textContent = event.error.message;
-                                                                    } else {
-                                                                        displayError.textContent = '';
-                                                                    }
+                                                                // Submit the form with the token ID.
+                                                                form2.addEventListener('submit', function (event2) {
+                                                                    event2.preventDefault();
+                                                                    var bankAccountData = {
+                                                                        country: 'us',
+                                                                        currency: 'usd',
+                                                                        routing_number: document.getElementById('routing-number').value,
+                                                                        account_number: document.getElementById('account-number').value,
+                                                                        account_holder_name: document.getElementById('name').value,
+                                                                        account_holder_type: document.getElementById('type').value,
+                                                                    };
+                                                                    stripe.createToken('bank_account', bankAccountData).then(setOutcome);
                                                                 });
+                                                            }
 
-// Handle form submission.
-                                                                var form = document.getElementById('payment-form');
-                                                                form.addEventListener('submit', function (event) {
+
+                                                        });
+
+                                                        function cardPayment() {
+                                                            var stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
+                                                            //var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
+                                                            // Create an instance of Elements.
+                                                            var elements = stripe.elements();
+                                                            var style = {
+                                                                base: {
+                                                                    color: '#32325d',
+                                                                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontSmoothing: 'antialiased',
+                                                                    fontSize: '16px',
+                                                                    '::placeholder': {
+                                                                        color: '#aab7c4'
+                                                                    }
+                                                                },
+                                                                invalid: {
+                                                                    color: '#fa755a',
+                                                                    iconColor: '#fa755a'
+                                                                }
+                                                            };
+                                                            // card payment
+                                                            var form1 = document.getElementById('payment-form');
+                                                            // Create an instance of the card Element.
+                                                            var card = elements.create('card', {style: style});
+                                                            // Add an instance of the card Element into the `card-element` <div>.
+                                                            card.mount('#card-element');
+                                                            // Handle real-time validation errors from the card Element.
+                                                            card.addEventListener('change', function (event) {
+                                                                var displayError = document.getElementById('card-errors');
+                                                                if (event.error) {
+                                                                    displayError.textContent = event.error.message;
+                                                                } else {
+                                                                    displayError.textContent = '';
+                                                                }
+                                                            });
+                                                            // Handle form submission.
+
+                                                            var ownerInfo = {
+                                                                owner: {
+                                                                    name: document.getElementById('name_on_card').value,
+                                                                    email: document.getElementById('email').value
+                                                                },
+                                                            };
+
+                                                            form1.addEventListener('submit', function (event) {                                                                
+                                                                if ($("#ccType").val() == "1") {
                                                                     event.preventDefault();
+                                                                    stripe.createSource(card, ownerInfo).then(function (result) {
 
-                                                                    stripe.createToken(card).then(function (result) {
                                                                         if (result.error) {
                                                                             // Inform the user if there was an error.
                                                                             var errorElement = document.getElementById('card-errors');
                                                                             errorElement.textContent = result.error.message;
                                                                         } else {
                                                                             // Send the token to your server.
-                                                                            stripeTokenHandler(result.token);
+                                                                            //stripeTokenHandler(result.token);
+                                                                            stripeSourceHandler(result.source);
                                                                         }
                                                                     });
-                                                                });
-
-// Submit the form with the token ID.
-                                                                function stripeTokenHandler(token) {
-                                                                    // Insert the token ID into the form so it gets submitted to the server
-                                                                    var form = document.getElementById('payment-form');
-                                                                    var hiddenInput = document.createElement('input');
-                                                                    hiddenInput.setAttribute('type', 'hidden');
-                                                                    hiddenInput.setAttribute('name', 'stripeToken');
-                                                                    hiddenInput.setAttribute('value', token.id);
-                                                                    form.appendChild(hiddenInput);
-
-                                                                    // Submit the form
-                                                                    form.submit();
                                                                 }
 
+                                                            });
+                                                        }
+
+                                                        function disableNewCardPayment() {
+                                                            // card payment
+                                                            var form1 = document.getElementById('payment-form');
+                                                            form1.removeEventListener('submit', function (event) {
+
+                                                            });
+                                                        }
+
+//                                                        function stripeTokenHandler(token) {
+//                                                            // Insert the token ID into the form so it gets submitted to the server
+//                                                            var form = document.getElementById('payment-form');
+//                                                            var hiddenInput = document.createElement('input');
+//                                                            hiddenInput.setAttribute('type', 'hidden');
+//                                                            hiddenInput.setAttribute('name', 'stripeToken');
+//                                                            hiddenInput.setAttribute('value', token.id);
+//                                                            form.appendChild(hiddenInput);
+//                                                            alert(token.id);
+//                                                            // Submit the form
+//                                                            form.submit();
+//                                                        }
+                                                        function stripeSourceHandler(source) {
+                                                            // Insert the source ID into the form so it gets submitted to the server
+                                                            var form = document.getElementById('payment-form');
+                                                            var hiddenInput = document.createElement('input');
+                                                            hiddenInput.setAttribute('type', 'hidden');
+                                                            hiddenInput.setAttribute('name', 'stripeSource');
+                                                            hiddenInput.setAttribute('value', source.id);
+                                                            form.appendChild(hiddenInput);
+
+                                                            // Submit the form
+                                                            form.submit();
+                                                        }
+                                                        function setOutcome(result) {
+//                                                                    var successElement = document.querySelector('.success');
+//                                                                    var errorElement = document.querySelector('.error');
+//                                                                    successElement.classList.remove('visible');
+//                                                                    errorElement.classList.remove('visible');
+                                                            if (result.token.id) {
+                                                                alert(result.token.id);
+                                                                // Use the token to create a charge or a customer
+                                                                // https://stripe.com/docs/charges
+//                                                                        successElement.querySelector('.token').textContent = result.token.id;
+//                                                                        successElement.classList.add('visible');
+
+                                                                var form3 = document.getElementById('payment-formbank');
+                                                                var hiddenInput = document.createElement('input');
+                                                                hiddenInput.setAttribute('type', 'hidden');
+                                                                hiddenInput.setAttribute('name', 'stripeToken');
+                                                                hiddenInput.setAttribute('value', result.token.id);
+                                                                form3.appendChild(hiddenInput);
+                                                                // Submit the form
+                                                                form3.submit();
+                                                            } else if (result.error) {
+//                                                                        errorElement.textContent = result.error.message;
+//                                                                        errorElement.classList.add('visible');
                                                             }
-                                                        });
+                                                        }
+                                                        function changePaymentProcess(element) {
+                                                            if ($(element).is(":checked"))
+                                                            {
+                                                                // it is checked
+                                                                var paymentMethod = $(element).attr('data-payment');
+                                                                if (paymentMethod == 'credit-card') {
+                                                                    $('.creditCardDiv').removeClass("hidden");
+                                                                    $('.bankPaymentDiv').addClass("hidden");
+                                                                    $('.creditCardDiv').find('form').addClass("form-active");
+                                                                    $('.bankPaymentDiv').find('form').removeClass("form-active");
+                                                                } else {
+                                                                    $('.creditCardDiv').addClass("hidden");
+                                                                    $('.bankPaymentDiv').removeClass("hidden");
+                                                                    $('.creditCardDiv').find('form').removeClass("form-active");
+                                                                    $('.bankPaymentDiv').find('form').addClass("form-active");
+                                                                }
+//                                                                checkprocess();
+                                                            }
+                                                        }
+
+                                                        function showHideNewCard(element) {
+                                                            var isShowNew = $(element).attr('data-shownew');
+                                                            if (isShowNew == "1") {
+                                                                $("#newCreditCard").removeClass('hidden');
+                                                                $("#existingCreditCard").addClass('hidden');
+                                                                $("#ccType").val("1");
+                                                                cardPayment();
+                                                            } else {
+                                                                $("#newCreditCard").addClass('hidden');
+                                                                $("#existingCreditCard").removeClass('hidden');
+                                                                $("#ccType").val("2");
+                                                                disableNewCardPayment();
+                                                            }
+                                                        }
     </script>
 
 

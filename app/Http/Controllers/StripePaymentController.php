@@ -36,7 +36,6 @@ class StripePaymentController extends Controller {
 
         if (isset($_GET['token'])) {
             $invoiceData = Invoice::where('GUID', '=', $_GET['token'])->first();
-
             if ($invoiceData) {
                 if (!isset($invoiceData->due_date)) {
                     $due_date = date("Y-m-d", strtotime(date('m/d/Y')));
@@ -48,41 +47,35 @@ class StripePaymentController extends Controller {
                     $stateTaxes = StateTax::find($invoiceData->state_tax_id);
                 }
             }
-
+//
             $customer = Customer::find($invoiceData->customer_id);
+//            var_dump($customer);
+////            $stateTaxes = DB::table('state_taxes AS st')
+////                    ->leftJoin('invoices AS i', 'st.id', '=', 'i.state_tax_id')
+////                    ->select('st.id', 'i.state_tax_id', 'st.state_name', 'st.tax_rate')
+////                    ->where('st.id', '=', $invoiceData->state_tax_id)
+////                    ->first();
+//
+//
 
-//            $stateTaxes = DB::table('state_taxes AS st')
-//                    ->leftJoin('invoices AS i', 'st.id', '=', 'i.state_tax_id')
-//                    ->select('st.id', 'i.state_tax_id', 'st.state_name', 'st.tax_rate')
-//                    ->where('st.id', '=', $invoiceData->state_tax_id)
-//                    ->first();
-
-
-            Stripe\Stripe::setApiKey('sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv');
-
-            if (isset($customer->stripe_customer_id)) {
+            if ((isset($customer->stripe_customer_id) && $customer->stripe_customer_id != '')) {
+                Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
                 $PaymentMethod = \Stripe\PaymentMethod::all([
                             'customer' => $customer->stripe_customer_id,
                             'type' => 'card',
                 ]);
+//                var_dump($PaymentMethod);
+//                return;
             }
-
-//return $PaymentMethod." 2424 ".$currentPath." 2424 ".$invoiceData." 2424 ".$stripePaymentId." 2424 ".$Invoice;
-//return view('test', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stripePaymentId', 'Invoice'));
-//            return view('Client/stripePayment', compact('PaymentMethod', 'currentPath', 'invoiceData' , 'stateTaxes' ,'stripePaymentId', 'Invoice'));
-            return view('Client/mansiTest', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stateTaxes', 'stripePaymentId', 'Invoice'));
+//
+////return $PaymentMethod." 2424 ".$currentPath." 2424 ".$invoiceData." 2424 ".$stripePaymentId." 2424 ".$Invoice;
+////return view('test', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stripePaymentId', 'Invoice'));
+            return view('Client/stripePayment', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stateTaxes', 'stripePaymentId', 'Invoice'));
+            //return view('Client/mansiTest', compact('PaymentMethod', 'currentPath', 'invoiceData', 'stateTaxes', 'stripePaymentId', 'Invoice'));
         }
     }
 
     public function paymentPlan(Request $request) {
-//        $paymentMethod = '';
-//        if ($request->paymentMethodCredit == 'credit') {
-//            $paymentMethod = 'credit';
-//        }
-//        if ($request->paymentMethodBank == 'bank') {
-//            $paymentMethod = 'bank';
-//        }
-//        if ($paymentMethod == 'credit') {
 
         $flash_msg = "";
         $customerEmail = '';
@@ -96,9 +89,12 @@ class StripePaymentController extends Controller {
             $token = $QbToken[$i]->access_token;
             $appId = $QbToken[$i]->realm_id;
         }
+//        echo $token."<br/>";
+//        echo $appId;
+//                return;
 //        $token = QbToken::pluck('access_token')->first();
 
-        Stripe\Stripe::setApiKey('sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv');
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
             $flash_msg .= " 1";
             $Invoice = Invoice::find($request->invoice_id);
@@ -107,37 +103,47 @@ class StripePaymentController extends Controller {
             if (!is_null($Invoice->customer->stripe_customer_id)) {
                 $flash_msg .= " 2";
                 $customer_id = $Invoice->customer->stripe_customer_id;
+                $source_id = $request->ccType == 1 ? $request->stripeSource : $request->paymentMethodId;
                 $charge = \Stripe\Charge::create(array(
                             'customer' => $customer_id,
                             "amount" => $request->totalPrice * 100,
                             "currency" => "usd",
-                            "description" => "Test payment New Created.",
-                            "source" => $request->paymentMethodId
+                            "description" => "Talevation new payment from " . $Invoice->customer->name,
+                            "source" => $source_id
                 ));
             } else {
                 $flash_msg .= " 3";
                 $customerDetails = \Stripe\Customer::all(['email' => $request->email]);
 
+                //$customer_source = $request->stripeToken;
+
                 if (isset($customerDetails->data[0]->email)) {
                     $flash_msg .= " 4";
                     $customerEmail = $customerDetails->data[0]->email;
                     $customer_id = $customerDetails->data[0]->id;
+
+                    $card = \Stripe\Customer::createSource(
+                                    $customer_id, [
+                                'source' => $request->stripeSource,
+                                    ]
+                    );
                 } else {
                     $flash_msg .= " 5";
                     //add customer to stripe
                     $s_customer = \Stripe\Customer::create(array(
                                 'email' => $request->email,
                                 'name' => $request->name_on_card,
-                                'source' => $request->stripeToken
+                                'source' => $request->stripeSource
                     ));
                     $customer_id = $s_customer->id;
                 }
                 $flash_msg .= " 6";
                 $charge = \Stripe\Charge::create(array(
                             'customer' => $customer_id,
-                            "amount" => $request->totalPrice * 100,
-                            "currency" => "usd",
-                            "description" => "Test payment."
+                            'amount' => $request->totalPrice * 100,
+                            'currency' => "usd",
+                            'description' => "Talevation new payment from " . $Invoice->customer->name,
+                            'source' => $request->stripeSource
                 ));
             }
 
@@ -161,19 +167,24 @@ class StripePaymentController extends Controller {
 
             $Amount = $request->totalPrice;
             $flash_msg .= " 7";
-//            $success = "Invoice paid successfully! ";
-//            Session::put('success', $success);
 
 
+//            echo "qbid=" . $Invoice->customer->qb_customerId;
             if (isset($Invoice->customer->qb_customerId)) {
+//                echo "in createpaymentapi";
+//                return;
                 $flash_msg .= " 8";
                 $totalPrice = $request->totalPrice;
                 $invoice_id = $request->invoice_id;
                 $customerRef = $Invoice->customer->qb_customerId;
+//                echo $totalPrice."~~~~".$invoice_id."~~~~~~".$customerRef;
                 $utility = new Utility;
                 $response1 = $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+//                var_dump($response1);
+//                return;
                 $flash_msg .= " 8";
             } else {
+                   
                 $flash_msg .= " 9";
 //                    ************** Query Customer Api ****************//
                 $curl = curl_init();
@@ -220,7 +231,7 @@ class StripePaymentController extends Controller {
                     $data = (object) array('DisplayName' => $request->name_on_card, 'PrimaryEmailAddr' => (object) array('Address' => $request->email));
                     $data_json = json_encode($data);
 
-//return $data_json;
+                    //return $data_json;
 
                     $curl = curl_init(); // URL of the call
                     // Disable SSL verification
@@ -257,155 +268,118 @@ class StripePaymentController extends Controller {
 //            return $response1 . " bansari " . $flash_msg;
             return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
         } catch (Exception $e) {
-//            $invoiceData="";
-
             Session::flash('fail_message', "Error! Please Try again.");
 
             return redirect()->back()->with('stripePaymentId', "Blank");
         }
     }
 
-//        else {
-//            $flash_msg = "";
-//            $customerEmail = '';
-//            $customer_id = '';
-//            $appId = '';
-//            $token = '';
-//
-//            $QbToken = QbToken::all();
-//            for ($i = 0; $i < count($QbToken); $i++) {
-//                $id = $QbToken[$i]->id;
-//                $token = $QbToken[$i]->access_token;
-//                $appId = $QbToken[$i]->realm_id;
-//            }
-////        $token = QbToken::pluck('access_token')->first();
-//
-//            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-//
-////            $s_customer = \Stripe\Customer::create(array(
-////                        'email' => $request->email,
-////                        'name' => $request->name_on_card,
-////                        'source' => $request->stripeToken
-////            ));
-////            $customer_id = $s_customer->id;
-//            $customer_id = "cus_GPfNLiAH8049g2";
-//
-////            $intent = \Stripe\SetupIntent::create();
-////            $payment_method = \Stripe\PaymentMethod::retrieve($intent->payment_method);
-////            var_dump($payment_method);
-////        
-////            $test = \Stripe\PaymentMethod::create([
-////                        'type' => 'card',
-////                        'card' => [
-////                            'number' => '4242424242424242',
-////                            'exp_month' => 12,
-////                            'exp_year' => 2020,
-////                            'cvc' => '314',
-////                        ]
-////            ]);
-////            var_dump($test);
-////            $source = \Stripe\Source::create([
-////                        "type" => "ach_credit_transfer",
-////                        "currency" => "usd",
-////                        "owner" => [
-////                            "email" => "swati@spristack.com"
-////                        ]
-////            ]);
-////            var_dump($source);
-////            echo "<br/>";
-////            $source_id = $source->id;
-////
-////            $retrivesource = \Stripe\Source::retrieve(
-////                            $source_id
-////            );
-////                echo "<br/>";
-////            var_dump($retrivesource);
-////            $banktoken = \Stripe\Token::create([
-////                        'bank_account' => [
-////                            'country' => 'US',
-////                            'currency' => 'usd',
-////                            'account_holder_name' => $request->name_on_card,
-////                            'account_holder_type' => 'individual',
-////                            'routing_number' => '110000000',
-////                            'account_number' => '000123456789',
-////                        ],
-////            ]);
-////
-////            $bankobject = \Stripe\Customer::createSource(
-////                            $customer_id, ['source' => $banktoken->id]
-////            );
-////            var_dump($bankobject);
-////
-//            $getbankdetail = \Stripe\Customer::retrieveSource(
-//                            $customer_id, 'ba_1Ft6QJI1YOzsgbYDypIkc5dA'
-//            );
-//
-//            var_dump($getbankdetail);
-//            // verify the account
-//            $getbankdetail->verify(['amounts' => [32, 45]]);
-//
-//            $charge = \Stripe\Charge::create([
-//                        'amount' => 2 * 100,
-//                        'currency' => 'usd',
-//                        'customer' => $customer_id,
-//                        'source' => $getbankdetail->id,
-//            ]);
-////            $pay = $payment_method->attach(['customer' => $customer_id]);
-////            var_dump($pay);
-////          $bankobject=  \Stripe\Customer::createSource(
-////                    $customer_id, ['source' => 'btok_1FspoLI1YOzsgbYD6QSXzeHX']
-////            );
-////            echo "<br/>";
-////           var_dump($bankobject);
-//        }
-
     public function bankPayment(Request $request) {
         //email & card holder name add when customer is create    
-        Stripe\Stripe::setApiKey('sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv');
-//        $customerCreate = \Stripe\Customer::create([
-//                    'description' => $request->bankHolderName,
-//                    'email' => $request->email,
-//                    'source' => $request->stripeToken,
-//        ]);
-//        $customer_json = $customerCreate->__toJSON();
-//        $customer_json = json_decode($customer_json);
-//        
-//        $Invoice = Invoice::find($request->invoice_id_verify);
-//        $Invoice->exists = true;
-//        $Invoice->id = $request->invoice_id;
-//        
-////        $Invoice->stripe_payment_id = $charge->id;
-////        $Invoice->status = 1;
-////        $Invoice->save();
-//
-//        $customer = new Customer;
-//        $customer->exists = true;
-//        $customer->id = $Invoice->customer_id;
-//        $customer->stripe_customer_id = $customer_json->id;
-//        $customer->save();
-//        var_dump($customer_json); echo "<br/>";
-//        echo($customer_json->id);
-//        echo 'first' . $customer_json->id;
-//        echo $customer_json['id'];
+        //$Test = $request->stripeToken;
+        $Invoice = Invoice::find($request->invoice_id_verify);
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        if (!is_null($Invoice->customer->stripe_customer_id)) {
+            if ($Invoice->isAchVerified == 2) {
+                //retrieve stripe customer id for verification
+                $retrieveCustomer = \Stripe\Customer::retrieve($Invoice->customer->stripe_customer_id);
 
-        $mail_content = new MailContent();
-        $mail_content->invoiceToken = request('invoiceToken');
-        $mail_content->email = request('email');
-        $data = ['view' => 'mails.mansiTestVerify', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Verify Link'];
-        $emailOb = new Email($data);
+                //get the existing bank account & check its status verified or new
+                $bank_account = \Stripe\Customer::retrieveSource(
+                                $retrieveCustomer->id, $retrieveCustomer->default_source
+                );
 
-        Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
-        //
-        //charge create
-//        $charge = \Stripe\Charge::create([
-//                    'amount' => $request->totalPrice,
-//                    'currency' => 'usd',
-//                    'customer' => $customer_json->id,
-//        ]);
+                //charge create
+                $charge = \Stripe\Charge::create([
+                            'amount' => $request->totalPrice * 100,
+                            'currency' => 'usd',
+                            'customer' => $retrieveCustomer->id,
+                            'source' => $retrieveCustomer->default_source
+                ]);
+
+                $Invoice = Invoice::find($request->invoice_id_verify);
+                $Invoice->exists = true;
+                $Invoice->id = $request->invoice_id_verify;
+                $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->status = 1;
+                $Invoice->save();
+
+                $customer = new Customer;
+                $customer->exists = true;
+                $customer->id = $Invoice->customer_id;
+                $customer->stripe_customer_id = $retrieveCustomer->id;
+                $customer->save();
+
+                $stripePaymentId = $charge->id;
+                $Invoice = $Invoice;
+                $Amount = $request->totalPrice;
+                return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
+            }
+            if ($Invoice->isAchVerified == 1 || $Invoice->isAchVerified == 0) {
+                $Invoice->exists = true;
+                $Invoice->id = $request->invoice_id_verify;
+//            $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->isAchVerified = 1;
+                $Invoice->save();
+
+                $customer = new Customer;
+                $customer->exists = true;
+                $customer->id = $Invoice->customer_id;
+                $customer->stripe_customer_id = $Invoice->customer->stripe_customer_id;
+                $customer->save();
+//                
+                //mail sent
+                $mail_content = new MailContent();
+                $mail_content->invoiceToken = request('invoiceToken');
+                $mail_content->email = request('email');
+                $mail_content->price = $request->totalPrice;
+                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Verify Link'];
+
+                $emailOb = new Email($data);
+//                Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
+                return view('Client/mailNotification');
+            }
+        } else {
+            try {
+                $customerCreate = \Stripe\Customer::create([
+                            'description' => $request->bankHolderName,
+                            'email' => $request->email,
+                            'source' => $request->stripeToken,
+                ]);
+
+                $customer_json = $customerCreate->__toJSON();
+                $customer_json = json_decode($customer_json);
+
+                $Invoice = Invoice::find($request->invoice_id_verify);
+                $Invoice->exists = true;
+                $Invoice->id = $request->invoice_id_verify;
+//            $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->isAchVerified = 1;
+                $Invoice->save();
+
+                $customer = new Customer;
+                $customer->exists = true;
+                $customer->id = $Invoice->customer_id;
+                $customer->stripe_customer_id = $customer_json->id;
+                $customer->save();
+
+                //mail sent
+                $mail_content = new MailContent();
+                $mail_content->invoiceToken = request('invoiceToken');
+                $mail_content->email = request('email');
+                $mail_content->price = $request->totalPrice;
+                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Verify Link'];
+                $emailOb = new Email($data);
+                Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
+                return view('Client/mailNotification');
+            } catch (\Stripe\Error\Base $e) {
+                echo($e->getMessage());
+            }
+        }
     }
 
     public function achVerification(Request $request) {
-        Stripe\Stripe::setApiKey('sk_test_YWrmxxCNxfB5ZHsKxbFeQzrv');
+        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         //retrieve stripe customer id for verification
         $retrieveCustomer = \Stripe\Customer::retrieve($request->stripe_customer_id_verify);
@@ -417,23 +391,72 @@ class StripePaymentController extends Controller {
         $status = $bank_account->status;
         if ($status == "new") {
             //verify the account 32,45
-            $bank_account_verify = $bank_account->verify(['amounts' => [$request->amount1, $request->amount2]]);
+            try {
+                $bank_account_verify = $bank_account->verify(['amounts' => [$request->amount1, $request->amount2]]);
+            } catch (\Stripe\Error\Base $e) {
+                return;
+            }
 
-            //after verification, verified status change to 1
+            //after verification, verified status change to 2
             $invoiceAchVerified = Invoice::find($request->invoiceId);
-            $invoiceAchVerified->isAchVerified = 1;
+            $invoiceAchVerified->isAchVerified = 2;
             $invoiceAchVerified->save();
 
             //charge create
-//            $charge = \Stripe\Charge::create([
-//                        'amount' => $request->totalPrice,
-//                        'currency' => 'usd',
-//                        'customer' => $retrieveCustomer->id,
-//            ]);
+            $charge = \Stripe\Charge::create([
+                        'amount' => $request->price * 100,
+                        'currency' => 'usd',
+                        'customer' => $retrieveCustomer->id,
+                        'source' => $retrieveCustomer->default_source
+            ]);
+
+            $Invoice = Invoice::find($request->invoiceId);
+            $Invoice->exists = true;
+            $Invoice->id = $request->invoiceId;
+            $Invoice->stripe_payment_id = $charge->id;
+            $Invoice->status = 1;
+            $Invoice->save();
+
+            $customer = new Customer;
+            $customer->exists = true;
+            $customer->id = $Invoice->customer_id;
+            $customer->stripe_customer_id = $retrieveCustomer->id;
+            $customer->save();
+
+            $stripePaymentId = $charge->id;
+            $Invoice = $Invoice;
+            $Amount = $request->price;
+            return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
         } else {
-//            $invoiceAchVerified = Invoice::find($request->invoiceId);
-//            $invoiceAchVerified->isAchVerified = 1;
-//            $invoiceAchVerified->save();
+            $invoiceAchVerified = Invoice::find($request->invoiceId);
+            $invoiceAchVerified->isAchVerified = 2;
+            $invoiceAchVerified->save();
+
+            //charge create
+            $charge = \Stripe\Charge::create([
+                        'amount' => $request->price * 100,
+                        'currency' => 'usd',
+                        'customer' => $retrieveCustomer->id,
+                        'source' => $retrieveCustomer->default_source
+            ]);
+
+            $Invoice = Invoice::find($request->invoiceId);
+            $Invoice->exists = true;
+            $Invoice->id = $request->invoiceId;
+            $Invoice->stripe_payment_id = $charge->id;
+            $Invoice->status = 1;
+            $Invoice->save();
+
+            $customer = new Customer;
+            $customer->exists = true;
+            $customer->id = $Invoice->customer_id;
+            $customer->stripe_customer_id = $retrieveCustomer->id;
+            $customer->save();
+
+            $stripePaymentId = $charge->id;
+            $Invoice = $Invoice;
+            $Amount = $request->price;
+            return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
         }
     }
 

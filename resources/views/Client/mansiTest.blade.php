@@ -417,7 +417,10 @@
     <!--<script type="text/javascript" src="https://js.stripe.com/v2/"></script>-->
 
     <body>
-
+        <?php
+        // var_dump($invoiceData);
+//        return;
+        ?>
         <!-- start loader -->
         <div id="pageloader-overlay" class="visible incoming"><div class="loader-wrapper-outer"><div class="loader-wrapper-inner"><div class="loader"></div></div></div></div>
         <!-- end loader -->
@@ -643,94 +646,126 @@
 
                                                     </div>
                                                 </div>
-                                                <?php // }       ?>
+                                                <?php // }         ?>
                                             </div>
                                         </section><!-- /.content -->
                                     </div>
                                 </div>
-
+   <?php  
+                                        echo "verify==".$invoiceData->isAchVerified;
+                                        echo "customrtiidddd=".$invoiceData->customer->stripe_customer_id;
+                                        ?>
                                 <div class="card hidden" id="stripePaymentUI">
                                     <div class="card-body">
-                                        <?php if(strpos($_SERVER['REQUEST_URI'], '&p=verify') == true){ ?>
-                                        <div class="paymentVerifyDiv">
-                                            <div class="card-title mt-3">Enter Amount Details</div>
-                                            <hr>
-                                            <form role="form" action="{{ route('stripe.achVerify') }}"  method="post">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
-                                                <input type="hidden" name="stripe_customer_id_verify" value="{{$invoiceData->customer->stripe_customer_id}}" />
-                                                <input type="hidden" name="invoiceId" value="{{$invoiceData->id}}" />
-                                                <div class="row">
-                                                    <div class="col-md-6 col-lg-6 col-sm-12">
-                                                        <div class="form-group">
-                                                            <label for="input-1">Amount 1</label>
-                                                            <input type="text" class="form-control" required id="amount1" name="amount1" placeholder="Enter Amount" value="">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6 col-lg-6 col-sm-12">
-                                                        <div class="form-group">
-                                                            <label for="input-1">Amount 2</label>
-                                                            <input type="text" class="form-control" required id="amount2" name="amount2" placeholder="Enter Amount" value="">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                     
+                                        <?php if ($invoiceData->isAchVerified == "1" && $invoiceData->customer->stripe_customer_id !== '') {
+                                            ?>
+                                            <div class="paymentVerifyDiv">
+                                                <div class="card-title mt-3">Enter Amount Details</div>
                                                 <hr>
-                                                <div class="form-group">
-                                                    <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i>Submit</button>
-                                                </div>
-                                            </form>
-                                        </div> <?php }
-                                        
-                                       else { ?>
-                                        <div class="col-md-12 col-lg-12 col-sm-12">
-                                            <div class="paymentOptionUI">
-                                                <div class="icheck-material-primary">
-                                                    <input type="radio" id="primary1" name="primaryname" checked="" onclick="changePaymentProcess(this);" data-payment="credit-card">
-                                                    <label for="primary1">Credit Card Payment</label>
-                                                </div>
-                                                <div class="icheck-material-primary">
-                                                    <input type="radio" id="primary2" name="primaryname" onclick="changePaymentProcess(this);" data-payment="bank-payment">
-                                                    <label for="primary2">Bank Payment</label>
-                                                </div> 
-                                            </div>
-                                        </div>
-
-                                        <div class="card-title">Kindly pay your Talevation Invoice!</div>
-                                        <hr>
-
-                                        <div class="creditCardDiv">
-                                            <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form">
-                                                {{ csrf_field() }}
-
-                                                <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
-                                                <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
-                                                <div class="form-group">
-                                                    <label for="input-1">Name on Card</label>
-                                                    <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="input-1">Email</label>
-                                                    <input type="text" class="form-control" required id="email" name="email" placeholder="Enter Your Email" value="{{$invoiceData->email}}">
-                                                </div>
-
-                                                <?php
-                                                $stripe_payment_id = $invoiceData->customer->stripe_customer_id;
-
-                                                if (isset($stripe_payment_id)) {
-                                                    ?>
-                                                    <input value="{{$invoiceData->customer->stripe_customer_id}}" id="stripe_customer_id" name="stripe_customer_id" type="hidden">
-                                                    <div class="form-group">
-                                                        <input type="hidden" value="" name="paymentMethodId" id="paymentMethodId">
-                                                        <label class="col-lg-8 col-sm-12 col-md-8 pade_none" for="input-2">Payment Source</label>
-                                                        <select onclick="setPaymentId(this);" id="paymentMethod" name="paymentMethod" class="form-control col-lg-4 col-sm-12 custom-select"  style="text-transform: lowercase;">
-                                                            @for($i=0;$i<count($PaymentMethod['data']);$i++)
-                                                                <option id="{{$PaymentMethod['data'][$i]->id}}">{{$PaymentMethod['data'][$i]['card']->brand}} ending with {{ $PaymentMethod['data'][$i]['card']->last4}}</option>
-                                                                @endfor
-                                                        </select>
+                                                <form role="form" action="{{ route('stripe.achVerify') }}"  method="post">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
+                                                    <input type="hidden" name="stripe_customer_id_verify" value="{{$invoiceData->customer->stripe_customer_id}}" />
+                                                    <input type="hidden" name="invoiceId" value="{{$invoiceData->id}}" />
+                                                    <input type="hidden" name="price" value="{{$totalDue}}" />
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-lg-6 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label for="input-1">Amount 1</label>
+                                                                <input type="text" class="form-control" required id="amount1" name="amount1" placeholder="Enter Amount" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-lg-6 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label for="input-1">Amount 2</label>
+                                                                <input type="text" class="form-control" required id="amount2" name="amount2" placeholder="Enter Amount" value="">
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                <?php } else { ?>
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i>Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div> <?php } else {
+                                            ?>
+                                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                                <div class="paymentOptionUI">
+                                                    <div class="icheck-material-primary">
+                                                        <input type="radio" id="primary1" name="primaryname" checked="" onclick="changePaymentProcess(this);" data-payment="credit-card">
+                                                        <label for="primary1">Credit Card Payment</label>
+                                                    </div>
+                                                    <div class="icheck-material-primary">
+                                                        <input type="radio" id="primary2" name="primaryname" onclick="changePaymentProcess(this);" data-payment="bank-payment">
+                                                        <label for="primary2">Bank Payment</label>
+                                                    </div> 
+                                                </div>
+                                            </div>
 
-                                                    <div class="">
+                                            <div class="card-title">Kindly pay your Talevation Invoice!</div>
+                                            <hr>
+
+                                            <div class="creditCardDiv">
+                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form">
+                                                    {{ csrf_field() }}
+
+                                                    <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
+                                                    <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
+                                                    <div class="form-group">
+                                                        <label for="input-1">Name on Card</label>
+                                                        <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Email</label>
+                                                        <input type="text" class="form-control" required id="email" name="email" placeholder="Enter Your Email" value="{{$invoiceData->email}}">
+                                                    </div>
+
+                                                    <?php
+                                                    $hideNewCard = '';
+                                                    $stripe_payment_id = $invoiceData->customer->stripe_customer_id;
+                                                    if (isset($stripe_payment_id) && $stripe_payment_id != '') {
+                                                        $hideNewCard = 'hidden'; ?>
+                                                        <input value="{{$stripe_payment_id}}" id="stripe_customer_id" name="stripe_customer_id" type="hidden">
+                                                        <div id="existingCreditCard" class="form-group">
+                                                            <input type="hidden" value="" name="paymentMethodId" id="paymentMethodId">
+                                                            <label class="col-lg-8 col-sm-12 col-md-8 pade_none" for="input-2">Payment Source</label>
+                                                            <select onclick="setPaymentId(this);" id="paymentMethod" name="paymentMethod" class="form-control col-lg-4 col-sm-12 custom-select"  style="text-transform: lowercase;">
+                                                                @for($i=0;$i<count($PaymentMethod['data']);$i++)
+                                                                    <option id="{{$PaymentMethod['data'][$i]->id}}">{{$PaymentMethod['data'][$i]['card']->brand}} ending with {{ $PaymentMethod['data'][$i]['card']->last4}}</option>
+                                                                    @endfor
+                                                            </select>
+                                                            <a data-shownew="1" class="m-2 mr-3" href="javascript:void(0);" onclick="return showHideNewCard(this);"><i class="icon-lock"></i> Use New Card</a>
+                                                        </div>
+                                                    <?php } else { ?>
+
+
+
+                                                        <!--                                                <div class='form-row row'>
+                                                                                                            <div class="col-xs-12 col-md-4 form-group cvc required">
+                                                                                                            <label for="input-2">Card Number</label>
+                                                                                                            <input type="text" autocomplete='off' class="form-control card-number" value="" required name="card-number" size='20' id="card-number" placeholder="Enter Your Card Number">
+                                                                                                        </div>
+                                                                                                            <div class='col-xs-12 col-md-2 form-group cvc required'>
+                                                                                                                <label class='control-label'>CVC</label>
+                                                                                                                <input autocomplete='off' class='form-control required card-cvc' value="" name="card-cvc" id="card-cvc" placeholder='ex. 311' size='4' type='text'>
+                                                                                                            </div>
+                                                                                                            <div class='col-xs-12 col-md-3 form-group expiration required'>
+                                                                                                                <label class='control-label'>Expiration Month</label> <input
+                                                                                                                    class='form-control card-expiry-month' required name="card-expiry-month" value="" id="card-expiry-month" placeholder='MM' size='2'
+                                                                                                                    type='text'>
+                                                                                                            </div>
+                                                                                                            <div class='col-xs-12 col-md-3 form-group expiration required'>
+                                                                                                                <label class='control-label'>Expiration Year</label> <input
+                                                                                                                    class='form-control card-expiry-year' required name="card-expiry-year" value="" id="card-expiry-year" placeholder='YYYY' size='4'
+                                                                                                                    type='text'>
+                                                                                                            </div>
+                                                                                                        </div>-->
+
+
+
+                                                    <?php } ?>
+                                                    <div id="newCreditCard" class="{{$hideNewCard}}">
                                                         <label for="card-element">
                                                             Credit or debit card
                                                         </label>
@@ -740,157 +775,136 @@
 
                                                         <!-- Used to display form errors. -->
                                                         <div id="card-errors" role="alert"></div>
+                                                        <?php if (isset($stripe_payment_id) && $stripe_payment_id != '') { ?>
+                                                            <a data-shownew="0" class="m-2 mr-3" href="javascript:void(0);" onclick="return showHideNewCard(this);"><i class="icon-lock"></i> Select Existing Card</a>
+                                                        <?php } ?>
                                                     </div>
 
-                                                    <!--                                                <div class='form-row row'>
-                                                                                                        <div class="col-xs-12 col-md-4 form-group cvc required">
-                                                                                                        <label for="input-2">Card Number</label>
-                                                                                                        <input type="text" autocomplete='off' class="form-control card-number" value="" required name="card-number" size='20' id="card-number" placeholder="Enter Your Card Number">
-                                                                                                    </div>
-                                                                                                        <div class='col-xs-12 col-md-2 form-group cvc required'>
-                                                                                                            <label class='control-label'>CVC</label>
-                                                                                                            <input autocomplete='off' class='form-control required card-cvc' value="" name="card-cvc" id="card-cvc" placeholder='ex. 311' size='4' type='text'>
-                                                                                                        </div>
-                                                                                                        <div class='col-xs-12 col-md-3 form-group expiration required'>
-                                                                                                            <label class='control-label'>Expiration Month</label> <input
-                                                                                                                class='form-control card-expiry-month' required name="card-expiry-month" value="" id="card-expiry-month" placeholder='MM' size='2'
-                                                                                                                type='text'>
-                                                                                                        </div>
-                                                                                                        <div class='col-xs-12 col-md-3 form-group expiration required'>
-                                                                                                            <label class='control-label'>Expiration Year</label> <input
-                                                                                                                class='form-control card-expiry-year' required name="card-expiry-year" value="" id="card-expiry-year" placeholder='YYYY' size='4'
-                                                                                                                type='text'>
+                                                    <div class='form-row row'>
+                                                        <div class='col-md-12 error form-group hidden'>
+                                                            <div class='alert-danger alert p-2'>Please correct the errors and try
+                                                                again.</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='form-row mb-3'>
+                                                        <div class='col-md-12 mt-3 '>
+                                                            <div class='row mt-3'>
+                                                                <div class='centerElement'>
+                                                                    <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class='row mt-3'>
+                                                                <div class='col-md-12'>
+                                                                    <div class='fr'>
+                                                                        <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
+                                                                        <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                       
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-8">
+                                                            <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
+
+                                                            <div class="col-md-4 pull-left" style="">
+                                                                <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
+                                                        <?php if (isset($stripe_payment_id) && $stripe_payment_id != '') { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
+                                                        <?php } else { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
+                                                        <?php } ?>
+                                                        <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+                                            <div class="bankPaymentDiv hidden">
+                                                <form action="{{ route('stripe.post1') }}" class="" method="post" id="payment-formbank">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="source" />
+                                                    <input type="hidden" name="email" value="{{$invoiceData->email}}" />
+                                                    <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id_verify">
+                                                    <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
+                                                    <div class="form-group">
+                                                        <label for="input-1">Name</label>
+                                                        <input id="name" name="bankHolderName" class="form-control field" required value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}" placeholder="Jenny Rosen" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Type</label>
+                                                        <select id="type" class="form-control field" required name="type">
+                                                            <option value="individual">Individual</option>
+                                                            <option value="company">Company</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Routing number</label>
+                                                        <input id="routing-number" name="routing_number" class="form-control field" value="110000000" placeholder="110000000" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input-1">Account number</label>
+                                                        <input id="account-number" name="account_number" class="form-control field" value='000123456789' placeholder="000123456789" />
+                                                    </div>
+                                                    <!--                                                <div class="outcome">
+                                                                                                        <div class="error"></div>
+                                                                                                        <div class="success">
+                                                                                                            Success! Your Stripe token is <span class="token"></span>
                                                                                                         </div>
                                                                                                     </div>-->
 
-
-
-                                                <?php } ?>
-                                                <div class='form-row row'>
-                                                    <div class='col-md-12 error form-group hidden'>
-                                                        <div class='alert-danger alert p-2'>Please correct the errors and try
-                                                            again.</div>
-                                                    </div>
-                                                </div>
-
-                                                <div class='form-row mb-3'>
-                                                    <div class='col-md-12 mt-3 '>
-                                                        <div class='row mt-3'>
-                                                            <div class='centerElement'>
-                                                                <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
-                                                            </div>
+                                                    <div class='form-row row'>
+                                                        <div class='col-md-12 error form-group hidden'>
+                                                            <div class='alert-danger alert p-2'>Please correct the errors and try
+                                                                again.</div>
                                                         </div>
+                                                    </div>
 
-                                                        <div class='row mt-3'>
-                                                            <div class='col-md-12'>
-                                                                <div class='fr'>
-                                                                    <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
-                                                                    <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                    <div class='form-row mb-3'>
+                                                        <div class='col-md-12 mt-3 '>
+                                                            <div class='row'>
+                                                                <div class='centerElement'>
+                                                                    <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
                                                                 </div>
                                                             </div>
-                                                        </div>                                       
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                                <div class="col-md-12">
-                                                    <div class="col-md-8">
-                                                        <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
-
-                                                        <div class="col-md-4 pull-left" style="">
-                                                            <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
-                                                    <?php if (isset($stripe_payment_id)) { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
-                                                    <?php } else { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
-                                                    <?php } ?>
-                                                    <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <div class="bankPaymentDiv hidden">
-                                            <form action="{{ route('stripe.post1') }}" class="" method="post" id="payment-formbank">
-                                                {{ csrf_field() }}
-                                                <input type="hidden" name="source" />
-                                                <input type="hidden" name="email" value="{{$invoiceData->email}}" />
-                                                <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id_verify">
-                                                <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
-                                                <div class="form-group">
-                                                    <label for="input-1">Name</label>
-                                                    <input id="name" name="bankHolderName" class="form-control field" required value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}" placeholder="Jenny Rosen" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="input-1">Type</label>
-                                                    <select id="type" class="form-control field" required name="type">
-                                                        <option value="individual">Individual</option>
-                                                        <option value="company">Company</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="input-1">Routing number</label>
-                                                    <input id="routing-number" name="routing_number" class="form-control field" value="110000000" placeholder="110000000" />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="input-1">Account number</label>
-                                                    <input id="account-number" name="account_number" class="form-control field" value='000123456789' placeholder="000123456789" />
-                                                </div>
-                                                <!--                                                <div class="outcome">
-                                                                                                    <div class="error"></div>
-                                                                                                    <div class="success">
-                                                                                                        Success! Your Stripe token is <span class="token"></span>
-                                                                                                    </div>
-                                                                                                </div>-->
-
-                                                <div class='form-row row'>
-                                                    <div class='col-md-12 error form-group hidden'>
-                                                        <div class='alert-danger alert p-2'>Please correct the errors and try
-                                                            again.</div>
-                                                    </div>
-                                                </div>
-
-                                                <div class='form-row mb-3'>
-                                                    <div class='col-md-12 mt-3 '>
-                                                        <div class='row'>
-                                                            <div class='centerElement'>
-                                                                <p>Billed to: {{$invoiceData->first_name}} {{$invoiceData->last_name}}({{$invoiceData->email}})</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class='row mt-3'>
-                                                            <div class='col-md-12'>
-                                                                <div class='fr'>
-                                                                    <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
-                                                                    <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                            <div class='row mt-3'>
+                                                                <div class='col-md-12'>
+                                                                    <div class='fr'>
+                                                                        <input type="hidden" name="totalPrice" id="totalPrice" value="{{$totalDue}}">
+                                                                        <h3 class="totalPrice">Total: $14.99/month</h3>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <hr>
-                                                <div class="col-md-12">
-                                                    <div class="col-md-8">
-                                                        <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
+                                                    <hr>
+                                                    <div class="col-md-12">
+                                                        <div class="col-md-8">
+                                                            <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
 
-                                                        <div class="col-md-4 pull-left" style="">
-                                                            <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                            <div class="col-md-4 pull-left" style="">
+                                                                <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
-                                                    <?php if (isset($stripe_payment_id)) { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay 1</button>
-                                                    <?php } else { ?>
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now 1</button>
-                                                    <?php } ?>
-                                                    <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
-                                                </div>
-                                            </form>
-                                        </div>
+                                                    <div class="form-group">
+                                                        <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
+                                                        <?php if (isset($stripe_payment_id)) { ?>
+                                                            <input type="submit" class="btn btn-info mr-1 px-5 pull-right" value="Pay">
+                                                        <?php } else { ?>
+                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
+                                                        <?php } ?>
+                                                        <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -985,8 +999,8 @@
     <script>
                                                         //Test UI JS
                                                         $(function () {
-                                                            var stripe_customer_id = $("#stripe_customer_id").val();
-                                                            if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
+                                                            //var stripe_customer_id = $("#stripe_customer_id").val();
+                                                            //if (stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined) {
                                                                 var stripe = Stripe('pk_test_r8hQgZhHiSDMnMFn9Apy5aAk');
                                                                 //var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
                                                                 // Create an instance of Elements.
@@ -1006,8 +1020,6 @@
                                                                         iconColor: '#fa755a'
                                                                     }
                                                                 };
-
-//                                                            if ($("#primary1").is(":checked")) {
                                                                 // card payment
                                                                 var form1 = document.getElementById('payment-form');
                                                                 // Create an instance of the card Element.
@@ -1024,25 +1036,35 @@
                                                                     }
                                                                 });
                                                                 // Handle form submission.
+
+                                                                var ownerInfo = {
+                                                                    owner: {
+                                                                        name: document.getElementById('name_on_card').value,
+                                                                        email: document.getElementById('email').value
+                                                                    },
+                                                                };
+
                                                                 form1.addEventListener('submit', function (event) {
                                                                     event.preventDefault();
-                                                                    stripe.createToken(card).then(function (result) {
+                                                                    stripe.createSource(card, ownerInfo).then(function (result) {
+
                                                                         if (result.error) {
                                                                             // Inform the user if there was an error.
                                                                             var errorElement = document.getElementById('card-errors');
                                                                             errorElement.textContent = result.error.message;
                                                                         } else {
                                                                             // Send the token to your server.
-                                                                            stripeTokenHandler(result.token);
+                                                                            //stripeTokenHandler(result.token);
+                                                                            stripeSourceHandler(result.source);
                                                                         }
                                                                     });
                                                                 });
-
                                                                 // bank payment
 
                                                                 var form2 = document.getElementById('payment-formbank');
+
+                                                                // Submit the form with the token ID.
                                                                 form2.addEventListener('submit', function (event2) {
-                                                                    alert('in');
                                                                     event2.preventDefault();
                                                                     var bankAccountData = {
                                                                         country: 'us',
@@ -1054,51 +1076,60 @@
                                                                     };
                                                                     stripe.createToken('bank_account', bankAccountData).then(setOutcome);
                                                                 });
+                                                            //}
+                                                            
+                                                            
+                                                        });
 
-                                                                // Submit the form with the token ID.
-                                                                function stripeTokenHandler(token) {
-                                                                    // Insert the token ID into the form so it gets submitted to the server
-                                                                    var form = document.getElementById('payment-form');
-                                                                    var hiddenInput = document.createElement('input');
-                                                                    hiddenInput.setAttribute('type', 'hidden');
-                                                                    hiddenInput.setAttribute('name', 'stripeToken');
-                                                                    hiddenInput.setAttribute('value', token.id);
-                                                                    form.appendChild(hiddenInput);
+//                                                        function stripeTokenHandler(token) {
+//                                                            // Insert the token ID into the form so it gets submitted to the server
+//                                                            var form = document.getElementById('payment-form');
+//                                                            var hiddenInput = document.createElement('input');
+//                                                            hiddenInput.setAttribute('type', 'hidden');
+//                                                            hiddenInput.setAttribute('name', 'stripeToken');
+//                                                            hiddenInput.setAttribute('value', token.id);
+//                                                            form.appendChild(hiddenInput);
+//                                                            alert(token.id);
+//                                                            // Submit the form
+//                                                            form.submit();
+//                                                        }
+                                                        function stripeSourceHandler(source) {
+                                                            // Insert the source ID into the form so it gets submitted to the server
+                                                            var form = document.getElementById('payment-form');
+                                                            var hiddenInput = document.createElement('input');
+                                                            hiddenInput.setAttribute('type', 'hidden');
+                                                            hiddenInput.setAttribute('name', 'stripeSource');
+                                                            hiddenInput.setAttribute('value', source.id);
+                                                            form.appendChild(hiddenInput);
 
-                                                                    // Submit the form
-                                                                    form.submit();
-                                                                }
-                                                                function setOutcome(result) {
+                                                            // Submit the form
+                                                            form.submit();
+                                                        }
+                                                        function setOutcome(result) {
 //                                                                    var successElement = document.querySelector('.success');
 //                                                                    var errorElement = document.querySelector('.error');
 //                                                                    successElement.classList.remove('visible');
 //                                                                    errorElement.classList.remove('visible');
-
-                                                                    if (result.token.id) {
-
-                                                                        // Use the token to create a charge or a customer
-                                                                        // https://stripe.com/docs/charges
+                                                            if (result.token.id) {
+                                                                alert(result.token.id);
+                                                                // Use the token to create a charge or a customer
+                                                                // https://stripe.com/docs/charges
 //                                                                        successElement.querySelector('.token').textContent = result.token.id;
 //                                                                        successElement.classList.add('visible');
 
-                                                                        var form3 = document.getElementById('payment-formbank');
-                                                                        var hiddenInput = document.createElement('input');
-                                                                        hiddenInput.setAttribute('type', 'hidden');
-                                                                        hiddenInput.setAttribute('name', 'stripeToken');
-                                                                        hiddenInput.setAttribute('value', result.token.id);
-                                                                        form3.appendChild(hiddenInput);
-                                                                        // Submit the form
-                                                                        form3.submit();
-                                                                    } else if (result.error) {
+                                                                var form3 = document.getElementById('payment-formbank');
+                                                                var hiddenInput = document.createElement('input');
+                                                                hiddenInput.setAttribute('type', 'hidden');
+                                                                hiddenInput.setAttribute('name', 'stripeToken');
+                                                                hiddenInput.setAttribute('value', result.token.id);
+                                                                form3.appendChild(hiddenInput);
+                                                                // Submit the form
+                                                                form3.submit();
+                                                            } else if (result.error) {
 //                                                                        errorElement.textContent = result.error.message;
 //                                                                        errorElement.classList.add('visible');
-                                                                    }
-                                                                }
-
                                                             }
-                                                        });
-
-
+                                                        }
                                                         function changePaymentProcess(element) {
                                                             if ($(element).is(":checked"))
                                                             {
@@ -1116,6 +1147,17 @@
                                                                     $('.bankPaymentDiv').find('form').addClass("form-active");
                                                                 }
 //                                                                checkprocess();
+                                                            }
+                                                        }
+
+                                                        function showHideNewCard(element) {
+                                                            var isShowNew = $(element).attr('data-shownew');
+                                                            if (isShowNew == "1") {
+                                                                $("#newCreditCard").removeClass('hidden');
+                                                                $("#existingCreditCard").addClass('hidden');
+                                                            } else {
+                                                                $("#newCreditCard").addClass('hidden');
+                                                                $("#existingCreditCard").removeClass('hidden');
                                                             }
                                                         }
     </script>

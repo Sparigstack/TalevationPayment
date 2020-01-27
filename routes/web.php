@@ -40,6 +40,7 @@ Route::post('getEmail', 'InvoiceController@fetch')->name('autocomplete.fetch');
 //Route for Add Customer Page
 Route::get('customer', 'CustomerController@customer');
 Route::post('addCustomer', 'CustomerController@addCustomer');
+Route::post('checkDuplicateEmail', 'CustomerController@checkDuplicateEmail');
 Route::post('getCustomerFromdb', 'CustomerController@getCustomerFromdb');
 
 //Route for Logout Page
@@ -54,6 +55,10 @@ Route::post('achVerification', 'StripePaymentController@achVerification')->name(
 Route::get('verifiedBank', function (){
     return view('verifiedBank');
 });
+//Route::get('achVerification', function () {
+//    return view('mails.mansiTestVerify1');
+//});
+
 
 Route::post('createPaymentAPI', 'StripePaymentController@createPaymentAPI')->name('createPaymentAPI');
 

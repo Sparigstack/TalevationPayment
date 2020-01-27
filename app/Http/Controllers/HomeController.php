@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use QuickBooksOnline\API\DataService\DataService;
 use App\Http\Controllers\OAuth2LoginHelper;
 use Artisan;
+use App\Mail\Email;
+use Mail;
+use App\CustomClass\MailContent;
 
 class HomeController extends Controller {
 
@@ -29,8 +32,8 @@ class HomeController extends Controller {
 
 //        $this->middleware('auth');
         $utility = new \App\Utility;
-        $ClientID = 'ABr9OwbD6M7ooMJiALq4kazXzALuMZB1gDSM2JRJDUZWKYXZoA';
-        $ClientSecretKey = 'AETbLV8JHViIdJ6vdwaokUtTxbYS9p8DpkltDDE7';
+        $ClientID = env('QB_APP_ID');
+        $ClientSecretKey = env('QB_APP_SECRET');
         $dataService = DataService::Configure(array(
                     'auth_mode' => 'oauth2',
                     'ClientID' => $ClientID,
@@ -61,8 +64,8 @@ class HomeController extends Controller {
 
     public function qbrefresh() {
 
-        $QbToken = QbToken::first();       
-        
+        $QbToken = QbToken::first();
+
         $OAuth2Login_Helper = $this->OAuth2LoginHelper;
         //if (isset($QbToken) && !empty($QbToken)) {
         if ($QbToken) {
@@ -86,6 +89,23 @@ class HomeController extends Controller {
 //    public function filterInvoices(Request $request){
 //        
 //    }
+
+//    public function sendEmail() {
+//
+//        $mail_content = new MailContent();
+//
+//        $mail_content->invoiceToken = 'something here';
+//        $mail_content->email = 'something@sss.com';
+//        $mail_content->price = 111;
+//
+//        $data = ['view' => 'mails.mansiTestVerify', 'mail_content' => $mail_content, 'bcc' => 'ronak@protocrm.com', 'bccName' => 'Ronak Shah', 'subject' => 'Talevation test email!'];
+//        
+//        $emailOb = new Email($data);
+////        Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
+////        echo 'done sent';
+////        return;
+//    }
+
     public function invoicePage(Request $request) {
 //        Artisan::call('config:clear');
 //        Artisan::call('cache:clear');
@@ -146,7 +166,7 @@ class HomeController extends Controller {
 
         $termsList = Term::all();
         $taxList = StateTax::all();
-        return view('Masters/invoice_2', compact('invoiceList', 'termsList','taxList','startDate', 'endDate', 'search'));
+        return view('Masters/invoice_2', compact('invoiceList', 'termsList', 'taxList', 'startDate', 'endDate', 'search'));
 //        return view('Client/invoice', compact('invoiceList', 'termsList', 'startDate', 'endDate'));
     }
 

@@ -21,7 +21,6 @@ class CustomerController extends Controller {
 //        $customers = DB::select(DB::raw("SELECT c.*,i1.GUID as invGUID,i1.terms,i1.customer_id as customerId,
 //(select count(i.id) from invoices i where i.customer_id=c.id) as count
 //FROM customers c left JOIN invoices i1 on i1.customer_id=c.id;"));
-
 //        return $customers;
 //        SELECT c.*,(select count(i.id) from invoices i where i.customer_id=c.id) as count FROM customers c  ;
 //        SELECT c.*,i1.GUID,
@@ -73,16 +72,22 @@ class CustomerController extends Controller {
         } else {
             $customers->qb_customerId = $request->qb_customerId;
         }
-$customers->save();
-       
+        $customers->save();
 
-        
+
+
 
         if ($request->from == "saveCreateInvoice") {
             return $customers;
         } else {
             return redirect('customer');
         }
+    }
+
+    public function checkDuplicateEmail(Request $request) {
+        $existEmail = DB::table('customers')->where('email', '=', $request->emailAddress)->get();
+
+        return $existEmail;
     }
 
     public function getCustomerFromdb(Request $request) {

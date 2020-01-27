@@ -3,11 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/mails/mansiTestVerify.blade.php</file>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Client/mansiTest.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Utility.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/HomeController.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/config/session.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/routes/web.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/StripePaymentController.php</file>
-            <file>file:/C:/xampp/htdocs/TalevationPayment/app/CustomClass/MailContent.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Masters/index.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Client/stripePayment.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/.env</file>
         </group>
     </open-files>
 </project-private>

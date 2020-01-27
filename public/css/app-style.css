@@ -5747,6 +5747,12 @@ table.grid td {
 }
 
 .dataTable .parent td a {margin-right: 5px;cursor: pointer;}
+
+.duplicateEmail{
+    font-size: 18px;
+    color: red;
+}
+
 /* Responsive */
 
 @media only screen and (max-width: 1366px) {
