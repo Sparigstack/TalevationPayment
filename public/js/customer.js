@@ -47,7 +47,7 @@ function OnEmailSearch(element) {
                 //        if (arr[i]['label'].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
                 var stringtoUpperCase = val.toUpperCase();
                 var Fromarray = arr[i]['label'].toUpperCase();
-                if (Fromarray.includes(stringtoUpperCase)) {
+//                if (Fromarray.includes(stringtoUpperCase)) {
                     /*create a DIV element for each matching element:*/
                     b = document.createElement("DIV");
 
@@ -157,7 +157,7 @@ function OnEmailSearch(element) {
 //                    redirectToSpace(this);
                     });
                     a.appendChild(b);
-                }
+//                }
             }
         }
     });
@@ -176,12 +176,12 @@ function checkDuplicateEmail(element) {
 //            alert(arr.length);
             if (arr.length > 0) {
                 $('.duplicateEmail').removeClass('hidden');
-                $(':input[type="submit"]').prop('disabled', true);
-                $(':input[type="button"]').prop('disabled', true);
+                $('#saveCustomerBtn').prop('disabled', true);
+                $('#saveCreateInvoice').prop('disabled', true);
             } else {
                 $('.duplicateEmail').addClass('hidden');
-                $(':input[type="submit"]').prop('disabled', false);
-                $(':input[type="button"]').prop('disabled', false);
+                $('#saveCustomerBtn').prop('disabled', false);
+                $('#saveCreateInvoice').prop('disabled', false);
             }
         }
     });

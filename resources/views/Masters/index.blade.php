@@ -251,12 +251,12 @@
 
                                 <div class="modal-footer">
                                     <div class="col-md-6 col-lg-6 col-sm-12">
-                                        <p class="duplicateEmail hidden"> Email is already exist. </p>
+                                        <p class="duplicateEmail hidden"> This user already exists in system. Duplicate entry is not allowed. </p>
                                     </div>
                                         <!--<input type="button" data-dismiss="modal" class="btn  btn-inverse-primary  m-1 pull-right pb-2" value="Close"/>-->
                                     <div class="col-lg-6 col-md-6 col-sm-12">
                                         <input type="submit" class="btn btn-primary btn-info waves-effect waves-light m-1 pull-right pb-2 hidden" name="submit" id="saveCustomerBtn"  value="Save Customer"/>
-                                        <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
+                                        <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice" id="saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
                                     </div>
 
                                 </div>
@@ -297,14 +297,16 @@
 
                             <input type="hidden" name="companyName_Invoice" id="companyName_Invoice">
                             <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-6 col-sm-12 col-lg-6">
+                                <div class="row parent">
+                                    <div class="col-md-5 col-sm-12 col-lg-5">
                                         <div class="hidden" id="searchDivSection_Invoice"></div>
                                         <label id="contentToShow" class="mb-0" for="input-4">Lookup  Customer by Email</label>
                                         <i class="user-pointer fas fa-edit hidden" onclick="return editCustomer(this);" id="edit_customer" style="font-size: 20px;"></i>
                                         <!--<button class="btn btn-info hidden" onclick="return editCustomer(this);" id="edit_customer">Edit Customer</button>-->
-                                        <input class="form-control col-6" required type="text" id="customer" autocomplete="off" name="customer" placeholder="customer">
-                                        <i class="fa fa-refresh fa-spin hidden" style="float: right;" aria-hidden="true"></i>
+                                        <div class="inputContainer">
+                                            <input class="form-control" required type="text" id="customer" autocomplete="off" name="customer" placeholder="customer">
+                                            <i class="fa fa-refresh fa-spin hidden" style="float: right;" aria-hidden="true"></i>
+                                        </div>
                                     </div>
 
 

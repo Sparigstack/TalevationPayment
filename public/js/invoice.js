@@ -37,13 +37,15 @@ function OnCustomerSearch(element) {
     var fName = $(".searchContent").attr("firstname");
     var input = element;
     var CSRF_TOKEN = $('input[name="_token"]').val();
+    showInputLoader(input);
     $.ajax({
         url: 'getCustomerFromdb',
         type: 'post',
-        async: false,
+//        async: false,
         data: {_token: CSRF_TOKEN, customer: customer},
         success: function (response) {
 //                console.log(response);
+            hideInputLoader(input);
             var existingList = $("#" + input.id + "autocomplete-list");
             if (existingList != null && existingList != undefined && existingList.length > 0)
                 $(existingList).remove();

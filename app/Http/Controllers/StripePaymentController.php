@@ -16,8 +16,32 @@ use Illuminate\Support\Facades\Route;
 use App\Mail\Email;
 use Mail;
 use App\CustomClass\MailContent;
+use Redirect;
+use Illuminate\Support\Facades\Auth;
+use QuickBooksOnline\API\DataService\DataService;
+use App\Http\Controllers\OAuth2LoginHelper;
 
 class StripePaymentController extends Controller {
+    private $OAuth2LoginHelper;
+    
+    public function __construct() {
+
+//        $this->middleware('auth');
+        $utility = new \App\Utility;
+        $ClientID = env('QB_APP_ID');
+        $ClientSecretKey = env('QB_APP_SECRET');
+        $dataService = DataService::Configure(array(
+                    'auth_mode' => 'oauth2',
+                    'ClientID' => $ClientID,
+                    'ClientSecret' => $ClientSecretKey,
+                    'RedirectURI' => $utility->projectBaseUrl() . "/public/qbauth",
+//dev                    'RedirectURI' => "http://dev.sprigstack.com/TalevationPayment/public/qbauth",
+//live                    'RedirectURI' => "https://talevation.com/payments/public/qbauth",
+                    'scope' => "com.intuit.quickbooks.accounting",
+                    'baseUrl' => "Development"
+        ));
+        $this->OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
+    }
 
     public function payment() {
         $currentPath = '';
@@ -168,7 +192,29 @@ class StripePaymentController extends Controller {
             $Amount = $request->totalPrice;
             $flash_msg .= " 7";
 
-
+            $QbTokenFirst = QbToken::first();
+            $QbTokenDate = date($QbTokenFirst->updated_at);
+            $Date = date("Y-m-d H:i:s");
+            $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
+//           echo round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60)." minute"; return;
+            if ($totalTime >= 59) {
+                $OAuth2Login_Helper = $this->OAuth2LoginHelper;
+                //if (isset($QbToken) && !empty($QbToken)) {
+                if ($QbTokenFirst) {
+                    $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
+                    $accessTokenValue = $accessTokenObj->getAccessToken();
+                    $refreshTokenValue = $accessTokenObj->getRefreshToken();
+                    $QbTokenFirst->exists = true;
+                    $QbTokenFirst->id = $QbTokenFirst->id;
+                    $QbTokenFirst->access_token = $accessTokenValue;
+                    $QbTokenFirst->refresh_token = $refreshTokenValue;
+                    $QbTokenFirst->save();
+                    return redirect()->route('invoice');
+                } else {
+                    $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
+                    return Redirect::to($authorizationCodeUrl);
+                }
+            }
 //            echo "qbid=" . $Invoice->customer->qb_customerId;
             if (isset($Invoice->customer->qb_customerId)) {
 //                echo "in createpaymentapi";
@@ -184,7 +230,7 @@ class StripePaymentController extends Controller {
 //                return;
                 $flash_msg .= " 8";
             } else {
-                   
+
                 $flash_msg .= " 9";
 //                    ************** Query Customer Api ****************//
                 $curl = curl_init();
