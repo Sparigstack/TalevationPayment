@@ -45,7 +45,7 @@ class CustomerController extends Controller {
         $customers->state_name = $request->state;
         $customers->city_name = $request->city;
         $customers->zipcode = $request->zipcode;
-        $customers->GUID = $request->cus_GUID;
+        $customers->GUID = uniqid();
         $customers->a2_accountId = $request->a2_accountId;
         $customers->a2_contactId = $request->a2_contactId;
         $customers->note = $request->note;

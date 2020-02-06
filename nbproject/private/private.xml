@@ -6,10 +6,13 @@
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Utility.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/HomeController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/config/session.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/CustomerController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/routes/web.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/StripePaymentController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Masters/index.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/routes/api.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/resources/views/Client/stripePayment.blade.php</file>
+            <file>file:/C:/xampp/htdocs/TalevationPayment/app/Http/Controllers/talevationSyncController.php</file>
             <file>file:/C:/xampp/htdocs/TalevationPayment/.env</file>
         </group>
     </open-files>

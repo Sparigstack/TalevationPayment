@@ -199,7 +199,7 @@
                                 <div class="row">
                                     <div class="col-md-12 secondSection">
                                     <p> Thank you for your time! <br>
-                                        Your bank details is successfully registered with us. We will make two micro deposits to your given account and that will reflect within 3 to 5 business days. <br>
+                                        Your bank detail is successfully registered with us. We will make two micro deposits to your given account and that will reflect within 3 to 5 business days. <br>
                                         You will get a confirmation email with next step link inside it. Once you receive the micro deposits in your bank account, kindly click the link provided in mail and verify your account. <br>
                                         Your invoice will be paid only after verification done from your end. <br> </p>
                                     </div>

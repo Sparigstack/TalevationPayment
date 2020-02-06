@@ -880,7 +880,7 @@ function editInvoice(element, InvoiceItemObject) {
 <td class=""><input type="text" value="' + InvoiceItemObject[k]['discription'] + '" class="form-control descValue"></td>\n\
 <td class="w8"><input min="0" onkeyup="return ItemTotalValue(this);"  onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['quantity'] + '" type="number" class="form-control qtyValue"></td><td class="w10"><div class="input-group">\n\
 <div class="input-group-prepend"><span class="input-group-text"><i class="fas fa-dollar-sign" aria-hidden="true"></i></span></div>\n\
-<input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['rate'] + '"type="number" class="form-control rateValue"></div></td>\n\
+<input min="0" step="0.01" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" value="' + InvoiceItemObject[k]['rate'] + '"type="number" class="form-control rateValue"></div></td>\n\
 \n\<td class="w8"><input type="checkbox" ' + isTaxable + ' onkeyup="return SetTaxableValue(this);" onchange="return SetTaxableValue(this);" class="form-control isTaxable ml-4" style="max-width: 20px !important;"></td>\n\
 <td class="w7 text-right"><label readonly="readonly" class="totalValue">$' + parseFloat(InvoiceItemObject[k]['quantity'] * InvoiceItemObject[k]['rate']) + '<label></label></label></td>\n\
 <td class="text-right" onclick="DeleteElement(this)"><i class="user-pointer fas fa-trash mt-8" aria-hidden="true"></i></td></tr>\n');

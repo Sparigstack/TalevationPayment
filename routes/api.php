@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('GetContacts/{fname}','talevationSyncController@GetContactData');
+Route::post('PostContacts','talevationSyncController@PostContactData');
+Route::get('InvoiceData/{customer_id}','talevationSyncController@GetInvoiceData');
+Route::post('PutContactData','talevationSyncController@PutContactData');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

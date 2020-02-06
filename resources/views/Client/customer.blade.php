@@ -22,8 +22,8 @@
                             <table id="default-datatable" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
                                         <th>Company Name</th>
+                                        <th>Name</th>
                                         <th>Email</th>
                                         <th>Location</th>
                                         <th>No. Of Invoices</th>
@@ -93,8 +93,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Name</th>
                                         <th>Company Name</th>
+                                        <th>Name</th>
                                         <th>Email</th>
                                         <th>Location</th>
                                         <th>No. Of Invoices</th>

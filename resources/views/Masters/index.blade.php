@@ -157,8 +157,7 @@
 
                                         <div class="col-md-5 col-lg-5 col-sm-12 parent">
                                             <div class="hidden" id="searchDivSection"></div>
-                                            <?php $uniqid_cus = uniqid(); ?>
-                                            <input type="hidden" name="cus_GUID" id="cus_GUID" value="{{$uniqid_cus}}">
+                                            
                                             <input type="hidden" name="a2_accountId" value="" id="a2_accountId">
 
                                             <input type="hidden" name="anniversary_Date" value="" id="anniversary_Date">
@@ -256,7 +255,8 @@
                                         <!--<input type="button" data-dismiss="modal" class="btn  btn-inverse-primary  m-1 pull-right pb-2" value="Close"/>-->
                                     <div class="col-lg-6 col-md-6 col-sm-12">
                                         <input type="submit" class="btn btn-primary btn-info waves-effect waves-light m-1 pull-right pb-2 hidden" name="submit" id="saveCustomerBtn"  value="Save Customer"/>
-                                        <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice" id="saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
+                                        <!--<input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice" id="saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>-->
+                                        <input type="button" class="btn btn-info btn-inverse-primary  m-1 pull-right pb-2 hidden saveCreateInvoice"  onclick="return saveCreateInvoice(this);"   value="Save & Create Invoice"/>
                                     </div>
 
                                 </div>
@@ -465,7 +465,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
                                                                 </div>
-                                                                <input min="0" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control rateValue">
+                                                                <input min="0" step="0.01" onkeyup="return ItemTotalValue(this);" onchange="return ItemTotalValue(this);" type="number" class="form-control rateValue">
                                                             </div>
                                                         </td>
 

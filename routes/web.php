@@ -50,7 +50,8 @@ Route::get('logout', 'HomeController@logout');
 Route::get('payment', 'StripePaymentController@payment');
 Route::post('paymentPlan', 'StripePaymentController@paymentPlan')->name('stripe.post');
 Route::post('bankPayment', 'StripePaymentController@bankPayment')->name('stripe.post1');
-Route::post('achVerification', 'StripePaymentController@achVerification')->name('stripe.achVerify');
+Route::post('achVerification', 'StripePaymentController@achVerification');
+Route::post('deleteBankAccount', 'StripePaymentController@deleteBankAccount');
 
 Route::get('verifiedBank', function (){
     return view('verifiedBank');
@@ -78,3 +79,8 @@ Route::get('previewInvoice','StripePaymentController@payment');
 
     
 Route::post('preset_line_items','InvoiceController@preset_line_items');
+Route::get('invoiceReceipt/{invoice_id}/{stripe_payment_id}/{amount}', 'StripePaymentController@showReceipt');
+
+//only for test API not in live
+//Route::get('GetContacts/{fname}','talevationSyncController@GetContactData');
+//Route::post('PostContacts','talevationSyncController@PostContactData');

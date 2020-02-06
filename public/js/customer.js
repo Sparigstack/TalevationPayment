@@ -177,11 +177,11 @@ function checkDuplicateEmail(element) {
             if (arr.length > 0) {
                 $('.duplicateEmail').removeClass('hidden');
                 $('#saveCustomerBtn').prop('disabled', true);
-                $('#saveCreateInvoice').prop('disabled', true);
+                $('.saveCreateInvoice').prop('disabled', true);
             } else {
                 $('.duplicateEmail').addClass('hidden');
                 $('#saveCustomerBtn').prop('disabled', false);
-                $('#saveCreateInvoice').prop('disabled', false);
+                $('.saveCreateInvoice').prop('disabled', false);
             }
         }
     });
