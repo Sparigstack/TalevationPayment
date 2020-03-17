@@ -99,23 +99,48 @@
 
                                         $clickHere = nl2br($clickHere);
                                         $status = $invoice->status;
-                                        $Amount = 0;
+//                                        $Amount = 0;
+//
+//                                        //for ($k = 0; $k < count($invoice->invoice_items); $k++) {
+//
+//                                        foreach ($invoice->invoice_items as $it) {
+//
+//                                            $valueWithoutTax = $it->rate * $it->quantity;
+//                                            $tax = 0;
+//                                            if (isset($it->tax) && $it->tax > 0)
+//                                                $tax += $valueWithoutTax * ($it->tax / 100);
+//
+//                                            $Amount += str_replace(',', '', number_format($valueWithoutTax + $tax, 2));
+////                                                
+////                                            $Amount += number_format(floatval(str_replace(',','',($valueWithoutTax + $tax))), 2);
+////                                            $Amount += $valueWithoutTax + $tax;
+//                                        }
 
-                                        //for ($k = 0; $k < count($invoice->invoice_items); $k++) {
+                                        $subTotal = 0;
+                                        $TotalAmount = 0;
+                                        $totalTax = 0;
+                                        $totalDue = 0;
+                                        ?>
+                                        @foreach($invoice->invoice_items as $invoiceItems)
+                                        <?php
+//                                        var_dump($invoice->state_tax->tax_rate);return;
+                                        $subTotal = $invoiceItems->quantity * $invoiceItems->rate;
+//                                                            + ($invoiceItems->quantity * $invoiceItems->rate * $invoiceItems->tax / 100);
+                                        $TotalAmount += $subTotal;
 
-                                        foreach ($invoice->invoice_items as $it) {
+                                        $tax = 0;
 
-                                            $valueWithoutTax = $it->rate * $it->quantity;
-                                            $tax = 0;
-                                            if (isset($it->tax) && $it->tax > 0)
-                                                $tax += $valueWithoutTax * ($it->tax / 100);
+                                        if ($invoiceItems->is_taxable == 1) {
 
-                                            $Amount += str_replace(',', '', number_format($valueWithoutTax + $tax, 2));
-//                                                
-//                                            $Amount += number_format(floatval(str_replace(',','',($valueWithoutTax + $tax))), 2);
-//                                            $Amount += $valueWithoutTax + $tax;
+                                            $tax = ($subTotal * $invoice->state_tax->tax_rate) / 100;
+
+                                            $taxValue = str_replace(',', '', number_format($tax, 2));
+                                            $totalTax += $taxValue;
                                         }
-
+                                        ?>
+                                        @endforeach
+                                        <?php
+                                        $totalDue = $TotalAmount + $totalTax;
                                         $showMarkPaid = false;
                                         if ($status == 0) {
                                             $statusString = "Unpaid";
@@ -143,12 +168,13 @@
                                 <input type="hidden" class="hidden edit_due_date" value="{{date("m/d/Y",strtotime($invoice->due_date))}}" />
                                 <input type="hidden" class="hidden edit_terms" value="{{$invoice->terms}}">
                                 <input type="hidden" class="hidden edit_state_tax_id" value="{{$invoice->state_tax_id}}">
+                                <input type="hidden" class="hidden edit_RecurringOption" value="{{$invoice->RecurringOption}}">
 
 
-                                <td class="edit_cName <?php echo $addBgColor; ?>">{{$invoice->name}}</td>
+                                <td class="edit_cName <?php echo $addBgColor; ?> w22">{{$invoice->name}}</td>
                                 <td class="edit_fullName <?php echo $addBgColor; ?>">{{$invoice->first_name}} {{$invoice->last_name}}</td>
                                 <td class="edit_Email <?php echo $addBgColor; ?>">{{$invoice->email}}</td>
-                                <td class="edit_Amount <?php echo $addBgColor; ?>">{{$Amount}}</td>
+                                <td class="edit_Amount <?php echo $addBgColor; ?>">{{$totalDue}}</td>
                                 <td class="edit_invoiceDate <?php echo $addBgColor; ?>">{{$invoice_date}}</td>
                                 <td class="edit_dueDate <?php echo $addBgColor; ?>">{{$due_date}}</td>
                                 <td class="edit_status <?php echo $addBgColor; ?>">{{$statusString}}
@@ -241,7 +267,7 @@
 ////END To clear invoice Modal onclose event
 ////                                        });
 //                                            }
-                                        $(document).ready(function () {
+                                            $(document).ready(function () {
 
 //                                        $(".modal").on("hidden.bs.modal", function() {
 //START To clear invoice Modal onclose event
@@ -249,48 +275,49 @@
 //Default data table
 //$('#InvoiceDbList').DataTable();
 //$('#staticTable').DataTable();
-                                        var table = $('#InvoiceDbList').DataTable({
-                                        lengthChange: false,
-                                                buttons: [{extend: 'copy',
-                                                        exportOptions: {
-                                                        columns: [0, 1, 2, 3, 4, 5, 6]
-                                                        }}, {
-                                                extend: 'excel',
-                                                        text: 'export to excel',
-                                                        exportOptions: {
-                                                        columns: [0, 1, 2, 3, 4, 5, 6]
-                                                        }}, {
-                                                extend: 'csv',
-                                                        text: 'export to csv',
-                                                        exportOptions: {
-                                                        columns: [0, 1, 2, 3, 4, 5, 6]
-                                                        }}, {
-                                                extend: 'pdf',
-                                                        text: 'export to pdf',
-                                                        exportOptions: {
-                                                        columns: [0, 1, 2, 3, 4, 5, 6]
-                                                        }}, {
-                                                extend: 'print',
-                                                        exportOptions: {
-                                                        columns: [0, 1, 2, 3, 4, 5, 6]
-                                                        }}],
-                                                bFilter: false,
-                                                aoColumnDefs: [
-                                                {
-                                                bSortable: false,
-                                                        aTargets: [7]
-                                                }
-                                                ]
-                                        });
-                                        table.buttons().container()
-                                                .appendTo('#InvoiceDbList_wrapper .col-md-6:eq(0)');
-                                        });
-                                        $('#start_date').datepicker({
-                                        todayHighlight: true,
-                                        });
-                                        $('#end_date').datepicker({
-                                        todayHighlight: true,
-                                        });
+                                            var table = $('#InvoiceDbList').DataTable({
+                                            lengthChange: false,
+                                                    buttons: [{extend: 'copy',
+                                                            exportOptions: {
+                                                            columns: [0, 1, 2, 3, 4, 5, 6]
+                                                            }}, {
+                                                    extend: 'excel',
+                                                            text: 'export to excel',
+                                                            exportOptions: {
+                                                            columns: [0, 1, 2, 3, 4, 5, 6]
+                                                            }}, {
+                                                    extend: 'csv',
+                                                            text: 'export to csv',
+                                                            exportOptions: {
+                                                            columns: [0, 1, 2, 3, 4, 5, 6]
+                                                            }}, {
+                                                    extend: 'pdf',
+                                                            text: 'export to pdf',
+                                                            exportOptions: {
+                                                            columns: [0, 1, 2, 3, 4, 5, 6]
+                                                            }}, {
+                                                    extend: 'print',
+                                                            exportOptions: {
+                                                            columns: [0, 1, 2, 3, 4, 5, 6]
+                                                            }}],
+                                                    bFilter: false,
+                                                    ordering: false,
+                                                    aoColumnDefs: [
+                                                    {
+                                                    bSortable: false,
+                                                            aTargets: [7]
+                                                    }
+                                                    ]
+                                            });
+                                            table.buttons().container()
+                                                    .appendTo('#InvoiceDbList_wrapper .col-md-6:eq(0)');
+                                            });
+                                            $('#start_date').datepicker({
+                                            todayHighlight: true,
+                                            });
+                                            $('#end_date').datepicker({
+                                            todayHighlight: true,
+                                            });
 
 </script>
 

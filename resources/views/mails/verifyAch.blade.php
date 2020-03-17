@@ -79,7 +79,7 @@
                 statement.</p>
             <?php
             $utility = new \App\Utility;
-            $Link = $utility->projectBaseUrl() . '/public' . "/previewInvoice?token=" . $mail_content->invoiceToken;
+            $Link = $utility->projectBaseUrl() . '/public' . "/previewInvoice?token=" . $mail_content->invoiceToken . "&p=ach";
 //            $Link="http://localhost:8081/TalevationPayment/public/previewInvoice?token=".$mail_content->invoiceToken."p=verify";
             ?>
             <p>Please <a href="{{$Link}}">Click Here</a> To verify your account. </p>

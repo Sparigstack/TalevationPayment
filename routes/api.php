@@ -21,3 +21,6 @@ Route::post('PutContactData','talevationSyncController@PutContactData');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('testInvoice', 'ApiTestController@createSalesReceiptAPI');
+Route::get('shlorder/{contactId}', 'talevationSyncController@getContactId');

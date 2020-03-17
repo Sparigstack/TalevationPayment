@@ -94,7 +94,7 @@ class StripePaymentController extends Controller {
                 ]);
             }
 
-            if (isset($customer->stripe_customer_id) && $customer->stripe_customer_id != '' && $customer->isAchVerified == 2) {
+            if (isset($customer->stripe_customer_id) && $customer->stripe_customer_id != '' && $customer->isAchVerified != 0) {
                 Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
                 $retrieveCustomer = \Stripe\Customer::retrieve($customer->stripe_customer_id);
@@ -111,7 +111,7 @@ class StripePaymentController extends Controller {
         }
     }
 
-    public function paymentPlan(Request $request) {
+    public function paymentPlan(Request $request) {        
         $flash_msg = "";
         $customerEmail = '';
         $customer_id = '';
@@ -159,6 +159,7 @@ class StripePaymentController extends Controller {
                 $Invoice->exists = true;
                 $Invoice->id = $request->invoice_id;
                 $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->IsRecurringAgreed = $request->recurValue;
                 $Invoice->status = 1;
                 $Invoice->save();
 
@@ -206,6 +207,7 @@ class StripePaymentController extends Controller {
                 $Invoice->exists = true;
                 $Invoice->id = $request->invoice_id;
                 $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->IsRecurringAgreed = $request->recurValue;
                 $Invoice->status = 1;
                 $Invoice->save();
 
@@ -253,20 +255,20 @@ class StripePaymentController extends Controller {
             }
 //            echo "qbid=" . $Invoice->customer->qb_customerId;
             if (isset($Invoice->customer->qb_customerId)) {
-//                echo "in createpaymentapi";
-//                return;
                 $flash_msg .= " 8";
                 $totalPrice = $request->totalPrice;
                 $invoice_id = $request->invoice_id;
                 $customerRef = $Invoice->customer->qb_customerId;
-//                echo $totalPrice."~~~~".$invoice_id."~~~~~~".$customerRef;
+                $memo = $Invoice->memo;
+//                echo $totalPrice."~~~~".$invoice_id."~~~~~~".$customerRef."--".$token.'--'.$memo;
+//                echo $appId;
                 $utility = new Utility;
-                $response1 = $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+//                $response1 = $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+                $response1 = $utility->createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token);
 //                var_dump($response1);
 //                return;
                 $flash_msg .= " 8";
             } else {
-
                 $flash_msg .= " 9";
 //                    ************** Query Customer Api ****************//
                 $curl = curl_init();
@@ -291,7 +293,6 @@ class StripePaymentController extends Controller {
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
                 $response = json_decode($response, true);
-                //var_dump($response);
 //                $QB_CustomerId = $response;
 //                return $QB_CustomerId;
                 if (isset($response['QueryResponse']['Customer']['0']['Id'])) {
@@ -326,9 +327,9 @@ class StripePaymentController extends Controller {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
                     $result = curl_exec($curl);
                     $response = json_decode($result, true);
-//                   
                     $totalPrice = $request->totalPrice;
                     $invoice_id = $request->invoice_id;
+                    $memo = $Invoice->memo;
                     $customerRef = $response['Customer']['Id'];
                     $flash_msg .= " 12";
                     $Customer = new Customer;
@@ -339,7 +340,8 @@ class StripePaymentController extends Controller {
                 }
                 $flash_msg .= " 13";
                 $utility = new Utility;
-                $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+//                $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+                $utility->createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token);
                 $flash_msg .= " 14";
             }
             $stripePaymentId = $charge->id;
@@ -376,6 +378,7 @@ class StripePaymentController extends Controller {
                             'amount' => $request->totalPrice * 100,
                             'currency' => 'usd',
                             'customer' => $retrieveCustomer->id,
+                            "description" => "Talevation new payment from " . $Invoice->customer->name,
                             'source' => $request->paymentMethodIdBank
                 ]);
 
@@ -383,6 +386,7 @@ class StripePaymentController extends Controller {
                 $Invoice->exists = true;
                 $Invoice->id = $request->invoice_id_verify;
                 $Invoice->stripe_payment_id = $charge->id;
+                $Invoice->IsRecurringAgreed = $request->recurValue;
                 $Invoice->status = 1;
                 $Invoice->save();
 
@@ -430,7 +434,7 @@ class StripePaymentController extends Controller {
                 $mail_content->invoiceToken = request('invoiceToken');
                 $mail_content->email = request('email');
                 $mail_content->price = $request->totalPrice;
-                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Verify Link'];
+                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Talevation Payment - verify your bank account'];
 
                 $emailOb = new Email($data);
                 Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
@@ -466,7 +470,7 @@ class StripePaymentController extends Controller {
                 $mail_content->invoiceToken = request('invoiceToken');
                 $mail_content->email = request('email');
                 $mail_content->price = $request->totalPrice;
-                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Verify Link'];
+                $data = ['view' => 'mails.verifyAch', 'mail_content' => $mail_content, 'bcc' => 'team.sprigstack@gmail.com', 'bccName' => 'Ronak Shah', 'subject' => 'Talevation Payment - verify your bank account'];
                 $emailOb = new Email($data);
                 Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
                 return view('Client/mailNotification');
@@ -503,6 +507,7 @@ class StripePaymentController extends Controller {
                             'amount' => $request->price * 100,
                             'currency' => 'usd',
                             'customer' => $retrieveCustomer->id,
+                            'description' => "Talevation new payment from " . $invoiceAchVerified->customer->name,
                             'source' => $request->stripe_source_id_verify
                 ]);
 
@@ -543,6 +548,7 @@ class StripePaymentController extends Controller {
                         'amount' => $request->price * 100,
                         'currency' => 'usd',
                         'customer' => $retrieveCustomer->id,
+                        'description' => "Talevation new payment from " . $invoiceAchVerified->customer->name,
                         'source' => $request->stripe_source_id_verify
             ]);
 

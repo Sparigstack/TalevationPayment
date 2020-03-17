@@ -109,6 +109,19 @@ class HomeController extends Controller {
     public function invoicePage(Request $request) {
 //        Artisan::call('config:clear');
 //        Artisan::call('cache:clear');
+        
+        //$data[] = (object)array("Line" => (object)array("Description"=>"Postman Test"));
+        
+//        $array = array(
+//  2 => array_values(array("Afghanistan", 32, 13)),
+//  4 => array("Albania", 32, 12)
+//);
+
+// array_values() removes the original keys and replaces
+// with plain consecutive numbers
+//$out = array_values($array);
+//$final = json_encode($array);
+        
         if (!Auth::check()) {
             return view('auth.login');
         }
@@ -161,7 +174,7 @@ class HomeController extends Controller {
                             ->orWhere('email', 'LIKE', '%' . $search . '%')
                             ->orWhere('first_name', 'LIKE', '%' . $search . '%')
                             ->orWhere('last_name', 'LIKE', '%' . $search . '%');
-                        })->get();
+                        })->orderBy('id', 'DESC')->get();
 //        return $invoiceList;
 
         $termsList = Term::all();
@@ -220,3 +233,4 @@ class HomeController extends Controller {
     }
 
 }
+

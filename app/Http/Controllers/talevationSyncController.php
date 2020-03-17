@@ -11,7 +11,7 @@ use DB;
 class talevationSyncController extends Controller {
 
     public function GetContactData(request $request) {
-        
+
         $token = $request->header('SuperToken');
         if ($token == null || $token != "TalevationSuperToken99") {
             return response()->json([
@@ -22,10 +22,10 @@ class talevationSyncController extends Controller {
             $fname = '';
             $lname = '';
             $IncomingData = explode(" ", $request->fname);
-            
+
             //$fname = $IncomingData[0];
             $counter = 0;
-            if (isset($IncomingData) &&  count($IncomingData) > 1) {
+            if (isset($IncomingData) && count($IncomingData) > 1) {
                 foreach ($IncomingData as $data) {
                     if ($counter == 0) {
                         $fname = $data;
@@ -35,8 +35,7 @@ class talevationSyncController extends Controller {
                     $counter++;
                 }
                 $customers = DB::table('customers')->where('first_name', 'LIKE', '%' . $fname . '%')->where('last_name', 'LIKE', '%' . $lname . '%')->get();
-            }
-            else{
+            } else {
                 $fname = $request->fname;
                 $customers = DB::table('customers')->where('first_name', 'LIKE', '%' . $fname . '%')->orWhere('last_name', 'LIKE', '%' . $fname . '%')->orWhere('email', 'LIKE', '%' . $fname . '%')->get();
                 //$customers = DB::table('customers')->where('first_name', 'LIKE', '%' . $fname . '%')->orWhere('last_name', 'LIKE', '%' . $fname . '%')->get();
@@ -145,5 +144,59 @@ class talevationSyncController extends Controller {
                     "TalevationCustomerId" => $a2Customers->id
                         ], 200);
     }
+
+    public function shlorder($contactId) {
+//        http://netdev2.addresstwo.com/api/Contact?id=26290
+//        $data = (object) array('id' => $totalPrice);
+//        $data_json = json_encode($data);
+        $curl = curl_init(); // URL of the call
+        // Disable SSL verification
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        // Will return the response, if false it print the response
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, "http://netdev2.addresstwo.com/api/Contact?id=" . $contactId);
+        curl_setopt($curl, CURLOPT_HTTPGET, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('SuperTokenAuthentication: AddressTwoSuperToken123'));
+//        curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
+        $result = curl_exec($curl);
+        $response = json_decode($result, true);
+//        return $response;
+        
+        
+            $com_name = $response['Account']['Name'];
+
+            $street1 = $response['Account']['Address'][0]['Street1'];
+            $street2 = $response['Account']['Address'][0]['Street2'];
+            $street3 = $response['Account']['Address'][0]['Street3'];
+            $state = $response['Account']['Address'][0]['State'];
+            $city = $response['Account']['Address'][0]['City'];
+            $country = $response['Account']['Address'][0]['Country'];
+            $zip = $response['Account']['Address'][0]['Zip'];
+            $address = (empty($street1) ? '' : $street1 . ', ') . (empty($street2) ? '' : $street2 . ', ') . (empty($street3) ? '' : $street3 . ', ') . (empty($city) ? '' : $city . ', ') . (empty($state) ? '' : $state . ', ') . (empty($country) ? '' : $country . ', ') . (empty($zip) ? '' : $zip);
+
+            $contactName = $response['FirstName'] . ' ' . $response['LastName'];
+            $email_add = '';
+            foreach ($response['EmailAddress'] as $emailData) {
+                if ($emailData['EntityID'] == $contactId) {
+                    $email_add = $emailData['Email'];
+                }
+            }
+
+            $mob_no = '';
+            foreach ($response['PhoneNumber'] as $data) {
+                if ($data['EntityId'] == $contactId) {
+                    $mob_no = $data['Number'];
+                }
+            }
+            return view('sslIntegration', compact('com_name', 'address', 'country', 'contactName', 'email_add', 'mob_no', 'state', 'city', 'zip'));
+        }
+
+
+//        $counter = 0;
+//        if (count($response['PhoneNumber'] >= 1)) {
+//        }
+
+        
+//        26290 1621747
 
 }

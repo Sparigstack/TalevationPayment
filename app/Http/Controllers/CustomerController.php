@@ -9,6 +9,9 @@ use App\Term;
 use Redirect;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Mail\Email;
+use Mail;
+use App\CustomClass\sslContent;
 
 class CustomerController extends Controller {
 
@@ -17,7 +20,7 @@ class CustomerController extends Controller {
         if (!Auth::check()) {
             return redirect('/');
         }
-        $customers = Customer::all();
+        $customers = Customer::orderBy('id', 'DESC')->get();
 //        $customers = DB::select(DB::raw("SELECT c.*,i1.GUID as invGUID,i1.terms,i1.customer_id as customerId,
 //(select count(i.id) from invoices i where i.customer_id=c.id) as count
 //FROM customers c left JOIN invoices i1 on i1.customer_id=c.id;"));
@@ -94,6 +97,52 @@ class CustomerController extends Controller {
         $customers = Customer::all();
 
         return $customers;
+    }
+
+    public function sendEmail(Request $request) {
+        $mail_content = new sslContent();
+        $mail_content->reseller = request('reseller');
+        $mail_content->order_date = request('order_date');
+        $mail_content->com_name = request('com_name');
+        $mail_content->add = request('add');
+        $mail_content->country = request('country');
+        $mail_content->contact = request('contact');
+        $mail_content->email_add = request('email_add');
+        $mail_content->mob_no = request('mob_no');
+        $mail_content->exist = request('exist');
+        $platform_details = $request->platform_details;
+        $product_details = $request->product_details;
+
+        $platform_details4 = array();
+        $dataPoints = '';
+        if ($platform_details != null && count($platform_details) > 0) {
+            for ($i = 0; $i < count($platform_details); $i++) {
+                $dataPoints .= "<tr><td align='right' width='30%'><label>" . $platform_details[$i]['label'] . " </label></td><td align='center' width='45%'>  " . $platform_details[$i]['platform_data'] . " </td><td align='center' width='32%'> " . $platform_details[$i]['amount'] . "</td></tr>";
+            }
+        }
+//        return($dataPoints);
+        $mail_content->platform_details = $dataPoints;
+
+        $dataPoints2 = '';
+        if ($product_details != null && count($product_details) > 0) {
+            for ($i = 0; $i < count($product_details); $i++) {
+                $dataPoints2 .= "<tr><td align='right' width='30%'><label>" . $product_details[$i]['label'] . " </label></td><td align='center' width='20%'>  " . $product_details[$i]['product_site'] . " </td><td align='center' width='26%'> " . $product_details[$i]['block_size'] . "</td><td align='center' width='30%'> " . $product_details[$i]['pro_amount'] . "</td></tr>";
+            }
+        }
+
+        $mail_content->product_details = $dataPoints2;
+        $mail_content->amount = request('amount');
+
+        $mail_content->product_site = request('product_site');
+        $mail_content->block_size = request('block_size');
+        $mail_content->pro_amount = request('pro_amount');
+
+//        $data = ['view' => 'mails.sslMail', 'mail_content' => $mail_content, 'bcc' => 'ronak@protocrm.com', 'bccName' => 'Ronak Shah', 'subject' => 'New Order Request from CRM'];
+        $data = ['view' => 'mails.sslMail', 'mail_content' => $mail_content, 'bcc' => 'ronak@protocrm.com', 'bccName' => 'Ronak Shah', 'subject' => 'New Order Request from CRM'];
+        $emailOb = new Email($data);
+//
+        Mail::to('team.sprigstack@gmail.com')->send($emailOb); //need to make this ID dynamic once testing is done
+//        return view('sslIntegration1');
     }
 
 }

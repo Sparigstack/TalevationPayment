@@ -73,6 +73,7 @@ class InvoiceController extends Controller {
         $invoice->invoice_date = $invoice_created_date;
         $invoice->terms = $request->inv_terms;
         $invoice->state_tax_id = $request->state_tax_id == -1 ? null : $request->state_tax_id;
+        $invoice->RecurringOption = $request->RecurringOption;
         $invoice->GUID = $request->inv_GUID;
         $invoice->memo = $request->memo;
         $invoice->status = 0;

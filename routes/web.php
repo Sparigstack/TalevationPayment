@@ -62,6 +62,7 @@ Route::get('verifiedBank', function (){
 
 
 Route::post('createPaymentAPI', 'StripePaymentController@createPaymentAPI')->name('createPaymentAPI');
+Route::post('createSalesReceiptAPI', 'StripePaymentController@createSalesReceiptAPI')->name('createSalesReceiptAPI');
 
 
 
@@ -81,6 +82,11 @@ Route::get('previewInvoice','StripePaymentController@payment');
 Route::post('preset_line_items','InvoiceController@preset_line_items');
 Route::get('invoiceReceipt/{invoice_id}/{stripe_payment_id}/{amount}', 'StripePaymentController@showReceipt');
 
-//only for test API not in live
-//Route::get('GetContacts/{fname}','talevationSyncController@GetContactData');
-//Route::post('PostContacts','talevationSyncController@PostContactData');
+Route::get('testInvoice', 'ApiTestController@createSalesReceiptAPI');
+
+Route::post('sslIntegration1', 'CustomerController@sendEmail')->name('sslIntegration');
+//Route::get('sslIntegration', function (){
+//    return view('sslIntegration');
+//});
+
+Route::get('shlorder/{contactId}', 'talevationSyncController@shlorder');

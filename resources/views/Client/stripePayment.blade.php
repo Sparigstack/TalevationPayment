@@ -418,6 +418,8 @@
 
     <body>
         <?php
+        $hiddenAchVerification = 'hidden';
+        $hiddenInvoiceDetails = '';
         // var_dump($invoiceData);
 //        return;
         ?>
@@ -442,13 +444,13 @@
                         <div class="col-md-12" style="">
                             <div class="col-lg-8 centerElement" style="margin: 0 auto;display: table;">
 
-
-
                                 <?php
-//                                echo $stripePaymentId . " " . $invoiceData->status . " " . $currentPath;
-//                                if ($stripePaymentId == "Blank") {
+                                if (isset($_GET['p'])) {
+                                    $hiddenAchVerification = '';
+                                    $hiddenInvoiceDetails = 'hidden';
+                                }
                                 ?>
-                                <div class="card" id="generateInvoice">
+                                <div class="card {{$hiddenInvoiceDetails}}" id="generateInvoice">
                                     <div class="card-body">
                                         <!-- Content Header (Page header) -->
                                         <section class="content-header">
@@ -522,7 +524,7 @@
                                                                 <th>Invoice Item</th>
                                                                 <th>Qty</th>
                                                                 <th>Rate</th>
-                                                                <th>isTaxable</th>
+                                                                <th>Taxable?</th>
                                                                 <th>Subtotal</th>
                                                             </tr>
                                                         </thead>
@@ -590,7 +592,25 @@
 <img class="paymentIconCss" src="{{asset('/payment-icons/Mastercard-Download-PNG.png')}}" alt="Paypal">-->
 
 
-                                                    </br>   <b> State Tax : </b>{{$stateTaxes->state_name}} ({{$stateTaxes->tax_rate}}% tax)
+                                                    </br>   <b> State Tax : </b>{{$stateTaxes->state_name}} ({{$stateTaxes->tax_rate}}% tax) </br> </br>
+                                                    <p> Do you want to pay this invoice automatically with your saved payment method every 
+                                                        <?php
+                                                        if ($invoiceData->RecurringOption == 1)
+                                                            echo 'month';
+                                                        if ($invoiceData->RecurringOption == 2)
+                                                            echo 'quarter';
+                                                        if ($invoiceData->RecurringOption == 3)
+                                                            echo 'year';
+                                                        ?>?
+                                                    </p>
+                                                    <div class="icheck-material-primary float-left">
+                                                        <input type="radio" class="" id="yesRecur" checked="" name="IsRecurringAgreed">
+                                                        <label for="yesRecur">Yes</label>
+                                                    </div>
+                                                    <div class="icheck-material-primary pl-2 float-left">
+                                                        <input type="radio" id="noRecur" name="IsRecurringAgreed">
+                                                        <label for="noRecur">No</label>
+                                                    </div>
                                                 </div><!-- /.col -->
                                                 <div class="col-lg-5">
                                                     <!--<p class="lead">Amount Due ${{number_format($TotalAmount,2)}}</p>-->
@@ -646,20 +666,25 @@
 
                                                     </div>
                                                 </div>
-                                                <?php // }         ?>
+                                                <?php // }          ?>
                                             </div>
                                         </section><!-- /.content -->
                                     </div>
                                 </div>
 
-                                <div class="card hidden" id="stripePaymentUI">
+
+                                <div class="card {{$hiddenAchVerification}}" id="stripePaymentUI">
                                     <div class="card-body">
 
-                                        <?php if ($invoiceData->customer->isAchVerified == "1" && $invoiceData->customer->stripe_customer_id !== '') {
+                                        <?php
+                                        if ($invoiceData->customer->isAchVerified == "1" && $invoiceData->customer->stripe_customer_id !== '' && isset($_GET['p'])) {
                                             ?>
                                             <div class="paymentVerifyDiv">
                                                 <div class="card-title mt-3">Bank Account Verification</div>
-                                                <p>You have previously saved your bank account with account number ending  for ACH payment. We sent two micro deposits to your account, please enter those exact two amounts below to verify your bank account.</p>
+                                                <p> Hello {{$invoiceData->customer->first_name}}, <br> 
+                                                    You have previously saved your bank account with account number ending with {{$PaymentMethodBank->last4}} for ACH payment. We sent two micro deposits to your account, please enter those exact two amounts below to verify your bank account.
+                                                    <br> Routing number: {{$PaymentMethodBank->routing_number}}
+                                                </p>
                                                 <hr>
                                                 <!--<form role="form" action=""  method="post">-->
 
@@ -689,7 +714,7 @@
                                                     The amounts provided do not match the amounts that were sent to the bank account.
                                                 </div> 
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="verification" onclick="achVerification();"><i class="icon-lock"></i>Submit</button>
+                                                    <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="verification" onclick="achVerification();"><i class="icon-lock"></i>Verify & Pay Now</button>
                                                 </div>
                                                 <!--</form>-->
                                             </div> <?php } else {
@@ -716,6 +741,7 @@
 
                                                     <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
                                                     <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
+                                                    <input type="hidden" name="recurValue" id="recurValue" value="">
                                                     <div class="form-group">
                                                         <label for="input-1">Name on Card</label>
                                                         <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
@@ -842,11 +868,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
-                                                        <?php if (isset($stripe_payment_id) && $stripe_payment_id != '') { ?>
-                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right">Pay</button>
-                                                        <?php } else { ?>
-                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
-                                                        <?php } ?>
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableCard"><i class="icon-lock"></i> Pay Now</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
                                                     </div>
                                                 </form>
@@ -857,6 +879,7 @@
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="source" />
                                                     <input type="hidden" name="email" value="{{$invoiceData->email}}" />
+                                                    <input type="hidden" name="recurValue" id="recurValue" value="">
                                                     <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id_verify" id="invoice_id_verify">
                                                     <input type="hidden" value="{{$invoiceData->customer->id}}" name="stripe_customer_id_verify" id="stripe_customer_id_verify">
                                                     <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
@@ -963,11 +986,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
-                                                        <?php if (isset($stripe_payment_id)) { ?>
-                                                            <input type="submit" class="btn btn-info mr-1 px-5 pull-right" value="Pay">
-                                                        <?php } else { ?>
-                                                            <button type="submit" class="btn btn-info mr-1 px-5 pull-right"><i class="icon-lock"></i> Pay Now</button>
-                                                        <?php } ?>
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableBank"><i class="icon-lock"></i>Save Bank Account</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
                                                     </div>
                                                 </form>
@@ -1009,192 +1028,210 @@
     <script src="{{asset('/js/bootstrap.min.js')}}"></script>
     <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
     <script type="text/javascript">
+                                                        $(function () {
+                                                            $(window).on('load', function () {
+                                                                $('#pageloader-overlay').fadeOut(1000);
+
+                                                            })
+
+
                                                             $(function () {
-                                                                $(window).on('load', function () {
-                                                                    $('#pageloader-overlay').fadeOut(1000);
-
-                                                                })
+                                                                $('[data-toggle="popover"]').popover()
+                                                            })
 
 
-                                                                $(function () {
-                                                                    $('[data-toggle="popover"]').popover()
-                                                                })
+                                                            $(function () {
+                                                                $('[data-toggle="tooltip"]').tooltip()
+                                                            })
+                                                            $("#paymentMethodId").val($("#paymentMethod option:first").attr('id'));
+                                                            $("#paymentMethodIdBank").val($("#paymentMethodBank option:first").attr('id'));
 
+                                                        });
+                                                        function setPaymentId(element) {
+                                                            var option = $('option:selected', element).attr('id');
 
-                                                                $(function () {
-                                                                    $('[data-toggle="tooltip"]').tooltip()
-                                                                })
-                                                                $("#paymentMethodId").val($("#paymentMethod option:first").attr('id'));
-                                                                $("#paymentMethodIdBank").val($("#paymentMethodBank option:first").attr('id'));
+                                                            $("#paymentMethodId").val(option);
+                                                        }
 
-                                                            });
-                                                            function setPaymentId(element) {
-                                                                var option = $('option:selected', element).attr('id');
+                                                        function invoicePayment(element, fromWhere) {
+                                                            $("#generateInvoice").addClass('hidden');
+                                                            $("#stripePaymentUI").removeClass('hidden');
+                                                            var invoice_Total = $(".totalDue").text();
 
-                                                                $("#paymentMethodId").val(option);
+                                                            $(".totalPrice").text("Total: " + invoice_Total);
+                                                            if (fromWhere == 'back') {
+                                                                $("#generateInvoice").removeClass('hidden');
+                                                                $("#stripePaymentUI").addClass('hidden');
                                                             }
-
-                                                            function invoicePayment(element, fromWhere) {
-                                                                $("#generateInvoice").addClass('hidden');
-                                                                $("#stripePaymentUI").removeClass('hidden');
-                                                                var invoice_Total = $(".totalDue").text();
-
-                                                                $(".totalPrice").text("Total: " + invoice_Total);
-                                                                if (fromWhere == 'back') {
-                                                                    $("#generateInvoice").removeClass('hidden');
-                                                                    $("#stripePaymentUI").addClass('hidden');
+                                                            if ($("#yesRecur").is(':checked')) {
+                                                                if ($(".creditCardDiv").hasClass("hidden")) {
+                                                                    $(".creditCardDiv").find("#recurValue").val('1');
+                                                                    $(".bankPaymentDiv").find("#recurValue").val('1');
+                                                                } else {
+                                                                    $(".bankPaymentDiv").find("#recurValue").val('1');
+                                                                    $(".creditCardDiv").find("#recurValue").val('1');
                                                                 }
-
+                                                            } else {
+                                                                if ($(".creditCardDiv").hasClass("hidden")) {
+                                                                    $(".creditCardDiv").find("#recurValue").val('0');
+                                                                    $(".bankPaymentDiv").find("#recurValue").val('0');
+                                                                } else {
+                                                                    $(".bankPaymentDiv").find("#recurValue").val('0');
+                                                                    $(".creditCardDiv").find("#recurValue").val('0');
+                                                                }
                                                             }
-                                                            function printDiv(divName) {
-                                                                var printContents = document.getElementById(divName).innerHTML;
-                                                                var originalContents = document.body.innerHTML;
+                                                        }
+                                                        function printDiv(divName) {
+                                                            var printContents = document.getElementById(divName).innerHTML;
+                                                            var originalContents = document.body.innerHTML;
 
-                                                                document.body.innerHTML = printContents;
+                                                            document.body.innerHTML = printContents;
 
-                                                                window.print();
+                                                            window.print();
 
-                                                                document.body.innerHTML = originalContents;
-                                                            }
-                                                            function setPaymentId(element) {
-                                                                var option = $('option:selected', element).attr('id');
-                                                                $("#paymentMethodId").val(option);
-                                                            }
-                                                            function setPaymentIdBank(element) {
-                                                                var optionBank = $('option:selected', element).attr('id');
-                                                                $("#paymentMethodIdBank").val(optionBank);
-                                                            }
+                                                            document.body.innerHTML = originalContents;
+                                                        }
+                                                        function setPaymentId(element) {
+                                                            var option = $('option:selected', element).attr('id');
+                                                            $("#paymentMethodId").val(option);
+                                                        }
+                                                        function setPaymentIdBank(element) {
+                                                            var optionBank = $('option:selected', element).attr('id');
+                                                            $("#paymentMethodIdBank").val(optionBank);
+                                                        }
 
     </script>
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-                                                            //Test UI JS
-                                                            $(function () {
-                                                                var paymentMethodIdBank = $("#paymentMethodIdBank").val();
-                                                                var bType = $("#bType").val();
-                                                                var paymentMethodId = $("#paymentMethodId").val();
+                                                        //Test UI JS
+                                                        $(function () {
+                                                            var paymentMethodIdBank = $("#paymentMethodIdBank").val();
+                                                            var bType = $("#bType").val();
+                                                            var paymentMethodId = $("#paymentMethodId").val();
 
-                                                                if (paymentMethodIdBank != "") {
+                                                            if (paymentMethodIdBank != "") {
 //                                                                $(".paymentOptionUI").addClass("hidden");
-                                                                    $('.bankPaymentDiv').removeClass("hidden");
-                                                                    $('.creditCardDiv').addClass("hidden");
-                                                                }
+                                                                $('.bankPaymentDiv').removeClass("hidden");
+                                                                $('.creditCardDiv').addClass("hidden");
+                                                            }
 
-                                                                if (paymentMethodId != "") {
+                                                            if (paymentMethodId != "") {
 //                                                                $(".paymentOptionUI").addClass("hidden");
-                                                                    $('.bankPaymentDiv').addClass("hidden");
-                                                                    $('.creditCardDiv').removeClass("hidden");
-                                                                }
+                                                                $('.bankPaymentDiv').addClass("hidden");
+                                                                $('.creditCardDiv').removeClass("hidden");
+                                                            }
 
-                                                                if (bType == 2) {
-                                                                    $(".paymentOptionUI").addClass("hidden");
-                                                                    $('.creditCardDiv').addClass("hidden");
-                                                                    $('.bankPaymentDiv').removeClass("hidden");
-                                                                    $("#newBankDetails").addClass('hidden');
-                                                                    $("#existingBankDetails").removeClass('hidden');
-                                                                }
+                                                            if (bType == 2) {
+                                                                $(".paymentOptionUI").addClass("hidden");
+                                                                $('.creditCardDiv').addClass("hidden");
+                                                                $('.bankPaymentDiv').removeClass("hidden");
+                                                                $("#newBankDetails").addClass('hidden');
+                                                                $("#existingBankDetails").removeClass('hidden');
+                                                            }
 
-                                                                var stripe_customer_id = $("#stripe_customer_id").val();
+                                                            var stripe_customer_id = $("#stripe_customer_id").val();
 
 //                                                            if ((stripe_customer_id == null || stripe_customer_id == "" || stripe_customer_id == undefined)) {
-                                                                $(".paymentOptionUI").removeClass("hidden");
+                                                            $(".paymentOptionUI").removeClass("hidden");
 
-                                                                //card payment
-                                                                cardPayment();
+                                                            //card payment
+                                                            cardPayment();
 
-                                                                // bank payment
-                                                                var stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
-                                                                var form2 = document.getElementById('payment-formbank');
+                                                            // bank payment
+                                                            var stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
+                                                            var form2 = document.getElementById('payment-formbank');
 
-                                                                // Submit the form with the token ID.
-                                                                form2.addEventListener('submit', function (event2) {
-                                                                    event2.preventDefault();
-                                                                    var bankAccountData = {
-                                                                        country: 'us',
-                                                                        currency: 'usd',
-                                                                        routing_number: document.getElementById('routing-number').value,
-                                                                        account_number: document.getElementById('account-number').value,
-                                                                        account_holder_name: document.getElementById('name').value,
-                                                                        account_holder_type: document.getElementById('type').value,
-                                                                    };
-                                                                    stripe.createToken('bank_account', bankAccountData).then(setOutcome);
-                                                                });
+                                                            // Submit the form with the token ID.
+                                                            form2.addEventListener('submit', function (event2) {
+                                                                event2.preventDefault();
+                                                                var bankAccountData = {
+                                                                    country: 'us',
+                                                                    currency: 'usd',
+                                                                    routing_number: document.getElementById('routing-number').value,
+                                                                    account_number: document.getElementById('account-number').value,
+                                                                    account_holder_name: document.getElementById('name').value,
+                                                                    account_holder_type: document.getElementById('type').value,
+                                                                };
+                                                                stripe.createToken('bank_account', bankAccountData).then(setOutcome);
+                                                            });
 //                                                            }
 
 
+                                                        });
+
+                                                        function cardPayment() {
+                                                            var stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
+                                                            //var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
+                                                            // Create an instance of Elements.
+                                                            var elements = stripe.elements();
+                                                            var style = {
+                                                                base: {
+                                                                    color: '#32325d',
+                                                                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontSmoothing: 'antialiased',
+                                                                    fontSize: '16px',
+                                                                    '::placeholder': {
+                                                                        color: '#aab7c4'
+                                                                    }
+                                                                },
+                                                                invalid: {
+                                                                    color: '#fa755a',
+                                                                    iconColor: '#fa755a'
+                                                                }
+                                                            };
+                                                            // card payment
+                                                            var form1 = document.getElementById('payment-form');
+                                                            // Create an instance of the card Element.
+                                                            var card = elements.create('card', {style: style});
+                                                            // Add an instance of the card Element into the `card-element` <div>.
+                                                            card.mount('#card-element');
+                                                            // Handle real-time validation errors from the card Element.
+                                                            card.addEventListener('change', function (event) {
+                                                                var displayError = document.getElementById('card-errors');
+                                                                if (event.error) {
+                                                                    displayError.textContent = event.error.message;
+                                                                } else {
+                                                                    displayError.textContent = '';
+                                                                }
                                                             });
+                                                            // Handle form submission.
 
-                                                            function cardPayment() {
-                                                                var stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
-                                                                //var stripe = Stripe('pk_live_4cNqjLaVcWD1P5twip4YHU0C00jAubT2Gb');
-                                                                // Create an instance of Elements.
-                                                                var elements = stripe.elements();
-                                                                var style = {
-                                                                    base: {
-                                                                        color: '#32325d',
-                                                                        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                                                                        fontSmoothing: 'antialiased',
-                                                                        fontSize: '16px',
-                                                                        '::placeholder': {
-                                                                            color: '#aab7c4'
+                                                            var ownerInfo = {
+                                                                owner: {
+                                                                    name: document.getElementById('name_on_card').value,
+                                                                    email: document.getElementById('email').value
+                                                                },
+                                                            };
+
+                                                            form1.addEventListener('submit', function (event) {
+                                                                if ($("#ccType").val() == "1") {
+                                                                    event.preventDefault();
+                                                                    stripe.createSource(card, ownerInfo).then(function (result) {
+
+                                                                        if (result.error) {
+                                                                            // Inform the user if there was an error.
+                                                                            var errorElement = document.getElementById('card-errors');
+                                                                            errorElement.textContent = result.error.message;
+                                                                            $("#buttonDisableCard").attr("disabled", false);
+                                                                        } else {
+                                                                            // Send the token to your server.
+                                                                            //stripeTokenHandler(result.token);
+                                                                            stripeSourceHandler(result.source);
                                                                         }
-                                                                    },
-                                                                    invalid: {
-                                                                        color: '#fa755a',
-                                                                        iconColor: '#fa755a'
-                                                                    }
-                                                                };
-                                                                // card payment
-                                                                var form1 = document.getElementById('payment-form');
-                                                                // Create an instance of the card Element.
-                                                                var card = elements.create('card', {style: style});
-                                                                // Add an instance of the card Element into the `card-element` <div>.
-                                                                card.mount('#card-element');
-                                                                // Handle real-time validation errors from the card Element.
-                                                                card.addEventListener('change', function (event) {
-                                                                    var displayError = document.getElementById('card-errors');
-                                                                    if (event.error) {
-                                                                        displayError.textContent = event.error.message;
-                                                                    } else {
-                                                                        displayError.textContent = '';
-                                                                    }
-                                                                });
-                                                                // Handle form submission.
+                                                                    });
+                                                                } else {
+                                                                    $("#buttonDisableCard").attr("disabled", true);
+                                                                }
+                                                            });
+                                                        }
 
-                                                                var ownerInfo = {
-                                                                    owner: {
-                                                                        name: document.getElementById('name_on_card').value,
-                                                                        email: document.getElementById('email').value
-                                                                    },
-                                                                };
+                                                        function disableNewCardPayment() {
+                                                            // card payment
+                                                            var form1 = document.getElementById('payment-form');
+                                                            form1.removeEventListener('submit', function (event) {
 
-                                                                form1.addEventListener('submit', function (event) {
-                                                                    if ($("#ccType").val() == "1") {
-                                                                        event.preventDefault();
-                                                                        stripe.createSource(card, ownerInfo).then(function (result) {
-
-                                                                            if (result.error) {
-                                                                                // Inform the user if there was an error.
-                                                                                var errorElement = document.getElementById('card-errors');
-                                                                                errorElement.textContent = result.error.message;
-                                                                            } else {
-                                                                                // Send the token to your server.
-                                                                                //stripeTokenHandler(result.token);
-                                                                                stripeSourceHandler(result.source);
-                                                                            }
-                                                                        });
-                                                                    }
-
-                                                                });
-                                                            }
-
-                                                            function disableNewCardPayment() {
-                                                                // card payment
-                                                                var form1 = document.getElementById('payment-form');
-                                                                form1.removeEventListener('submit', function (event) {
-
-                                                                });
-                                                            }
+                                                            });
+                                                        }
 
 //                                                        function stripeTokenHandler(token) {
 //                                                            // Insert the token ID into the form so it gets submitted to the server
@@ -1208,144 +1245,163 @@
 //                                                            // Submit the form
 //                                                            form.submit();
 //                                                        }
-                                                            function stripeSourceHandler(source) {
-                                                                // Insert the source ID into the form so it gets submitted to the server
-                                                                var form = document.getElementById('payment-form');
-                                                                var hiddenInput = document.createElement('input');
-                                                                hiddenInput.setAttribute('type', 'hidden');
-                                                                hiddenInput.setAttribute('name', 'stripeSource');
-                                                                hiddenInput.setAttribute('value', source.id);
-                                                                form.appendChild(hiddenInput);
+                                                        function stripeSourceHandler(source) {
+                                                            // Insert the source ID into the form so it gets submitted to the server
+                                                            var form = document.getElementById('payment-form');
+                                                            var hiddenInput = document.createElement('input');
+                                                            hiddenInput.setAttribute('type', 'hidden');
+                                                            hiddenInput.setAttribute('name', 'stripeSource');
+                                                            hiddenInput.setAttribute('value', source.id);
+                                                            form.appendChild(hiddenInput);
 
-                                                                // Submit the form
-                                                                form.submit();
-                                                            }
-                                                            function setOutcome(result) {
+                                                            // Submit the form
+                                                            form.submit();
+                                                            $("#buttonDisableCard").attr("disabled", true);
+                                                        }
+                                                        function setOutcome(result) {
 //                                                                    var successElement = document.querySelector('.success');
 //                                                                    var errorElement = document.querySelector('.error');
 //                                                                    successElement.classList.remove('visible');
 //                                                                    errorElement.classList.remove('visible');
-                                                                if (result.token.id) {
-                                                                    // Use the token to create a charge or a customer
-                                                                    // https://stripe.com/docs/charges
+                                                            if (result.token.id) {
+                                                                // Use the token to create a charge or a customer
+                                                                // https://stripe.com/docs/charges
 //                                                                        successElement.querySelector('.token').textContent = result.token.id;
 //                                                                        successElement.classList.add('visible');
 
-                                                                    var form3 = document.getElementById('payment-formbank');
-                                                                    var hiddenInput = document.createElement('input');
-                                                                    hiddenInput.setAttribute('type', 'hidden');
-                                                                    hiddenInput.setAttribute('name', 'stripeToken');
-                                                                    hiddenInput.setAttribute('value', result.token.id);
-                                                                    form3.appendChild(hiddenInput);
-                                                                    // Submit the form
-                                                                    form3.submit();
-                                                                } else if (result.error) {
+                                                                var form3 = document.getElementById('payment-formbank');
+                                                                var hiddenInput = document.createElement('input');
+                                                                hiddenInput.setAttribute('type', 'hidden');
+                                                                hiddenInput.setAttribute('name', 'stripeToken');
+                                                                hiddenInput.setAttribute('value', result.token.id);
+                                                                form3.appendChild(hiddenInput);
+                                                                // Submit the form
+                                                                form3.submit();
+                                                                $("#buttonDisableBank").attr("disabled", true);
+                                                            } else if (result.error) {
 //                                                                        errorElement.textContent = result.error.message;
 //                                                                        errorElement.classList.add('visible');
-                                                                }
                                                             }
-                                                            function changePaymentProcess(element) {
-                                                                if ($(element).is(":checked"))
-                                                                {
-                                                                    // it is checked
-                                                                    var paymentMethod = $(element).attr('data-payment');
-                                                                    if (paymentMethod == 'credit-card') {
-                                                                        $('.creditCardDiv').removeClass("hidden");
-                                                                        $('.bankPaymentDiv').addClass("hidden");
-                                                                        $('.creditCardDiv').find('form').addClass("form-active");
-                                                                        $('.bankPaymentDiv').find('form').removeClass("form-active");
-                                                                        cardPayment();
-                                                                    } else {
-                                                                        $('.creditCardDiv').addClass("hidden");
-                                                                        $('.bankPaymentDiv').removeClass("hidden");
-                                                                        $('.creditCardDiv').find('form').removeClass("form-active");
-                                                                        $('.bankPaymentDiv').find('form').addClass("form-active");
-                                                                    }
-//                                                                checkprocess();
-                                                                }
-                                                            }
-
-                                                            function showHideNewCard(element) {
-                                                                var isShowNew = $(element).attr('data-shownew');
-                                                                if (isShowNew == "1") {
-                                                                    $("#newCreditCard").removeClass('hidden');
-                                                                    $("#existingCreditCard").addClass('hidden');
-                                                                    $(".paymentOptionUI").removeClass('hidden');
-                                                                    $("#ccType").val("1");
+                                                        }
+                                                        function changePaymentProcess(element) {
+                                                            if ($(element).is(":checked"))
+                                                            {
+                                                                // it is checked
+                                                                var paymentMethod = $(element).attr('data-payment');
+                                                                if (paymentMethod == 'credit-card') {
+                                                                    $('.creditCardDiv').removeClass("hidden");
+                                                                    $('.bankPaymentDiv').addClass("hidden");
+                                                                    $('.creditCardDiv').find('form').addClass("form-active");
+                                                                    $('.bankPaymentDiv').find('form').removeClass("form-active");
                                                                     cardPayment();
                                                                 } else {
-                                                                    $("#newCreditCard").addClass('hidden');
-                                                                    $("#existingCreditCard").removeClass('hidden');
-                                                                    $(".paymentOptionUI").addClass('hidden');
-                                                                    $("#ccType").val("2");
-                                                                    disableNewCardPayment();
+                                                                    $('.creditCardDiv').addClass("hidden");
+                                                                    $('.bankPaymentDiv').removeClass("hidden");
+                                                                    $('.creditCardDiv').find('form').removeClass("form-active");
+                                                                    $('.bankPaymentDiv').find('form').addClass("form-active");
                                                                 }
+//                                                                checkprocess();
                                                             }
+                                                        }
 
-                                                            function deleteBankAccount(element) {
-                                                                var confirmDeleteBankAccount = confirm("Are you sure you want to delete bank account & use new payment method?");
-                                                                if (!confirmDeleteBankAccount)
-                                                                    return;
-                                                                var CSRF_TOKEN = $('input[name="_token"]').val();
-                                                                var paymentMethodIdBank = $('#paymentMethodIdBank').val();
-                                                                var stripe_customer_id = $('#stripe_customer_id').val();
-                                                                var invoice_id_verify = $('#invoice_id_verify').val();
-                                                                $.ajax({
-                                                                    url: 'deleteBankAccount',
-                                                                    type: 'post',
-                                                                    data: {_token: CSRF_TOKEN, paymentMethodIdBank: paymentMethodIdBank, stripe_customer_id: stripe_customer_id, invoice_id_verify: invoice_id_verify},
-                                                                    success: function (response) {
-                                                                        $("#newBankDetails").removeClass('hidden');
-                                                                        $("#existingBankDetails").addClass('hidden');
-                                                                        $(".paymentOptionUI").removeClass("hidden");
-                                                                        $("#primary2").prop('checked', true);
-                                                                    }
-                                                                });
+                                                        function showHideNewCard(element) {
+                                                            var isShowNew = $(element).attr('data-shownew');
+                                                            if (isShowNew == "1") {
+                                                                $("#newCreditCard").removeClass('hidden');
+                                                                $("#existingCreditCard").addClass('hidden');
+                                                                $(".paymentOptionUI").removeClass('hidden');
+                                                                $("#ccType").val("1");
+                                                                cardPayment();
+                                                            } else {
+                                                                $("#newCreditCard").addClass('hidden');
+                                                                $("#existingCreditCard").removeClass('hidden');
+                                                                $(".paymentOptionUI").addClass('hidden');
+                                                                $("#ccType").val("2");
+                                                                disableNewCardPayment();
                                                             }
+                                                        }
 
-                                                            function getBaseURL() {
-                                                                var urlString = window.location.host;
-                                                                var httpString = "http://";
-                                                                var domainString = "";
-                                                                if ((urlString.toLowerCase()).indexOf('127.0.0.1') !== -1 || (urlString.toLowerCase()).indexOf('dev') !== -1) {
-                                                                    if ((urlString.toLowerCase()).indexOf('dev') !== -1) {
-                                                                        domainString = "/TalevationPayment/public";
-                                                                        httpString = "https://";
-                                                                    }
-                                                                } else {
-                                                                    domainString = "/TalevationPayment/public";
+                                                        function deleteBankAccount(element) {
+                                                            var confirmDeleteBankAccount = confirm("Are you sure you want to delete bank account & use new payment method?");
+                                                            if (!confirmDeleteBankAccount)
+                                                                return;
+                                                            var CSRF_TOKEN = $('input[name="_token"]').val();
+                                                            var paymentMethodIdBank = $('#paymentMethodIdBank').val();
+                                                            var stripe_customer_id = $('#stripe_customer_id').val();
+                                                            var invoice_id_verify = $('#invoice_id_verify').val();
+                                                            $.ajax({
+                                                                url: 'deleteBankAccount',
+                                                                type: 'post',
+                                                                data: {_token: CSRF_TOKEN, paymentMethodIdBank: paymentMethodIdBank, stripe_customer_id: stripe_customer_id, invoice_id_verify: invoice_id_verify},
+                                                                success: function (response) {
+                                                                    $("#newBankDetails").removeClass('hidden');
+                                                                    $("#existingBankDetails").addClass('hidden');
+                                                                    $(".paymentOptionUI").removeClass("hidden");
+                                                                    $("#primary2").prop('checked', true);
                                                                 }
-                                                                var fullBaseURL = httpString + urlString + domainString;
+                                                            });
+                                                        }
 
-                                                                return fullBaseURL;
+//                                                            function getBaseURL() {
+//                                                                var urlString = window.location.host;
+//                                                                var httpString = "http://";
+//                                                                var domainString = "";
+//                                                                if ((urlString.toLowerCase()).indexOf('127.0.0.1') !== -1 || (urlString.toLowerCase()).indexOf('dev') !== -1) {
+//                                                                    if ((urlString.toLowerCase()).indexOf('dev') !== -1) {
+//                                                                        domainString = "/TalevationPayment/public";
+//                                                                        httpString = "https://";
+//                                                                    }
+//                                                                } else {
+//                                                                    domainString = "/TalevationPayment/public";
+//                                                                }
+//                                                                var fullBaseURL = httpString + urlString + domainString;
+//
+//                                                                return fullBaseURL;
+//                                                            }
+
+                                                        function getBaseURL() {
+                                                            var urlString = window.location.host;
+                                                            var httpString = "http://";
+                                                            var domainString = "";
+                                                            if ((urlString.toLowerCase()).indexOf('talevation.com') !== -1) {
+                                                                domainString = "/payments/public";
+                                                                httpString = "https://";
+                                                            } else {
+                                                                domainString = "/TalevationPayment/public";
                                                             }
-                                                            function achVerification(element) {
-                                                                var CSRF_TOKEN = $('input[name="_token"]').val();
-                                                                var amount1 = $("#amount1").val();
-                                                                var amount2 = $("#amount2").val();
-                                                                var stripe_customer_id_verify = $("#stripe_customer_id_verify").val();
-                                                                var stripe_source_id_verify = $("#stripe_source_id_verify").val();
-                                                                var invoiceId = $("#invoiceId").val();
-                                                                var price = $("#price").val();
-                                                                $.ajax({
-                                                                    url: 'achVerification',
-                                                                    type: 'post',
-                                                                    data: {_token: CSRF_TOKEN, amount1: amount1, amount2: amount2, stripe_customer_id_verify: stripe_customer_id_verify, stripe_source_id_verify: stripe_source_id_verify, invoiceId: invoiceId, price: price},
-                                                                    success: function (response) {
+                                                            var fullBaseURL = httpString + urlString + domainString;
+
+                                                            return fullBaseURL;
+                                                        }
+
+                                                        function achVerification(element) {
+                                                            var CSRF_TOKEN = $('input[name="_token"]').val();
+                                                            var amount1 = $("#amount1").val();
+                                                            var amount2 = $("#amount2").val();
+                                                            var stripe_customer_id_verify = $("#stripe_customer_id_verify").val();
+                                                            var stripe_source_id_verify = $("#stripe_source_id_verify").val();
+                                                            var invoiceId = $("#invoiceId").val();
+                                                            var price = $("#price").val();
+                                                            $.ajax({
+                                                                url: 'achVerification',
+                                                                type: 'post',
+                                                                data: {_token: CSRF_TOKEN, amount1: amount1, amount2: amount2, stripe_customer_id_verify: stripe_customer_id_verify, stripe_source_id_verify: stripe_source_id_verify, invoiceId: invoiceId, price: price},
+                                                                success: function (response) {
 //                                                                        console.log(response);
-                                                                        if (response == "error") {
-                                                                            $('#amountVerify').removeClass('hidden');
-                                                                        } else {
+                                                                    if (response == "error") {
+                                                                        $('#amountVerify').removeClass('hidden');
+                                                                    } else {
 //                                                                            alert(response);
-                                                                            var base_url = getBaseURL();
-                                                                            var data = response.split('~');
-                                                                            window.location.href = base_url + "/invoiceReceipt/" + data[0] + "/" + data[1] + "/" + data[2];
-                                                                        }
+                                                                        $("#verification").attr("disabled", true);
+                                                                        var base_url = getBaseURL();
+                                                                        var data = response.split('~');
+                                                                        window.location.href = base_url + "/invoiceReceipt/" + data[0] + "/" + data[1] + "/" + data[2];
+                                                                    }
 
 //                                                       
-                                                                    }
-                                                                });
-                                                            }
+                                                                }
+                                                            });
+                                                        }
     </script>
 
 

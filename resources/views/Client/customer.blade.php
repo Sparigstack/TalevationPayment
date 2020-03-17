@@ -45,7 +45,7 @@
                                 <input type="hidden" class="hidden fromInv_customerId" value="{{$customer->id}}">
 
 
-                                <td class="cName_customer">{{$customer->name}}</td>
+                                <td class="cName_customer w22">{{$customer->name}}</td>
                                 <td>{{$customer->first_name}} {{$customer->last_name}}</td>
                                 <td class="email_customer">{{$customer->email}}</td>
                                 <?php
@@ -144,8 +144,9 @@
                                     }
                                     $(document).ready(function () {
                                         //Default data table
-                                        $('#default-datatable').DataTable();
-
+                                        $('#default-datatable').DataTable({
+                                            ordering: false
+                                        });
                                     });
 </script>
 @endsection

@@ -157,7 +157,7 @@
 
                                         <div class="col-md-5 col-lg-5 col-sm-12 parent">
                                             <div class="hidden" id="searchDivSection"></div>
-                                            
+
                                             <input type="hidden" name="a2_accountId" value="" id="a2_accountId">
 
                                             <input type="hidden" name="anniversary_Date" value="" id="anniversary_Date">
@@ -291,6 +291,7 @@
                             <input autocomplete="false" name="hidden" type="text" style="display:none;">
                             <input type="hidden" name="customerDb_id" id="customerDb_id">
                             <input type="hidden" name="state_tax_id" id="state_tax_id">
+                            <input type="hidden" name="RecurringOptionId" id="RecurringOptionId">
                             <input type="hidden" id="Inv_id_fromEditIcon" name="Inv_id_fromEditIcon">
                             <input type="hidden" id="customerId_fromcreateInvoice" name="customerId_fromcreateInvoice">
                             {{ csrf_field() }}
@@ -510,13 +511,20 @@
                                                     <div class="col-3 invoiceTotalPrice totalTable totalTablesData  mt-3 totalTable">$0</div>
                                                     <div class="col-9 mt-2 totalTable " style="text-align: right;">Total Tax </div>
                                                     <div class="col-3 invoiceTotalTax totalTable totalTablesData  mt-2 totalTable">$0</div>
-                                                    <div class="col-9 mt-2 totalTable totalTablesData" style="text-align: right;"> Balance Due </div>
+                                                    <div class="col-9 mt-2 totalTable totalTablesData" style="text-align: right;"> Payment Due </div>
                                                     <div class="col-3 invoiceTotalBalance totalTable totalTablesData  mt-2 totalTable">$0</div>
                                                 </div>
                                             </div>
 
                                             <div class="row">  
-                                                <div class="col-9 pr-0">       </div>
+                                                <div class="col-9 row">
+                                                    <div class="col-5 pl-4 mt-3 pr-0" style="font-size: 1rem;">
+                                                        <p> Do you want this invoice to recur? </p>
+                                                    </div>
+                                                    <div class="col-4 pl-0 mt-2">
+                                                        <input type="checkbox" onkeyup="" onchange="" class="form-control RecurringOptionCheck " style="max-width: 20px !important;">
+                                                    </div>
+                                                </div>
 
                                                 <div class="col-3 row pt-3" style="">
                                                     <div class="col-10 " style="">
@@ -524,6 +532,25 @@
                                                             <option id="-1" value="-1">--Choose State Tax--</option>                                                            
                                                         </select>   
                                                     </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">  
+                                                <div class="col-8 row">
+                                                    <div class="col-4 pl-4 mt-3 pr-0" style="font-size: 1rem;">
+                                                        <p> Recur this invoice every </p>
+                                                    </div>
+                                                    <div class="col-2 pl-0 mt-2 RecurringOptionValue">
+                                                        <select class="form-control" style="" name="RecurringOption" id="RecurringOption" onchange="">
+                                                            <option value="1">month</option> 
+                                                            <option value="2">quarter</option>
+                                                            <option value="3">annual</option> 
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-3 row pt-3">
+                                                    <div class="col-10"> </div>
                                                 </div>
                                             </div>
 
@@ -567,7 +594,7 @@
 
         </div><!--End wrapper-->
 
-        <?php $v = "1.0.3"; ?>
+        <?php $v = "1.0.5"; ?>
 
         <!-- Bootstrap core JavaScrip        t-->
         <script src="{{asset('/js/jquery.min.js')}}"></script>

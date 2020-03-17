@@ -14,4 +14,7 @@ class Invoice extends Model
      public  function invoice_items(){
          return $this->hasMany('App\InvoiceItem');
     }
+    public  function state_tax(){
+         return $this->belongsTo('App\StateTax');
+    }
 }

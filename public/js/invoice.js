@@ -391,15 +391,30 @@ function datesByTerms(element) {
     if (termsValue == "5")
         $('#due-date').val("");
 }
+//function getBaseURL() {
+//    var urlString = window.location.host;
+//    var httpString = "http://";
+//    var domainString = "";
+//    if ((urlString.toLowerCase()).indexOf('127.0.0.1') !== -1 || (urlString.toLowerCase()).indexOf('dev') !== -1) {
+//        if ((urlString.toLowerCase()).indexOf('dev') !== -1) {
+//            domainString = "/TalevationPayment/public";
+//            httpString = "https://";
+//        }
+//    } else {
+//        domainString = "/TalevationPayment/public";
+//    }
+//    var fullBaseURL = httpString + urlString + domainString;
+//
+//    return fullBaseURL;
+//}
+
 function getBaseURL() {
     var urlString = window.location.host;
     var httpString = "http://";
     var domainString = "";
-    if ((urlString.toLowerCase()).indexOf('127.0.0.1') !== -1 || (urlString.toLowerCase()).indexOf('dev') !== -1) {
-        if ((urlString.toLowerCase()).indexOf('dev') !== -1) {
-            domainString = "/TalevationPayment/public";
-            httpString = "https://";
-        }
+    if ((urlString.toLowerCase()).indexOf('talevation.com') !== -1) {
+        domainString = "/payments/public";
+        httpString = "https://";
     } else {
         domainString = "/TalevationPayment/public";
     }
@@ -407,6 +422,7 @@ function getBaseURL() {
 
     return fullBaseURL;
 }
+
 function showHideInvoiceDetails(element) {
     var isValidate = validateInputs(element);
     var parent = findParent(element);
@@ -438,32 +454,58 @@ function showHideInvoiceDetails(element) {
 
         var inv_state = $("#InvoiceDetails").find("#inv_state").val();
         var state_tax_id = $(parent).find("#state_tax_id").val();
-        var matchFound = false;
+        var RecurringOptionId = $(parent).find("#RecurringOptionId").val();
+        
+        if(RecurringOptionId){
+            $(".RecurringOptionCheck").prop('checked', true);
+            $("#RecurringOption option[value='" + RecurringOptionId + "']").attr("selected", "selected");
+            $("#RecurringOption option[value='" + 1 + "']").removeAttr("selected", "selected");
+        }
+        else{
+            $(".RecurringOptionCheck").prop('checked', false);
+            $("#RecurringOption option[value='" + 1 + "']").attr("selected", "selected");
+        }
 
         var selectedItem = $(".state_name option[id='" + state_tax_id + "']");
+
         if (selectedItem != null && selectedItem.length > 0) {
             $(".state_name option[id='" + state_tax_id + "']").attr("selected", "selected");
         } else {
+            var abbFound = false;
             $(".state_name option").each(function () {
-                if (state_tax_id == $(this).attr("id"))
-                    matchFound = true;
-                else if ($(this).text().toLowerCase().indexOf(inv_state.toLowerCase()) >= 0)
-                    matchFound = true;
+                if (inv_state == $(this).attr("state_abb"))
+                    abbFound = true;
+//                if (state_tax_id == $(this).attr("id"))
+//                    matchFound = true;
+//                else if ($(this).text().toLowerCase().indexOf(inv_state.toLowerCase()) >= 0)
+//                    matchFound = true;
 
-                if (matchFound) {
+                if (abbFound) {
                     $(this).prop('selected', true);
                     return false;
                 } else {
                     $(this).prop('selected', false);
                 }
-                //, 'selected');
+
             });
+
+            if (!abbFound) {
+                var matchFound = false;
+                $(".state_name option").each(function () {
+
+                    if ($(this).text().toLowerCase().indexOf(inv_state.toLowerCase()) >= 0)
+                        matchFound = true;
+
+                    if (matchFound) {
+                        $(this).prop('selected', true);
+                        return false;
+                    } else {
+                        $(this).prop('selected', false);
+                    }
+                    //, 'selected');
+                });
+            }
         }
-
-
-
-
-
         SetTaxableValue();
     }
 }
@@ -545,6 +587,11 @@ function InsertInvoiceItems(element) {
         var inv_zip = $("#inv_zip").val();
         var inv_terms = $("#inv_terms").val();
         var state_tax_id = $("#state_taxes option:selected").attr('id');
+        
+        if ($(".RecurringOptionCheck").is(':checked')) {
+            var RecurringOption = $("#RecurringOption option:selected").val();
+        }
+        
         var inv_due_date = null;
         if (inv_terms != 'Due On Receipt') {
             inv_due_date = $("#due-date").val();
@@ -578,7 +625,7 @@ function InsertInvoiceItems(element) {
                 inv_lastname: inv_lastname, Email: Email, inv_add1: inv_add1, inv_add2: inv_add2
                 , inv_state: inv_state, inv_city: inv_city, inv_zip: inv_zip,
                 inv_due_date: inv_due_date, invoice_created_date: invoice_created_date, inv_terms: inv_terms, state_tax_id: state_tax_id,
-                customerDb_id: customerDb_id, inv_GUID: inv_GUID, companyName_Invoice: companyName_Invoice, memo: memo},
+                RecurringOption: RecurringOption, customerDb_id: customerDb_id, inv_GUID: inv_GUID, companyName_Invoice: companyName_Invoice, memo: memo},
             success: function (response) {
 
                 if (!parseInt(response)) {
@@ -819,6 +866,7 @@ function editInvoice(element, InvoiceItemObject) {
     $("#addInvoice_form").find("#customer").val($(parent).find('.edit_Email').text());
     $("#addInvoice_form").find("#customerDb_id").val($(parent).find('.edit_customerDb_Id').val());
     $("#addInvoice_form").find("#state_tax_id").val($(parent).find('.edit_state_tax_id').val());
+    $("#addInvoice_form").find("#RecurringOptionId").val($(parent).find('.edit_RecurringOption').val());
 
     $("#addInvoice_form").find("#customer").val($(parent).find('.edit_Email').text());
     $("#addInvoice_form").find("#Email").val($(parent).find('.edit_Email').text());
@@ -1064,7 +1112,7 @@ function checkForPresetItems(calledFrom) {
                 }
 
                 for (var j = 0; j < response.state_taxes.length; j++) {
-                    $(".state_name").append("<option  id='" + response.state_taxes[j].id + "'value='" + response.state_taxes[j].tax_rate + "'>" + response.state_taxes[j].state_name + "</option>");
+                    $(".state_name").append("<option  id='" + response.state_taxes[j].id + "'value='" + response.state_taxes[j].tax_rate + "'state_abb='" + response.state_taxes[j].state_abbreviation + "'>" + response.state_taxes[j].state_name + "</option>");
 
                 }
                 //hideLoader();
