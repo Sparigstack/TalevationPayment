@@ -73,7 +73,8 @@ Route::post('saveInvoiceItems', 'InvoiceItemController@saveInvoiceItems');
 //post call for marking invoice paid
 Route::post('markInvoicePaid', 'InvoiceController@markInvoicePaid');
 
-
+//post call for delete invoice
+Route::post('deleteInvoiceWithItems', 'InvoiceController@deleteInvoice');
 
 Route::get('qbauth', 'HomeController@qbauth');
 Route::get('previewInvoice','StripePaymentController@payment');
@@ -90,3 +91,11 @@ Route::post('sslIntegration1', 'CustomerController@sendEmail')->name('sslIntegra
 //});
 
 Route::get('shlorder/{contactId}', 'talevationSyncController@shlorder');
+// Route::post('croneJob', 'InvoiceController@croneJob')->name('croneJob');
+// Route::get('croneJob', function (){
+//    return view('croneJobPage');
+// });
+Route::get('recurInvoices', 'InvoiceController@recurInvoices');
+// Route::get('recurInvoices', function (){
+//    return 'mansi';
+// });

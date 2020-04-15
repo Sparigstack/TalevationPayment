@@ -593,6 +593,12 @@
 
 
                                                     </br>   <b> State Tax : </b>{{$stateTaxes->state_name}} ({{$stateTaxes->tax_rate}}% tax) </br> </br>
+                                                    <?php
+                                                    $showHide = "";
+                                                    if($invoiceData->RecurringOption == "") 
+                                                        $showHide = "hidden";
+                                                    ?>
+                                                    <div class="{{$showHide}}">
                                                     <p> Do you want to pay this invoice automatically with your saved payment method every 
                                                         <?php
                                                         if ($invoiceData->RecurringOption == 1)
@@ -611,6 +617,7 @@
                                                         <input type="radio" id="noRecur" name="IsRecurringAgreed">
                                                         <label for="noRecur">No</label>
                                                     </div>
+                                                </div>
                                                 </div><!-- /.col -->
                                                 <div class="col-lg-5">
                                                     <!--<p class="lead">Amount Due ${{number_format($TotalAmount,2)}}</p>-->

@@ -1,3 +1,4 @@
+<title>Talevation Payments | Customer</title>
 @extends('Masters.index')
 @section('contentSection')
 <?php

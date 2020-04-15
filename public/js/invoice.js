@@ -451,21 +451,22 @@ function showHideInvoiceDetails(element) {
         $(".save_send").removeClass('hidden');
         $("#InvoiceItemsDetails").removeClass('hidden');
         $("#edit_customer").removeClass("hidden");
+        // var RecurringOptionId = $(parent).find("#RecurringOptionId").val();
+        
+        // if(RecurringOptionId){
+        //     $(".RecurringOptionCheck").prop('checked', true);
+        //     $(".showHideDiv").removeClass('hidden');
+        //     $("#RecurringOption option[value='" + RecurringOptionId + "']").attr("selected", "selected");
+        //     // $("#RecurringOption option[value='" + 1 + "']").removeAttr("selected", "selected");
+        // }
+        // else{
+        //     $(".RecurringOptionCheck").prop('checked', false);
+        //     $(".showHideDiv").addClass('hidden');
+        //     $("#RecurringOption option[value='" + 1 + "']").attr("selected", "selected");
+        // }
 
         var inv_state = $("#InvoiceDetails").find("#inv_state").val();
         var state_tax_id = $(parent).find("#state_tax_id").val();
-        var RecurringOptionId = $(parent).find("#RecurringOptionId").val();
-        
-        if(RecurringOptionId){
-            $(".RecurringOptionCheck").prop('checked', true);
-            $("#RecurringOption option[value='" + RecurringOptionId + "']").attr("selected", "selected");
-            $("#RecurringOption option[value='" + 1 + "']").removeAttr("selected", "selected");
-        }
-        else{
-            $(".RecurringOptionCheck").prop('checked', false);
-            $("#RecurringOption option[value='" + 1 + "']").attr("selected", "selected");
-        }
-
         var selectedItem = $(".state_name option[id='" + state_tax_id + "']");
 
         if (selectedItem != null && selectedItem.length > 0) {
@@ -565,7 +566,7 @@ function InsertInvoiceItems(element) {
         var inv_lastname = $("#inv_lastname").val();
         var resultURL = getBaseURL();
         var InvoiceLink = resultURL + "/payment?token=" + $("#inv_GUID").val();
-        var clickHere = "Hello " + inv_firstname + " " + inv_lastname + "\n \n" + "Please pay your pending invoice with Talevation." + "\n" + "You can pay it online with the link below." + "\n" + InvoiceLink + "\n \n" + "If you are not able to click the link above, please copy and paste it in your browser." + "\n \n" + "Thanks," + "\n" + "Talevation";
+        var clickHere = "Hello " + inv_firstname + " " + inv_lastname + "," + "\n \n" + "Please pay your pending invoice with Talevation." + "\n" + "You can pay it online with the link below." + "\n" + InvoiceLink + "\n \n" + "If you are not able to click the link above, please copy and paste it in your browser." + "\n \n" + "Thanks," + "\n" + "Talevation";
         var mailToLinkBody = encodeURIComponent(clickHere);
         var save_send_Href_String = 'mailto:' + $("#customer").val() + '?subject=Talevation: Pay Invoice!&body=' + mailToLinkBody;
         var save_send = $(".save_send_href").attr('href', save_send_Href_String);
@@ -888,6 +889,20 @@ function editInvoice(element, InvoiceItemObject) {
     $("#memo").val($(parent).find('.edit_memo').val());
     $(".saveInvoice").removeClass('hidden');
 
+    var RecurringOptionId = $("#RecurringOptionId").val();
+        
+        if(RecurringOptionId){
+            $(".RecurringOptionCheck").prop('checked', true);
+            $(".showHideDiv").removeClass('hidden');
+            $("#RecurringOption option[value='" + RecurringOptionId + "']").attr("selected", "selected");
+            // $("#RecurringOption option[value='" + 1 + "']").removeAttr("selected", "selected");
+        }
+        else{
+            $(".RecurringOptionCheck").prop('checked', false);
+            $(".showHideDiv").addClass('hidden');
+            $("#RecurringOption option[value='" + 1 + "']").attr("selected", "selected");
+        }
+
     //removing old invoice items of previously edited or added invoice
     $("#invoiceItemTable").find('tbody').find('.clonnedInvoiceItem').remove();
 
@@ -971,7 +986,8 @@ function markInvoicePaid(element) {
     var parent = findParent(element);
     var invoiceId = $(element).attr('db-id');
     showLoader();
-    var CSRF_TOKEN = $(parent).find('.csrf-token').val();
+    // var CSRF_TOKEN = $(parent).find('.csrf-token').val();
+    var CSRF_TOKEN = $('.csrf-token').val();
     $.ajax({
         url: 'markInvoicePaid',
         type: 'post',
@@ -982,6 +998,26 @@ function markInvoicePaid(element) {
             $(parent).find('.edit_status').text("Paid");
             $(element).remove();
             hideLoader();
+        }
+    });
+}
+
+function deleteInvoice(element) {
+    var confirmDelete = confirm("Are you sure you want to delete this invoice?");
+    if (!confirmDelete)
+        return;
+    var parent = findParent(element);
+    var invoiceDeleteId = $(element).attr('db-delete-id');
+    showLoader();
+    var CSRF_TOKEN = $('.csrf-token').val();
+    var urlString = $('.deleteInvoiceWithItems').val();
+    $.ajax({
+        url: urlString,
+        type: 'post',
+        data: {_token: CSRF_TOKEN, invoiceDeleteId: invoiceDeleteId},
+        success: function (response) {
+            hideLoader();
+            location.reload();
         }
     });
 }
@@ -1012,6 +1048,9 @@ function AddNewInvoice() {
     $("#customer").removeClass("hidden");
     $("#contentToShow").text("Lookup Customer by Email");
 
+    $(".RecurringOptionCheck").prop('checked', false);
+    $(".showHideDiv").addClass('hidden');
+    $("#RecurringOption option[value='" + 1 + "']").attr("selected", "selected");
 
 
     //removing all previously used invoice items in add/edit popup
@@ -1019,6 +1058,7 @@ function AddNewInvoice() {
     $(InvoiceItemsDetails).find(".clonnedInvoiceItem").each(function () {
         $(this).remove();
     });
+    $("#state_tax_id").val('');
 
     checkForPresetItems('addnew');
 }
@@ -1118,5 +1158,14 @@ function checkForPresetItems(calledFrom) {
                 //hideLoader();
             }
         });
+    }
+}
+
+function isCheckedRecur(){
+    if ($(".RecurringOptionCheck").is(':checked')) {
+            $(".showHideDiv").removeClass('hidden');
+    }
+    else{
+        $(".showHideDiv").addClass('hidden');
     }
 }

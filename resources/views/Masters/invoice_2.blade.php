@@ -1,5 +1,7 @@
+<title>Talevation Payments | Invoice</title>
 @extends('Masters.index')
 @section('contentSection')
+
 <div class="content-wrapper">
     <div class="container-fluid">
 
@@ -95,7 +97,7 @@
                                     <tr class="parent">
 
                                         <?php
-                                        $clickHere = "Hello " . $invoice->first_name . " " . $invoice->last_name . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $InvoiceLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";
+                                        $clickHere = "Hello " . $invoice->first_name . " " . $invoice->last_name . "," . $body_line . $body_line . "Please pay your pending invoice with Talevation." . $body_line . "You can pay it online with the link below." . $body_line . $InvoiceLink . $body_line . " " . $body_line . "If you are not able to click the link above, please copy and paste it in your browser." . $body_line . " " . $body_line . "Thanks," . $body_line . "Talevation";
 
                                         $clickHere = nl2br($clickHere);
                                         $status = $invoice->status;
@@ -186,8 +188,11 @@
                                     <a title="Send Invoice to Customer" href="mailto:{{$invoice->email}}?subject=Talevation: Pay Invoice!&body={{$clickHere}}"><i class="fas fa-envelope-square"></i></a>
                                     <a title="Preview Invoice"  href="{{url($PreviewLink)}}" target="_blank"><i class="fas fa-eye"></i></a>
                                     <a title="Edit Invoice" style="color:#14abef;"  onclick="editInvoice(this,{{$invoice->invoice_items}});" data-toggle="modal" data-target="#addInvoice_form"><i class="fas fa-edit"></i></a>
+                                    <input class="csrf-token" type="hidden" value="{{ csrf_token() }}">
+                                    <input type="hidden"  class="deleteInvoiceWithItems" value="{{url('deleteInvoiceWithItems')}}">
+                                    <a title="Delete Invoice" style="color:#14abef;" db-delete-id="{{$invoice->id}}"  onclick="deleteInvoice(this);"><i class="fas fa-trash"></i></a>
                                     <?php if ($showMarkPaid) { ?>
-                                        <input class="csrf-token" type="hidden" value="{{ csrf_token() }}">
+                                        
                                         <a title="Mark Invoice Paid" style="color: green;" db-id="{{$invoice->id}}" onclick="markInvoicePaid(this);"><i class="fas fa-check"></i></a>        
                                         <?php } ?>
                                 </td>

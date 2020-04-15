@@ -522,7 +522,7 @@
                                                         <p> Do you want this invoice to recur? </p>
                                                     </div>
                                                     <div class="col-4 pl-0 mt-2">
-                                                        <input type="checkbox" onkeyup="" onchange="" class="form-control RecurringOptionCheck " style="max-width: 20px !important;">
+                                                        <input type="checkbox" onkeyup="" onchange="isCheckedRecur();" class="form-control RecurringOptionCheck " style="max-width: 20px !important;">
                                                     </div>
                                                 </div>
 
@@ -535,7 +535,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row">  
+                                            <div class="row showHideDiv hidden">  
                                                 <div class="col-8 row">
                                                     <div class="col-4 pl-4 mt-3 pr-0" style="font-size: 1rem;">
                                                         <p> Recur this invoice every </p>

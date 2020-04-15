@@ -1,3 +1,4 @@
+<title>Talevation Payments | Login</title>
 @extends('layouts.app')
 
 @section('content')
