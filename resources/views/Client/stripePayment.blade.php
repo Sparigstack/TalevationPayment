@@ -404,6 +404,51 @@
                 font-weight: 500;
                 font-size: 13px;
             }
+            #termsCheckCard{
+                width: 18px;
+                height: 18px;
+            }
+            #termsCheckBank{
+                width: 18px;
+                height: 18px;
+            }
+            .tooltiptext{
+                    font-size: 12px;
+    line-height: 17px;
+    visibility: hidden;
+    max-width: 300px;
+    background-color: #242424;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 7px 7px;
+    position: absolute;
+    z-index: 1;
+    bottom: 10%;
+    left: 35%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: .3s;
+    transform: translate3d(0px, 20px, 0px);
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0px, 0px, 0px);
+    text-transform: initial;
+            }
+            .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #242424 transparent transparent transparent;
+}
+.tooltipSaveBank{
+    left:25%;
+    /*margin-right: 35px;*/
+}
 
 
         </style>
@@ -679,6 +724,20 @@
                                     </div>
                                 </div>
 
+                                <div class="modal fade" id="openPdf" style="display:none;" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header pb-2 pt-2" style="font-size:25px;">
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        </div>
+      <div class="modal-body">
+        <object type="application/pdf" data="{{url('SHL Terms and Conditions provided by Talevation.pdf')}}" width="100%" height="500" style="">No Support</object>
+      </div>
+  </div>
+</div>
+                                                        </div>
+
 
                                 <div class="card {{$hiddenAchVerification}}" id="stripePaymentUI">
                                     <div class="card-body">
@@ -743,7 +802,7 @@
                                             <hr>
 
                                             <div class="creditCardDiv">
-                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form">
+                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form" onsubmit="return checkTermsCheckbox();">
                                                     {{ csrf_field() }}
 
                                                     <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
@@ -864,6 +923,13 @@
                                                         </div>
                                                     </div>
                                                     <hr>
+                                                    <div class="form-row row ">
+                                                        <div class="col-12">
+                                                            <div class="form-group showHideTooltip fr mb-1 hidden">
+                                                        <span class="tooltiptext pull-right fr">Check Terms and Conditions </span>
+                                                    </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
                                                             <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
@@ -871,18 +937,27 @@
                                                             <div class="col-md-4 pull-left" style="">
                                                                 <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
                                                             </div>
-                                                        </div>
+                                                            <!-- <div class="col-md-4">
+                                                            <div class="form-group showHideTooltip hidden">
+                                                        <span class="tooltiptext">Live Button Description Here</span>
                                                     </div>
+                                                        </div> -->
+                                                        </div>
+
+                                                    </div>
+                                                    
                                                     <div class="form-group">
                                                         <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
-                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableCard"><i class="icon-lock"></i> Pay Now</button>
+                                                        <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableCard" ><i class="icon-lock"></i> Pay Now</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                        <label for="termsCheckCard" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
+                                                        <input type="checkbox" id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
                                                     </div>
                                                 </form>
                                             </div>
 
                                             <div class="bankPaymentDiv hidden">
-                                                <form action="{{ route('stripe.post1') }}" class="" method="post" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-formbank">
+                                                <form onsubmit="return checkTermsCheckboxBank();" action="{{ route('stripe.post1') }}" class="" method="post" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-formbank">
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="source" />
                                                     <input type="hidden" name="email" value="{{$invoiceData->email}}" />
@@ -982,6 +1057,13 @@
                                                         </div>
                                                     </div>
                                                     <hr>
+                                                    <div class="form-row row ">
+                                                        <div class="col-12">
+                                                            <div class="form-group showHideTooltipBank fr mb-1 hidden">
+                                                        <span class="tooltiptext tooltipSaveBank pull-right fr">Check Terms and Conditions </span>
+                                                    </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
                                                             <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
@@ -991,10 +1073,13 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
                                                     <div class="form-group">
                                                         <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableBank"><i class="icon-lock"></i>Save Bank Account</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                        <label for="termsCheckBank" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
+                                                        <input type="checkbox" id="termsCheckBank" name="termsCheckName" class="pull-right mt-2 checkBank"onclick="checkTerms(this);" >
                                                     </div>
                                                 </form>
                                             </div>
@@ -1150,6 +1235,9 @@
 
                                                             // Submit the form with the token ID.
                                                             form2.addEventListener('submit', function (event2) {
+                                                                if(!$("#buttonDisableBank").hasClass("disabled")){
+                                                                    return false;
+                                                                }
                                                                 event2.preventDefault();
                                                                 var bankAccountData = {
                                                                     country: 'us',
@@ -1227,7 +1315,13 @@
                                                                         }
                                                                     });
                                                                 } else {
-                                                                    $("#buttonDisableCard").attr("disabled", true);
+                                                                    if($(".showHideTooltip").hasClass("hidden")){
+                                                                        $("#buttonDisableCard").attr("disabled", true);
+                                                                    }
+                                                                    else{
+                                                                        $("#buttonDisableCard").attr("disabled", false);
+                                                                    }
+                                                                    // $("#buttonDisableCard").attr("disabled", true);
                                                                 }
                                                             });
                                                         }
@@ -1284,7 +1378,7 @@
                                                                 form3.appendChild(hiddenInput);
                                                                 // Submit the form
                                                                 form3.submit();
-                                                                $("#buttonDisableBank").attr("disabled", true);
+                                                                // $("#buttonDisableBank").attr("disabled", true);
                                                             } else if (result.error) {
 //                                                                        errorElement.textContent = result.error.message;
 //                                                                        errorElement.classList.add('visible');
@@ -1409,6 +1503,42 @@
                                                                 }
                                                             });
                                                         }
+
+        function checkTermsCheckbox(){
+            if ($("#termsCheckCard").is(':checked')) {
+                // $("#buttonDisableCard").attr("disabled",false);
+                $(".showHideTooltip").addClass("hidden");
+            }
+            else{
+                 $(".showHideTooltip").removeClass("hidden");
+                return false;
+            }
+        }
+            
+        function checkTermsCheckboxBank(){
+            if($("#termsCheckBank").is(':checked')) {
+                $("#buttonDisableBank").attr("disabled",true);
+                $("#buttonDisableBank").addClass("disabled");
+                $(".showHideTooltipBank").addClass("hidden");
+            }
+            else{
+                $("#buttonDisableBank").attr("disabled",false);
+                $("#buttonDisableBank").removeClass("disabled");
+                $(".showHideTooltipBank").removeClass("hidden");
+                return false;
+            }
+        }
+        function checkTerms(element){
+            if($(element).is(':checked')){
+                if($(element).hasClass("checkBank")){
+                    $(".tooltipSaveBank").parent().addClass("hidden");
+                }
+                else{
+                    $(".tooltiptext").parent().addClass("hidden");
+                }
+            }
+
+        }
     </script>
 
 

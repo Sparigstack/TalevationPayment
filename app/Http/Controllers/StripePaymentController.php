@@ -259,7 +259,14 @@ class StripePaymentController extends Controller {
                 $totalPrice = $request->totalPrice;
                 $invoice_id = $request->invoice_id;
                 $customerRef = $Invoice->customer->qb_customerId;
-                $memo = $Invoice->memo;
+                $memo = '';
+                if(!is_null($Invoice->memo)){
+                    $memo = $Invoice->memo;
+                }
+                else{
+                    $memo = '';
+                }
+                
 //                echo $totalPrice."~~~~".$invoice_id."~~~~~~".$customerRef."--".$token.'--'.$memo;
 //                echo $appId;
                 $utility = new Utility;
@@ -329,7 +336,14 @@ class StripePaymentController extends Controller {
                     $response = json_decode($result, true);
                     $totalPrice = $request->totalPrice;
                     $invoice_id = $request->invoice_id;
-                    $memo = $Invoice->memo;
+                    $memo = '';
+                    if(!is_null($Invoice->memo)){
+                        $memo = $Invoice->memo;
+                    }
+                    else{
+                        $memo = '';
+                    }
+                    // $memo = $Invoice->memo;
                     $customerRef = $response['Customer']['Id'];
                     $flash_msg .= " 12";
                     $Customer = new Customer;
