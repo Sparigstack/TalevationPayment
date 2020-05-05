@@ -1,0 +1,50 @@
+{
+    "name": "spatie/laravel-stripe-webhooks",
+    "description": "Handle stripe webhooks in a Laravel application",
+    "keywords": [
+        "spatie",
+        "laravel-stripe-webhooks"
+    ],
+    "homepage": "https://github.com/spatie/laravel-stripe-webhooks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Freek Van der Herten",
+            "email": "freek@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "illuminate/support": "~5.5.0|~5.6.0|~5.7.0",
+        "stripe/stripe-php": "^5.2|^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.5.0|~3.6.0|~3.7.0",
+        "phpunit/phpunit": "^6.4|^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\StripeWebhooks\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\StripeWebhooks\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spatie\\StripeWebhooks\\StripeWebhooksServiceProvider"
+            ]
+        }
+    }
+}

@@ -24,3 +24,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('testInvoice', 'ApiTestController@createSalesReceiptAPI');
 Route::get('shlorder/{contactId}', 'talevationSyncController@getContactId');
+
+Route::get('stripePayout', 'StripePayoutController@stripePayout');

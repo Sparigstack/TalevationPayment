@@ -11,6 +11,7 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "quickbooks/v3-php-sdk": "^5.2",
+        "spatie/laravel-stripe-webhooks": "^1.1",
         "stripe/stripe-php": "^6.43"
     },
     "require-dev": {

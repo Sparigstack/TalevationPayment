@@ -272,6 +272,7 @@ class StripePaymentController extends Controller {
                 $utility = new Utility;
 //                $response1 = $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
                 $response1 = $utility->createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token);
+                $utility->createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
 //                var_dump($response1);
 //                return;
                 $flash_msg .= " 8";
@@ -611,6 +612,74 @@ class StripePaymentController extends Controller {
         $stripePaymentId = $stripe_payment_id;
         $Amount = $amount;
         return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
+    }
+
+    public function createDepositAPI(request $request){
+        // $demoTable = new DemoTable();
+        // $demoTable->name = "deposit";
+        // $demoTable->role = $webRequest;
+        // $demoTable->save();
+
+        $appId = '';
+        $token = '';
+
+        $QbToken = QbToken::all();
+        for ($i = 0; $i < count($QbToken); $i++) {
+            $id = $QbToken[$i]->id;
+            $token = $QbToken[$i]->access_token;
+            $appId = $QbToken[$i]->realm_id;
+        }
+
+        $QbTokenFirst = QbToken::first();
+            $QbTokenDate = date($QbTokenFirst->updated_at);
+            $Date = date("Y-m-d H:i:s");
+            $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
+
+            if ($totalTime >= 59) {
+                $OAuth2Login_Helper = $this->OAuth2LoginHelper;
+                //if (isset($QbToken) && !empty($QbToken)) {
+                if ($QbTokenFirst) {
+                    $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
+                    $accessTokenValue = $accessTokenObj->getAccessToken();
+                    $refreshTokenValue = $accessTokenObj->getRefreshToken();
+                    $QbTokenFirst->exists = true;
+                    $QbTokenFirst->id = $QbTokenFirst->id;
+                    $QbTokenFirst->access_token = $accessTokenValue;
+                    $QbTokenFirst->refresh_token = $refreshTokenValue;
+                    $QbTokenFirst->save();
+                    return redirect()->route('invoice');
+                } else {
+                    $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
+                    return Redirect::to($authorizationCodeUrl);
+                }
+            }
+
+        // $QbToken = QbToken::first();
+        // $appId = $QbToken->realm_id;
+
+        try {
+            // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
+            $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87")));
+            $data = (object) array("TotalAmt" => 1675.52, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            $data_json = json_encode($data);
+            $curl = curl_init(); // URL of the call
+            // Disable SSL verification
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            // Will return the response, if false it print the response
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, env('QB_API_URL') . $appId . "/deposit?minorversion=47");
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
+            $result = curl_exec($curl);
+            $response = json_decode($result, true);
+           var_dump($response);
+
+        } catch (Exception $e) {
+//            return response()->json([
+//                        'error' => $e
+//                            ], 200);
+        }
     }
 
 }

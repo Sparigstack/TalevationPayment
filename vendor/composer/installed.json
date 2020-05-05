@@ -611,7 +611,8 @@
                 "homepage": "https://github.com/mtdowling"
             }
         ],
-        "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function."
+        "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+        "abandoned": true
     },
     {
         "name": "guzzlehttp/streams",
@@ -663,7 +664,8 @@
         "keywords": [
             "Guzzle",
             "stream"
-        ]
+        ],
+        "abandoned": true
     },
     {
         "name": "hamcrest/hamcrest-php",
@@ -757,7 +759,8 @@
                 "name": "Jakub Onderka",
                 "email": "jakub.onderka@gmail.com"
             }
-        ]
+        ],
+        "abandoned": "php-parallel-lint/php-console-color"
     },
     {
         "name": "jakub-onderka/php-console-highlighter",
@@ -805,7 +808,8 @@
                 "homepage": "http://www.acci.cz/"
             }
         ],
-        "description": "Highlight PHP code in terminal"
+        "description": "Highlight PHP code in terminal",
+        "abandoned": "php-parallel-lint/php-console-highlighter"
     },
     {
         "name": "kylekatarnls/update-helper",
@@ -1332,7 +1336,8 @@
         "keywords": [
             "cron",
             "schedule"
-        ]
+        ],
+        "abandoned": "dragonmantank/cron-expression"
     },
     {
         "name": "myclabs/deep-copy",
@@ -3276,6 +3281,64 @@
         ],
         "description": "Library that helps with managing the version number of Git-hosted PHP projects",
         "homepage": "https://github.com/sebastianbergmann/version"
+    },
+    {
+        "name": "spatie/laravel-stripe-webhooks",
+        "version": "1.1.4",
+        "version_normalized": "1.1.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/spatie/laravel-stripe-webhooks.git",
+            "reference": "0b336bfacae1d02e9d6cb96f6f8cf3327be82cc9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/spatie/laravel-stripe-webhooks/zipball/0b336bfacae1d02e9d6cb96f6f8cf3327be82cc9",
+            "reference": "0b336bfacae1d02e9d6cb96f6f8cf3327be82cc9",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/support": "~5.5.0|~5.6.0|~5.7.0",
+            "php": "^7.0",
+            "stripe/stripe-php": "^5.2|^6.0"
+        },
+        "require-dev": {
+            "orchestra/testbench": "~3.5.0|~3.6.0|~3.7.0",
+            "phpunit/phpunit": "^6.4|^7.0"
+        },
+        "time": "2019-02-27T12:33:29+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Spatie\\StripeWebhooks\\StripeWebhooksServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Spatie\\StripeWebhooks\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Freek Van der Herten",
+                "email": "freek@spatie.be",
+                "homepage": "https://spatie.be",
+                "role": "Developer"
+            }
+        ],
+        "description": "Handle stripe webhooks in a Laravel application",
+        "homepage": "https://github.com/spatie/laravel-stripe-webhooks",
+        "keywords": [
+            "laravel-stripe-webhooks",
+            "spatie"
+        ]
     },
     {
         "name": "stripe/stripe-php",

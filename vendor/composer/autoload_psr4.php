@@ -31,6 +31,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
+    'Spatie\\StripeWebhooks\\' => array($vendorDir . '/spatie/laravel-stripe-webhooks/src'),
     'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'QuickBooksOnline\\API\\' => array($vendorDir . '/quickbooks/v3-php-sdk/src'),
