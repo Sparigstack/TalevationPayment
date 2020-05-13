@@ -126,6 +126,7 @@ class Utility {
             // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
             foreach ($invoice_items as $items) {
             $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$items->quantity * $items->rate, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
+            // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$items->quantity * $items->rate, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87")));
             }
             $data = (object) array("TotalAmt" => $totalPrice, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
             $data_json = json_encode($data);
