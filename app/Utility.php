@@ -10,6 +10,8 @@ namespace App;
 
 use App\Invoice;
 use App\InvoiceItem;
+use App\DemoTable;
+use App\QbToken;
 
 /**
  * Description of Utility
@@ -103,6 +105,44 @@ class Utility {
                 $Invoice->QB_transaction_id = $response['SalesReceipt']['Id'];
                 $Invoice->save();
             }
+        } catch (Exception $e) {
+//            return response()->json([
+//                        'error' => $e
+//                            ], 200);
+        }
+    }
+
+    public function createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token){
+        // $demoTable = new DemoTable();
+        // $demoTable->name = "deposit";
+        // $demoTable->role = $webRequest;
+        // $demoTable->save();
+
+        // $QbToken = QbToken::first();
+        // $appId = $QbToken->realm_id;
+        $invoice_items = InvoiceItem::where("invoice_id", $invoice_id)->get();
+
+        try {
+            // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
+            foreach ($invoice_items as $items) {
+            $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$items->quantity * $items->rate, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
+            }
+            $data = (object) array("TotalAmt" => $totalPrice, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            $data_json = json_encode($data);
+            $curl = curl_init(); // URL of the call
+            // Disable SSL verification
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            // Will return the response, if false it print the response
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, env('QB_API_URL') . $appId . "/deposit?minorversion=47");
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
+            $result = curl_exec($curl);
+            $response = json_decode($result, true);
+            var_dump($response);
+           // return $response;
+
         } catch (Exception $e) {
 //            return response()->json([
 //                        'error' => $e

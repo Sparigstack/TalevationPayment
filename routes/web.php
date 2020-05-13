@@ -64,9 +64,6 @@ Route::get('verifiedBank', function (){
 Route::post('createPaymentAPI', 'StripePaymentController@createPaymentAPI')->name('createPaymentAPI');
 Route::post('createSalesReceiptAPI', 'StripePaymentController@createSalesReceiptAPI')->name('createSalesReceiptAPI');
 
-
-
-
 //Route for  saveInvoiceItems 
 Route::post('saveInvoiceItems', 'InvoiceItemController@saveInvoiceItems');
 
@@ -96,6 +93,12 @@ Route::get('shlorder/{contactId}', 'talevationSyncController@shlorder');
 //    return view('croneJobPage');
 // });
 Route::get('recurInvoices', 'InvoiceController@recurInvoices');
-// Route::get('recurInvoices', function (){
-//    return 'mansi';
+// Route::get('stripePayout', 'StripePayoutController@stripePayout');
+// Route::get('stripePayout', function (){
+//    return view('stripePayout');
+// });
+Route::stripeWebhooks('stripePayout');
+Route::get('payoutcheck', 'StripePaymentController@createDepositAPI');
+// Route::get('payoutcheck', function (){
+//    return view('stripePayout');
 // });

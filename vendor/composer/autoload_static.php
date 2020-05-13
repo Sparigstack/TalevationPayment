@@ -62,6 +62,7 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Stripe\\' => 7,
+            'Spatie\\StripeWebhooks\\' => 22,
         ),
         'R' => 
         array (
@@ -235,6 +236,10 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
+        'Spatie\\StripeWebhooks\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src',
+        ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
@@ -378,9 +383,14 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
     );
 
     public static $classMap = array (
+        'App\\Console\\Commands\\DemoCron' => __DIR__ . '/../..' . '/app/Console/Commands/DemoCron.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\CustomClass\\MailContent' => __DIR__ . '/../..' . '/app/CustomClass/MailContent.php',
+        'App\\CustomClass\\sslContent' => __DIR__ . '/../..' . '/app/CustomClass/sslContent.php',
         'App\\Customer' => __DIR__ . '/../..' . '/app/Customer.php',
+        'App\\DemoTable' => __DIR__ . '/../..' . '/app/DemoTable.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\ApiTestController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApiTestController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',
         'App\\Http\\Controllers\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisterController.php',
@@ -391,6 +401,8 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
         'App\\Http\\Controllers\\InvoiceController' => __DIR__ . '/../..' . '/app/Http/Controllers/InvoiceController.php',
         'App\\Http\\Controllers\\InvoiceItemController' => __DIR__ . '/../..' . '/app/Http/Controllers/InvoiceItemController.php',
         'App\\Http\\Controllers\\StripePaymentController' => __DIR__ . '/../..' . '/app/Http/Controllers/StripePaymentController.php',
+        'App\\Http\\Controllers\\StripePayoutController' => __DIR__ . '/../..' . '/app/Http/Controllers/StripePayoutController.php',
+        'App\\Http\\Controllers\\talevationSyncController' => __DIR__ . '/../..' . '/app/Http/Controllers/talevationSyncController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -399,11 +411,17 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Invoice' => __DIR__ . '/../..' . '/app/Invoice.php',
         'App\\InvoiceItem' => __DIR__ . '/../..' . '/app/InvoiceItem.php',
+        'App\\Mail\\Email' => __DIR__ . '/../..' . '/app/Mail/Email.php',
+        'App\\Mail\\HDTutoMail' => __DIR__ . '/../..' . '/app/Mail/HDTutoMail.php',
+        'App\\Mail\\TestEmail' => __DIR__ . '/../..' . '/app/Mail/TestEmail.php',
+        'App\\PresetLineItems' => __DIR__ . '/../..' . '/app/PresetLineItems.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\QbToken' => __DIR__ . '/../..' . '/app/QbToken.php',
+        'App\\StateTax' => __DIR__ . '/../..' . '/app/StateTax.php',
         'App\\Term' => __DIR__ . '/../..' . '/app/Term.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\Utility' => __DIR__ . '/../..' . '/app/Utility.php',
@@ -3631,6 +3649,11 @@ class ComposerStaticInit1dbe7097558af53bba1e47843b57caad
         'SebastianBergmann\\ResourceOperations\\ResourceOperations' => __DIR__ . '/..' . '/sebastian/resource-operations/src/ResourceOperations.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
         'SessionUpdateTimestampHandlerInterface' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
+        'Spatie\\StripeWebhooks\\Exceptions\\WebhookFailed' => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src/Exceptions/WebhookFailed.php',
+        'Spatie\\StripeWebhooks\\Middlewares\\VerifySignature' => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src/Middlewares/VerifySignature.php',
+        'Spatie\\StripeWebhooks\\StripeWebhookCall' => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src/StripeWebhookCall.php',
+        'Spatie\\StripeWebhooks\\StripeWebhooksController' => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src/StripeWebhooksController.php',
+        'Spatie\\StripeWebhooks\\StripeWebhooksServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-stripe-webhooks/src/StripeWebhooksServiceProvider.php',
         'Stripe\\Account' => __DIR__ . '/..' . '/stripe/stripe-php/lib/Account.php',
         'Stripe\\AccountLink' => __DIR__ . '/..' . '/stripe/stripe-php/lib/AccountLink.php',
         'Stripe\\AlipayAccount' => __DIR__ . '/..' . '/stripe/stripe-php/lib/AlipayAccount.php',
