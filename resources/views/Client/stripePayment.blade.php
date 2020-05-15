@@ -425,8 +425,9 @@
     position: absolute;
     z-index: 1;
     bottom: 10%;
-    left: 35%;
-    margin-left: -60px;
+    /*left: 35%;*/
+    left:27%;
+    /*margin-left: -60px;*/
     opacity: 0;
     transition: .3s;
     transform: translate3d(0px, 20px, 0px);
@@ -446,7 +447,8 @@
     border-color: #242424 transparent transparent transparent;
 }
 .tooltipSaveBank{
-    left:25%;
+    /*left:25%;*/
+    left:17%;
     /*margin-right: 35px;*/
 }
 
