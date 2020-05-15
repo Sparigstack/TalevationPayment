@@ -112,23 +112,85 @@ class Utility {
         }
     }
 
-    public function createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token){
-        // $demoTable = new DemoTable();
-        // $demoTable->name = "deposit";
-        // $demoTable->role = $webRequest;
-        // $demoTable->save();
+    // public function createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token){
+    public function createDepositAPI($webhookRequest){
+        
+        $appId = '';
+        $token = '';
 
-        // $QbToken = QbToken::first();
-        // $appId = $QbToken->realm_id;
-        $invoice_items = InvoiceItem::where("invoice_id", $invoice_id)->get();
+        $QbToken = QbToken::all();
+        for ($i = 0; $i < count($QbToken); $i++) {
+            $id = $QbToken[$i]->id;
+            $token = $QbToken[$i]->access_token;
+            $appId = $QbToken[$i]->realm_id;
+        }
+
+        $QbTokenFirst = QbToken::first();
+            $QbTokenDate = date($QbTokenFirst->updated_at);
+            $Date = date("Y-m-d H:i:s");
+            $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
+
+            if ($totalTime >= 59) {
+                $OAuth2Login_Helper = $this->OAuth2LoginHelper;
+                //if (isset($QbToken) && !empty($QbToken)) {
+                if ($QbTokenFirst) {
+                    $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
+                    $accessTokenValue = $accessTokenObj->getAccessToken();
+                    $refreshTokenValue = $accessTokenObj->getRefreshToken();
+                    $QbTokenFirst->exists = true;
+                    $QbTokenFirst->id = $QbTokenFirst->id;
+                    $QbTokenFirst->access_token = $accessTokenValue;
+                    $QbTokenFirst->refresh_token = $refreshTokenValue;
+                    $QbTokenFirst->save();
+                    return redirect()->route('invoice');
+                } else {
+                    $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
+                    return Redirect::to($authorizationCodeUrl);
+                }
+            }
+
+            $curl = curl_init();
+            // 2020-05-04
+            $txnQueryDate = date('Y-m-d',strtotime(now()));
+            $query = "select * from SalesReceipt where TxnDate=" . $txnQueryDate;
+            // $query = "select * from SalesReceipt where TxnDate='2020-05-04'";
+            $query_enc = urlencode($query);
+            $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    "Accept: application/json",
+                    "Authorization: Bearer " . $token,
+                    "Cache-Control: no-cache",
+                    "Content-Type: application/json"
+                ),
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            $response = json_decode($response, true);
+            // var_dump($response);return;
 
         try {
             // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
-            foreach ($invoice_items as $items) {
-            $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$items->quantity * $items->rate, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
-            // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$items->quantity * $items->rate, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87")));
+
+            // $data = (object) array("TotalAmt" => 20.0, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            $salesReceiptData = $response['QueryResponse']['SalesReceipt'];
+            foreach($salesReceiptData as $receiptData){
+                $lineItemDetail = $receiptData['TotalAmt'];
+                $salesReceiptId = $receiptData['Id'];
+                // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')] , 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
+                $arr[] = (object)array('Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')]);
             }
-            $data = (object) array("TotalAmt" => $totalPrice, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            // var_dump($arr); return;
+            
+            $data = (object) array('Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Savings','value'=>'36'));
+
             $data_json = json_encode($data);
             $curl = curl_init(); // URL of the call
             // Disable SSL verification
@@ -141,8 +203,7 @@ class Utility {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
             $response = json_decode($result, true);
-            var_dump($response);
-           // return $response;
+            // var_dump($response);
 
         } catch (Exception $e) {
 //            return response()->json([

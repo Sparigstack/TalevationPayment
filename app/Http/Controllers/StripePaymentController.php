@@ -654,17 +654,47 @@ class StripePaymentController extends Controller {
                 }
             }
 
-        // $QbToken = QbToken::first();
-        // $appId = $QbToken->realm_id;
+            $curl = curl_init();
+            // 2020-05-04
+            $txnQueryDate = date('Y-m-d',strtotime(now()));
+            $query = "select * from SalesReceipt where TxnDate=" . $txnQueryDate;
+            // $query = "select * from SalesReceipt where TxnDate='2020-04-30'";
+            $query_enc = urlencode($query);
+            $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_HTTPHEADER => array(
+                    "Accept: application/json",
+                    "Authorization: Bearer " . $token,
+                    "Cache-Control: no-cache",
+                    "Content-Type: application/json"
+                ),
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            $response = json_decode($response, true);
+            // var_dump($response);return;
 
         try {
             // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
 
-            $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
-            $data = (object) array("TotalAmt" => 20.0, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
-
-            // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87")));
-            // $data = (object) array("TotalAmt" => 1675.52, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            // $data = (object) array("TotalAmt" => 20.0, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            $salesReceiptData = $response['QueryResponse']['SalesReceipt'];
+            foreach($salesReceiptData as $receiptData){
+                $lineItemDetail = $receiptData['TotalAmt'];
+                $salesReceiptId = $receiptData['Id'];
+                // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')] , 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
+                $arr[] = (object)array('Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')]);
+            }
+            // var_dump($arr); return;
+            
+            $data = (object) array('Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Savings','value'=>'36'));
 
             $data_json = json_encode($data);
             $curl = curl_init(); // URL of the call
@@ -678,7 +708,7 @@ class StripePaymentController extends Controller {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
             $response = json_decode($result, true);
-           var_dump($response);
+            // var_dump($response);
 
         } catch (Exception $e) {
 //            return response()->json([
