@@ -272,7 +272,7 @@ class StripePaymentController extends Controller {
                 $utility = new Utility;
 //                $response1 = $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
                 $response1 = $utility->createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token);
-                $utility->createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
+                
 //                var_dump($response1);
 //                return;
                 $flash_msg .= " 8";
@@ -365,7 +365,7 @@ class StripePaymentController extends Controller {
             $Amount = $Amount;
             $flash_msg .= " 15";
             //Session::flash('log_message', $flash_msg);
-//            return $response1 . " bansari " . $flash_msg;
+            //return " here " . $flash_msg;
             return view('Client/paymentReceipt', compact('stripePaymentId', 'Invoice', 'Amount'));
         } catch (Exception $e) {
             Session::flash('fail_message', "Error! Please Try again.");

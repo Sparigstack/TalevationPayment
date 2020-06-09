@@ -10,6 +10,8 @@ use App\DemoTable;
 use DB;
 use Stripe;
 
+
+///this is not working. this was created for testing.
 class StripePayoutController extends Controller {
 
     public function stripePayout(request $request){
