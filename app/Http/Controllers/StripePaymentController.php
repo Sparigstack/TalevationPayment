@@ -335,6 +335,7 @@ class StripePaymentController extends Controller {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
                     $result = curl_exec($curl);
                     $response = json_decode($result, true);
+                    // var_dump($response); return;
                     $totalPrice = $request->totalPrice;
                     $invoice_id = $request->invoice_id;
                     $memo = '';
