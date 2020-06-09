@@ -75,22 +75,92 @@
                 color: rgba(0, 0, 0, 0.72);
                 letter-spacing: .5px;
             }
+            
+            
             #pageloader-overlay.visible {
-                opacity: 1;
-            }
-            #pageloader-overlay {
-                opacity: 0;
-                top: 0px;
-                left: 0px;
-                position: fixed;
-                background-color: rgba(0, 0, 0);
-                height: 100%;
-                width: 100%;
-                z-index: 9998;
-                -webkit-transition: opacity 0.2s linear;
-                -moz-transition: opacity 0.2s linear;
-                transition: opacity 0.2s linear;
-            }
+                    opacity: 1;
+                }
+
+                #pageloader-overlay {
+                    opacity: 0;
+                    top: 0px;
+                    left: 0px;
+                    position: fixed;
+                    background-color: rgba(0, 0, 0);
+                    height: 100%;
+                    width: 100%;
+                    z-index: 9998;
+                    -webkit-transition: opacity 0.2s linear;
+                    -moz-transition: opacity 0.2s linear;
+                    transition: opacity 0.2s linear;
+                }
+
+                #pageloader-overlay .loader-wrapper-outer {
+                    background-color: transparent;
+                    z-index: 9999;
+                    margin: auto;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    display: table;
+                    text-align: center;
+                    vertical-align: middle;
+                }
+                *, ::after, ::before {
+                    box-sizing: border-box;
+                }
+
+                #pageloader-overlay .loader-wrapper-inner {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+
+                #pageloader-overlay .loader, #pageloader-overlay .loader:after {
+                    border-radius: 50%;
+                    width: 50px;
+                    height: 50px;
+                }
+                #pageloader-overlay .loader {
+                    margin: auto;
+                    font-size: 10px;
+                    position: relative;
+                    text-indent: -9999em;
+                    border-top: 8px solid rgba(255, 255, 255, 0.5);
+                    border-right: 8px solid rgba(255, 255, 255, 0.5);
+                    border-bottom: 8px solid rgba(255, 255, 255, 0.5);
+                    border-left: 8px solid #AAA;
+                    -webkit-transform: translateZ(0);
+                    -ms-transform: translateZ(0);
+                    transform: translateZ(0);
+                    -webkit-animation: pageloader 1.1s infinite linear;
+                    animation: pageloader 1.1s infinite linear;
+                }
+
+                @-webkit-keyframes pageloader {
+                    0% {
+                        -webkit-transform: rotate(0deg);
+                        transform: rotate(0deg); 
+                    }
+
+                    100% {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg); 
+                    } 
+                }
+
+                @keyframes pageloader {
+                    0% {
+                        -webkit-transform: rotate(0deg);
+                        transform: rotate(0deg); 
+                    }
+
+                    100% {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg); 
+                    } 
+                }
+
+            
             #wrapper {
                 width: 100%;
                 position: relative;
@@ -422,11 +492,11 @@
     text-align: center;
     border-radius: 6px;
     padding: 7px 7px;
-    position: absolute;
+/*    position: absolute;*/
     z-index: 1;
-    bottom: 10%;
+/*    bottom: 10%;
     left: 35%;
-    margin-left: -60px;
+    margin-left: -60px;*/
     opacity: 0;
     transition: .3s;
     transform: translate3d(0px, 20px, 0px);
@@ -802,7 +872,7 @@
                                             <hr>
 
                                             <div class="creditCardDiv">
-                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form" onsubmit="return checkTermsCheckbox();">
+                                                <form role="form" action="{{ route('stripe.post') }}"  method="post" class="require-validation form-active" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-form" >
                                                     {{ csrf_field() }}
 
                                                     <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
@@ -926,7 +996,7 @@
                                                     <div class="form-row row ">
                                                         <div class="col-12">
                                                             <div class="form-group showHideTooltip fr mb-1 hidden">
-                                                        <span class="tooltiptext pull-right fr">Check Terms and Conditions </span>
+                                                        <span class="tooltiptext pull-right fr">Please Check Terms and Conditions </span>
                                                     </div>
                                                         </div>
                                                     </div>
@@ -935,7 +1005,7 @@
                                                             <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
 
                                                             <div class="col-md-4 pull-left" style="">
-                                                                <a href="javascript:void(0);"><img src="https://coworker.imgix.net/template/img/img_payment_secure_ssl.png" alt="ssl icon">SSL <span>secure</span></a>
+                                                                <img src="{{asset('images/img_payment_secure_ssl.png')}}" alt="ssl icon">SSL SECURE
                                                             </div>
                                                             <!-- <div class="col-md-4">
                                                             <div class="form-group showHideTooltip hidden">
@@ -951,13 +1021,13 @@
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableCard" ><i class="icon-lock"></i> Pay Now</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
                                                         <label for="termsCheckCard" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
-                                                        <input type="checkbox" id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
+                                                        <input type="checkbox" checked id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
                                                     </div>
                                                 </form>
                                             </div>
 
                                             <div class="bankPaymentDiv hidden">
-                                                <form onsubmit="return checkTermsCheckboxBank();" action="{{ route('stripe.post1') }}" class="" method="post" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-formbank">
+                                                <form action="{{ route('stripe.post1') }}" class="" method="post" data-cc-on-file="false" data-stripe-publishable-key="{{env('STRIPE_KEY')}}" id="payment-formbank">
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="source" />
                                                     <input type="hidden" name="email" value="{{$invoiceData->email}}" />
@@ -1079,7 +1149,7 @@
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableBank"><i class="icon-lock"></i>Save Bank Account</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
                                                         <label for="termsCheckBank" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
-                                                        <input type="checkbox" id="termsCheckBank" name="termsCheckName" class="pull-right mt-2 checkBank"onclick="checkTerms(this);" >
+                                                        <input type="checkbox" checked id="termsCheckBank" name="termsCheckName" class="pull-right mt-2 checkBank"onclick="checkTerms(this);" >
                                                     </div>
                                                 </form>
                                             </div>
@@ -1504,37 +1574,50 @@
                                                             });
                                                         }
 
-        function checkTermsCheckbox(){
-            if ($("#termsCheckCard").is(':checked')) {
-                // $("#buttonDisableCard").attr("disabled",false);
-                $(".showHideTooltip").addClass("hidden");
-            }
-            else{
-                 $(".showHideTooltip").removeClass("hidden");
-                return false;
-            }
-        }
+//        function checkTermsCheckbox(){
+//            if ($("#termsCheckCard").is(':checked')) {
+//                // $("#buttonDisableCard").attr("disabled",false);
+//                $(".showHideTooltip").addClass("hidden");
+//            }
+//            else{
+//                 $(".showHideTooltip").removeClass("hidden");
+//                return false;
+//            }
+//        }
             
-        function checkTermsCheckboxBank(){
-            if($("#termsCheckBank").is(':checked')) {
-                $("#buttonDisableBank").attr("disabled",true);
-                $("#buttonDisableBank").addClass("disabled");
-                $(".showHideTooltipBank").addClass("hidden");
-            }
-            else{
-                $("#buttonDisableBank").attr("disabled",false);
-                $("#buttonDisableBank").removeClass("disabled");
-                $(".showHideTooltipBank").removeClass("hidden");
-                return false;
-            }
-        }
+//        function checkTermsCheckboxBank(){
+//            if($("#termsCheckBank").is(':checked')) {
+//                $("#buttonDisableBank").attr("disabled",true);
+//                $("#buttonDisableBank").addClass("disabled");
+//                $(".showHideTooltipBank").addClass("hidden");
+//            }
+//            else{
+//                $("#buttonDisableBank").attr("disabled",false);
+//                $("#buttonDisableBank").removeClass("disabled");
+//                $(".showHideTooltipBank").removeClass("hidden");
+//                return false;
+//            }
+//        }
         function checkTerms(element){
             if($(element).is(':checked')){
                 if($(element).hasClass("checkBank")){
+                    $(element).parent().find('#buttonDisableBank').removeAttr('disabled');
                     $(".tooltipSaveBank").parent().addClass("hidden");
                 }
                 else{
+                    $(element).parent().find('#buttonDisableCard').removeAttr('disabled');
                     $(".tooltiptext").parent().addClass("hidden");
+                }
+            }
+            else{
+                
+                if($(element).hasClass("checkBank")){
+                    $(element).parent().find('#buttonDisableBank').attr('disabled', 'disabled');
+                    $(".tooltipSaveBank").parent().removeClass("hidden");
+                }
+                else{
+                    $(element).parent().find('#buttonDisableCard').attr('disabled', 'disabled');
+                    $(".tooltiptext").parent().removeClass("hidden");
                 }
             }
 
