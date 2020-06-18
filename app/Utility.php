@@ -200,7 +200,7 @@ class Utility {
                 $lineItemDetail = $receiptData['TotalAmt'];
                 $salesReceiptId = $receiptData['Id'];
                 // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')] , 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
-                $arr[] = (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]);
+                $arr[] = (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnLineId'=> 0, 'TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]);
             }
             // var_dump($arr); return;
 
