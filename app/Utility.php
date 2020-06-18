@@ -81,7 +81,7 @@ class Utility {
                 // $tax = 'TAX';
                 $unitPrice = number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
                 $tax = 'NON';
-                $arr[] = (object) array("Description" => $items->discription . " State Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
+                $arr[] = (object) array("Description" => $items->discription . " Sales Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
                             "Qty" => $items->quantity, "UnitPrice" => $unitPrice, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $unitPrice, "Id" => 0);
             } else {
