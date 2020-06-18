@@ -134,15 +134,16 @@ class Utility {
         $appId = '';
         $token = '';
 
-        $QbToken = QbToken::all();
-        for ($i = 0; $i < count($QbToken); $i++) {
-            $id = $QbToken[$i]->id;
-            $token = $QbToken[$i]->access_token;
-            $appId = $QbToken[$i]->realm_id;
-        }
+        // $QbToken = QbToken::all();
+        // for ($i = 0; $i < count($QbToken); $i++) {
+        //     $id = $QbToken[$i]->id;
+        //     $token = $QbToken[$i]->access_token;
+        //     $appId = $QbToken[$i]->realm_id;
+        // }
 
         $QbTokenFirst = QbToken::first();
         $QbTokenDate = date($QbTokenFirst->updated_at);
+        $appId = $QbTokenFirst->realm_id;
         $Date = date("Y-m-d H:i:s");
         $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
 
@@ -175,14 +176,20 @@ class Utility {
                 $QbTokenFirst->access_token = $accessTokenValue;
                 $QbTokenFirst->refresh_token = $refreshTokenValue;
                 $QbTokenFirst->save();
+                
+                $token = $accessTokenObj->getAccessToken();
+                
                 //return redirect()->route('invoice');
             } 
+        }
+        else{
+            $token = $QbTokenFirst->access_token;
         }
 
         $curl = curl_init();
         // 2020-05-04
         $txnQueryDate = date('Y-m-d', strtotime(now()));
-        $query = "select * from SalesReceipt where TxnDate=" . $txnQueryDate;
+        $query = "select * from SalesReceipt where TxnDate='" . $txnQueryDate."'";
         // $query = "select * from SalesReceipt where TxnDate='2020-05-04'";
         $query_enc = urlencode($query);
         $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
@@ -202,6 +209,7 @@ class Utility {
             ),
         ));
         $response = curl_exec($curl);
+        
         $err = curl_error($curl);
         $response = json_decode($response, true);
         // var_dump($response);return;
@@ -233,6 +241,7 @@ class Utility {
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
+            //return $result;
             $response = json_decode($result, true);
             // var_dump($response);
         } catch (Exception $e) {
@@ -240,6 +249,7 @@ class Utility {
 //                        'error' => $e
 //                            ], 200);
         }
+        return "success";
     }
 
 }
