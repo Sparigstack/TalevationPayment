@@ -486,12 +486,12 @@
                     font-size: 12px;
     line-height: 17px;
     visibility: hidden;
-    max-width: 300px;
+    /*max-width: 300px;*/
     background-color: #242424;
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 7px 7px;
+    padding: 7px 20px;
 /*    position: absolute;*/
     z-index: 1;
 /*    bottom: 10%;
@@ -508,16 +508,30 @@
             .tooltiptext::after {
     content: "";
     position: absolute;
-    top: 100%;
-    left: 50%;
+    top: 90%;
+    /*left: 50%;*/
+    /*left: 45%;*/
+    left: 47%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: #242424 transparent transparent transparent;
 }
 .tooltipSaveBank{
-    left:25%;
+    /*left:25%;*/
     /*margin-right: 35px;*/
+}
+.tooltipSection{
+    width: 60%;
+    margin: 0 auto;
+}
+.showHideTooltip{
+    text-align: center;
+}
+
+.showHideTooltipBank .tooltiptext::after{
+    top: 92.5%;
+    left:45%;
 }
 
 
@@ -993,13 +1007,22 @@
                                                         </div>
                                                     </div>
                                                     <hr>
-                                                    <div class="form-row row ">
+
+                                                    <!-- <div class="form-row col-lg-12">
+                                                        <div class="col-lg-3"> </div>
+                                                        <div class="col-lg-7">
+                                                            <div class="form-group showHideTooltip mb-1 hidden">
+                                                                <span class="tooltiptext" data-toggle="tooltip" data-placement="top" title="Please Check Terms and Conditions">Please Check Terms and Conditions </span>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                    <!-- <div class="form-row row ">
                                                         <div class="col-12">
                                                             <div class="form-group showHideTooltip fr mb-1 hidden">
                                                         <span class="tooltiptext pull-right fr">Please Check Terms and Conditions </span>
                                                     </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
                                                             <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
@@ -1020,8 +1043,15 @@
                                                         <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableCard" ><i class="icon-lock"></i> Pay Now</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+
+                                                        <div class="tooltipSection">
+                                                        <div class="form-group showHideTooltip mb-1 hidden">
+                                                                <span class="tooltiptext">Please Check Terms and Conditions </span>
+                                                            </div>
+
                                                         <label for="termsCheckCard" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
                                                         <input type="checkbox" checked id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
+                                                    </div>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1127,13 +1157,13 @@
                                                         </div>
                                                     </div>
                                                     <hr>
-                                                    <div class="form-row row ">
+                                                    <!-- <div class="form-row row ">
                                                         <div class="col-12">
                                                             <div class="form-group showHideTooltipBank fr mb-1 hidden">
                                                         <span class="tooltiptext tooltipSaveBank pull-right fr">Check Terms and Conditions </span>
                                                     </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="col-md-12">
                                                         <div class="col-md-8">
                                                             <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
@@ -1148,9 +1178,14 @@
                                                         <input type="hidden" name="paymentMethodBank" id="paymentMethodBank" value="bank">
                                                         <button type="submit" class="btn btn-info mr-1 px-5 pull-right" id="buttonDisableBank"><i class="icon-lock"></i>Save Bank Account</button>
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                        <div class="tooltipSection">
+                                                            <div class="form-group showHideTooltipBank mb-1 hidden text-center">
+                                                        <span class="tooltiptext tooltipSaveBank">Please Check Terms and Conditions </span>
+                                                        </div>
                                                         <label for="termsCheckBank" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
                                                         <input type="checkbox" checked id="termsCheckBank" name="termsCheckName" class="pull-right mt-2 checkBank"onclick="checkTerms(this);" >
                                                     </div>
+                                                </div>
                                                 </form>
                                             </div>
                                         <?php } ?>
@@ -1187,9 +1222,15 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('/js/jquery.min.js')}}"></script>
+    <script src="{{asset('/js/popper.min.js')}}"></script>
     <script src="{{asset('/js/bootstrap.min.js')}}"></script>
+    <!-- <script src="{{asset('/js/popper.min.js')}}"></script> -->
     <script src="https://kit.fontawesome.com/5eb42b8eec.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();   
+});
+
                                                         $(function () {
                                                             $(window).on('load', function () {
                                                                 $('#pageloader-overlay').fadeOut(1000);
@@ -1601,22 +1642,26 @@
         function checkTerms(element){
             if($(element).is(':checked')){
                 if($(element).hasClass("checkBank")){
-                    $(element).parent().find('#buttonDisableBank').removeAttr('disabled');
+                    // $(element).parent().find('#buttonDisableBank').removeAttr('disabled');
+                    $('#buttonDisableBank').removeAttr('disabled');
                     $(".tooltipSaveBank").parent().addClass("hidden");
                 }
                 else{
-                    $(element).parent().find('#buttonDisableCard').removeAttr('disabled');
+                    // $(element).parent().find('#buttonDisableCard').removeAttr('disabled');
+                    $('#buttonDisableCard').removeAttr('disabled');
                     $(".tooltiptext").parent().addClass("hidden");
                 }
             }
             else{
                 
                 if($(element).hasClass("checkBank")){
-                    $(element).parent().find('#buttonDisableBank').attr('disabled', 'disabled');
+                    // $(element).parent().find('#buttonDisableBank').attr('disabled', 'disabled');
+                    $('#buttonDisableBank').attr('disabled', 'disabled');
                     $(".tooltipSaveBank").parent().removeClass("hidden");
                 }
                 else{
-                    $(element).parent().find('#buttonDisableCard').attr('disabled', 'disabled');
+                    // $(element).parent().find('#buttonDisableCard').attr('disabled', 'disabled');
+                    $('#buttonDisableCard').attr('disabled', 'disabled');
                     $(".tooltiptext").parent().removeClass("hidden");
                 }
             }
