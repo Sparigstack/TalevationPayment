@@ -82,11 +82,36 @@
                                         } else if ($status == 1) {
                                             $statusString = "Paid";
                                         }
+
+                                        $subTotal = 0;
+                                        $TotalAmount = 0;
+                                        $totalTax = 0;
+                                        $totalDue = 0;
                                         ?>
+                                        @foreach($invoiceData->invoice_items as $invoiceItems)
+                                        <?php
+//                                        var_dump($invoice->state_tax->tax_rate);return;
+                                        $subTotal = $invoiceItems->quantity * $invoiceItems->rate;
+//                                                            + ($invoiceItems->quantity * $invoiceItems->rate * $invoiceItems->tax / 100);
+                                        $TotalAmount += $subTotal;
+
+                                        $tax = 0;
+
+                                        if ($invoiceItems->is_taxable == 1) {
+
+                                            $tax = ($subTotal * $invoiceData->state_tax->tax_rate) / 100;
+
+                                            $taxValue = str_replace(',', '', number_format($tax, 2));
+                                            $totalTax += $taxValue;
+                                        }
+                                        ?>
+                                        @endforeach
+                                    <?php    $totalDue = $TotalAmount + $totalTax; ?>
+                                        
                                         <td>{{$invoiceData->name}}</td>
                                         <td>{{$invoiceData->first_name}} {{$invoiceData->last_name}}</td>
 
-                                        <td>{{$Amount}}</td>
+                                        <td>${{$totalDue}}</td>
                                         <td>{{$invoice_date}}</td>
                                         <td>{{$due_date}}</td>
                                         <td>{{$statusString}}</td>

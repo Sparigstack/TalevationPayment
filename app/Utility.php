@@ -10,6 +10,7 @@ namespace App;
 
 use App\Invoice;
 use App\InvoiceItem;
+use App\StateTax;
 use App\DemoTable;
 use App\QbToken;
 use QuickBooksOnline\API\DataService\DataService;
@@ -69,21 +70,34 @@ class Utility {
     public function createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token) {
         $tax = '';
 
+        $invoice = Invoice::where("id", $invoice_id)->first();
+        if (isset($invoice->state_tax_id)) {
+            $stateTaxes = StateTax::find($invoice->state_tax_id);
+        }
+
         $invoice_items = InvoiceItem::where("invoice_id", $invoice_id)->get();
         foreach ($invoice_items as $items) {
             if ($items->is_taxable == 1) {
-                $tax = 'TAX';
+                // $tax = 'TAX';
+                $unitPrice = number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
+                $tax = 'NON';
+                $arr[] = (object) array("Description" => $items->discription . " State Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
+                        "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+                            "Qty" => $items->quantity, "UnitPrice" => $unitPrice, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $unitPrice, "Id" => 0);
             } else {
                 $tax = 'NON';
-            }
-            $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
+                $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
                             "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+            }
+            // $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
+            //             "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+            //                 "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
         }
 
         $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
         $data_json = json_encode($data);
-//        var_dump($arr);
+       // var_dump($arr);return;
 //        return $data_json;
 
         try {
@@ -98,7 +112,7 @@ class Utility {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
             $response = json_decode($result, true);
-//            return $response;
+           // return $response;
 
             if (isset($response['SalesReceipt']['Id'])) {
                 $Invoice = new Invoice;
@@ -204,7 +218,9 @@ class Utility {
             }
             // var_dump($arr); return;
 
-            $data = (object) array('Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
+            // $data = (object) array('Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
+
+            $data = (object) array('TotalAmt'=>$webhookRequest['data']['object']['amount'], 'Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
 
             $data_json = json_encode($data);
             $curl = curl_init(); // URL of the call

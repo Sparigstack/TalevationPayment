@@ -176,7 +176,7 @@
                                 <td class="edit_cName <?php echo $addBgColor; ?> w22">{{$invoice->name}}</td>
                                 <td class="edit_fullName <?php echo $addBgColor; ?>">{{$invoice->first_name}} {{$invoice->last_name}}</td>
                                 <td class="edit_Email <?php echo $addBgColor; ?>">{{$invoice->email}}</td>
-                                <td class="edit_Amount <?php echo $addBgColor; ?>">{{$totalDue}}</td>
+                                <td class="edit_Amount <?php echo $addBgColor; ?>">${{$totalDue}}</td>
                                 <td class="edit_invoiceDate <?php echo $addBgColor; ?>">{{$invoice_date}}</td>
                                 <td class="edit_dueDate <?php echo $addBgColor; ?>">{{$due_date}}</td>
                                 <td class="edit_status <?php echo $addBgColor; ?>">{{$statusString}}

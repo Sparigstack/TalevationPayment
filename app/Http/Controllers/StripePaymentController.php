@@ -718,4 +718,103 @@ class StripePaymentController extends Controller {
         }
     }
 
+    public function salesreceipt(Request $request){
+        $appId = '';
+        $token = '';
+
+        $QbToken = QbToken::all();
+        for ($i = 0; $i < count($QbToken); $i++) {
+            $id = $QbToken[$i]->id;
+            $token = $QbToken[$i]->access_token;
+            $appId = $QbToken[$i]->realm_id;
+        }
+
+        $QbTokenFirst = QbToken::first();
+            $QbTokenDate = date($QbTokenFirst->updated_at);
+            $Date = date("Y-m-d H:i:s");
+            $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
+
+            if ($totalTime >= 59) {
+                $OAuth2Login_Helper = $this->OAuth2LoginHelper;
+                //if (isset($QbToken) && !empty($QbToken)) {
+                if ($QbTokenFirst) {
+                    $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
+                    $accessTokenValue = $accessTokenObj->getAccessToken();
+                    $refreshTokenValue = $accessTokenObj->getRefreshToken();
+                    $QbTokenFirst->exists = true;
+                    $QbTokenFirst->id = $QbTokenFirst->id;
+                    $QbTokenFirst->access_token = $accessTokenValue;
+                    $QbTokenFirst->refresh_token = $refreshTokenValue;
+                    $QbTokenFirst->save();
+                    return redirect()->route('invoice');
+                } else {
+                    $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
+                    return Redirect::to($authorizationCodeUrl);
+                }
+            }
+        $tax = '';
+
+        $invoice = Invoice::where("id", 40)->first();
+        if (isset($invoice->state_tax_id)) {
+            $stateTaxes = StateTax::find($invoice->state_tax_id);
+        }
+
+        $invoice_items = InvoiceItem::where("invoice_id", 40)->get();
+        foreach ($invoice_items as $items) {
+            if ($items->is_taxable == 1) {
+
+                // $tax = 'TAX';
+                $unitPrice = number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
+                $tax = 'NON';
+                $arr[] = (object) array("Description" => $items->discription . " State Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
+                        "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+                            "Qty" => $items->quantity, "UnitPrice" => $unitPrice, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $unitPrice , "Id" => 0);
+                // var_dump(number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2));return;
+                // number_format(($items->quantity * $items->rate) + ($items->quantity * $items->rate * $stateTaxes->tax_rate/100),2)
+            } else {
+                $tax = 'NON';
+                $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
+                        "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+                            "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+            }
+        }
+
+        $data = (object) array("TotalAmt" => 69.88, "CustomerRef" => (object) array("value" => 12), "CustomerMemo" => (object) array("value" => "abc"), "Line" => $arr);
+        $data_json = json_encode($data);
+       // var_dump($arr);return;
+//        return $data_json;
+
+        try {
+            $curl = curl_init(); // URL of the call
+            // Disable SSL verification
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            // Will return the response, if false it print the response
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_URL, env('QB_API_URL') . $appId . "/salesreceipt?minorversion=45");
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
+            $result = curl_exec($curl);
+            $response = json_decode($result, true);
+           return $response;
+
+            if (isset($response['SalesReceipt']['Id'])) {
+                $Invoice = new Invoice;
+                $Invoice->exists = true;
+                $Invoice->id = $invoice_id;
+                $Invoice->QB_transaction_id = $response['SalesReceipt']['Id'];
+                $Invoice->save();
+            }
+        } catch (Exception $e) {
+//            return response()->json([
+//                        'error' => $e
+//                            ], 200);
+        }
+
+        // $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
+        // $data_json = json_encode($data);
+       // var_dump($arr);
+//        return $data_json;
+}
+
 }

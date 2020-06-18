@@ -102,6 +102,8 @@ Route::get('recurInvoices', 'InvoiceController@recurInvoices');
 // });
 Route::stripeWebhooks('stripePayout');
 Route::get('payoutcheck', 'StripePaymentController@createDepositAPI');
+
+Route::get('mansi', 'StripePaymentController@salesreceipt');
 // Route::get('payoutcheck', function (){
 //    return view('stripePayout');
 // });
