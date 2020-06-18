@@ -19,10 +19,10 @@ class StripeWebhooksController extends Controller
     public function __invoke(Request $request)
     {
         $webhookRequest = $request;
-         $demoTable = new DemoTable();
-        $demoTable->name = "webhook2.3 today";
-        $demoTable->role = $webhookRequest['data']['object']['amount'];
-        $demoTable->save();
+//         $demoTable = new DemoTable();
+//        $demoTable->name = "webhook2.3 today";
+//        $demoTable->role = $webhookRequest['data']['object']['amount'];
+//        $demoTable->save();
 
         $utility = new \App\Utility;
         $utility->createDepositAPI($webhookRequest);

@@ -504,35 +504,36 @@
     opacity: 1;
     transform: translate3d(0px, 0px, 0px);
     text-transform: initial;
+    position: relative;
+    margin-left: -65px;
             }
             .tooltiptext::after {
     content: "";
     position: absolute;
-    top: 90%;
-    /*left: 50%;*/
-    /*left: 45%;*/
-    left: 47%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: #242424 transparent transparent transparent;
+    bottom: -10px;
+    left:11%;
+    
 }
 .tooltipSaveBank{
     /*left:25%;*/
     /*margin-right: 35px;*/
 }
-.tooltipSection{
+/*.tooltipSection{
     width: 60%;
     margin: 0 auto;
-}
+}*/
 .showHideTooltip{
     text-align: center;
 }
 
-.showHideTooltipBank .tooltiptext::after{
+/*.showHideTooltipBank .tooltiptext::after{
     top: 92.5%;
     left:45%;
-}
+}*/
 
 
         </style>
@@ -1007,34 +1008,45 @@
                                                         </div>
                                                     </div>
                                                     <hr>
+                                                    
+                                                    
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-3" style="">
+                                                                <img src="https://dev.sprigstack.com/TalevationPayment/public/images/img_payment_secure_ssl.png" alt="ssl icon">SSL SECURE
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <div class="row">
+                                                                    <div class="col-md-7">                
+                                                                        <div class="tooltipSection pull-right">
+                                                                            <div class="form-group showHideTooltip mb-1 hidden">
+                                                                                <span class="tooltiptext">Please Check Terms and Conditions </span>
+                                                                            </div>
 
-                                                    <!-- <div class="form-row col-lg-12">
-                                                        <div class="col-lg-3"> </div>
-                                                        <div class="col-lg-7">
-                                                            <div class="form-group showHideTooltip mb-1 hidden">
-                                                                <span class="tooltiptext" data-toggle="tooltip" data-placement="top" title="Please Check Terms and Conditions">Please Check Terms and Conditions </span>
+                                                                            <input type="checkbox" checked="" id="termsCheckCard" name="termsCheckName" class="mt-2 checkCard" onclick="checkTerms(this);" style="float: left;">  <label for="termsCheckCard" class="m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
+                                                       
+                                                                        </div>    
+                                                                    </div> 
+                                                                    <div class="col-md-5"> 
+                                                                        <div class="row pull-right" >
+                                                                            <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
+                                                                            <a class="m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
+                                                                            <button type="submit" class="btn btn-info mr-1 px-5" id="buttonDisableCard" disabled="disabled"><i class="icon-lock"></i> Pay Now</button>
+                                                        
+                                                                        </div>
+                                                                    </div>                                                        
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div> -->
-                                                    <!-- <div class="form-row row ">
-                                                        <div class="col-12">
-                                                            <div class="form-group showHideTooltip fr mb-1 hidden">
-                                                        <span class="tooltiptext pull-right fr">Please Check Terms and Conditions </span>
                                                     </div>
-                                                        </div>
-                                                    </div> -->
-                                                    <div class="col-md-12">
-                                                        <div class="col-md-8">
-                                                            <!--<a href="javascript:void(0);"><img style="width: 50%;float: left;" src="{{url('images/CC.png')}}" alt="payment icon"></a>-->
 
+                                                    
+<!--                                                    <div class="col-md-12">
+                                                        <div class="col-md-8">
                                                             <div class="col-md-4 pull-left" style="">
                                                                 <img src="{{asset('images/img_payment_secure_ssl.png')}}" alt="ssl icon">SSL SECURE
                                                             </div>
-                                                            <!-- <div class="col-md-4">
-                                                            <div class="form-group showHideTooltip hidden">
-                                                        <span class="tooltiptext">Live Button Description Here</span>
-                                                    </div>
-                                                        </div> -->
+                                                            
                                                         </div>
 
                                                     </div>
@@ -1045,14 +1057,14 @@
                                                         <a class="pull-right m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
 
                                                         <div class="tooltipSection">
-                                                        <div class="form-group showHideTooltip mb-1 hidden">
-                                                                <span class="tooltiptext">Please Check Terms and Conditions </span>
-                                                            </div>
+                                                            <div class="form-group showHideTooltip mb-1 hidden">
+                                                                    <span class="tooltiptext">Please Check Terms and Conditions </span>
+                                                                </div>
 
-                                                        <label for="termsCheckCard" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
-                                                        <input type="checkbox" checked id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
-                                                    </div>
-                                                    </div>
+                                                            <label for="termsCheckCard" class="pull-right m-2 mr-3">I agree to the <a data-toggle="modal" data-target="#openPdf" href="">terms and conditions</a></label>
+                                                            <input type="checkbox" checked id="termsCheckCard" name="termsCheckName" class="pull-right mt-2 checkCard" onclick="checkTerms(this);">
+                                                        </div>
+                                                    </div>-->
                                                 </form>
                                             </div>
 
