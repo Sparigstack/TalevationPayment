@@ -12,6 +12,8 @@ use App\Invoice;
 use App\InvoiceItem;
 use App\DemoTable;
 use App\QbToken;
+use QuickBooksOnline\API\DataService\DataService;
+use App\Http\Controllers\OAuth2LoginHelper;
 
 /**
  * Description of Utility
@@ -113,8 +115,8 @@ class Utility {
     }
 
     // public function createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token){
-    public function createDepositAPI($webhookRequest){
-        
+    public function createDepositAPI($webhookRequest) {
+
         $appId = '';
         $token = '';
 
@@ -126,70 +128,83 @@ class Utility {
         }
 
         $QbTokenFirst = QbToken::first();
-            $QbTokenDate = date($QbTokenFirst->updated_at);
-            $Date = date("Y-m-d H:i:s");
-            $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
+        $QbTokenDate = date($QbTokenFirst->updated_at);
+        $Date = date("Y-m-d H:i:s");
+        $totalTime = round(abs(strtotime($QbTokenDate) - strtotime($Date)) / 60);
 
-            if ($totalTime >= 59) {
-                $OAuth2Login_Helper = $this->OAuth2LoginHelper;
-                //if (isset($QbToken) && !empty($QbToken)) {
-                if ($QbTokenFirst) {
-                    $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
-                    $accessTokenValue = $accessTokenObj->getAccessToken();
-                    $refreshTokenValue = $accessTokenObj->getRefreshToken();
-                    $QbTokenFirst->exists = true;
-                    $QbTokenFirst->id = $QbTokenFirst->id;
-                    $QbTokenFirst->access_token = $accessTokenValue;
-                    $QbTokenFirst->refresh_token = $refreshTokenValue;
-                    $QbTokenFirst->save();
-                    return redirect()->route('invoice');
-                } else {
-                    $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
-                    return Redirect::to($authorizationCodeUrl);
-                }
-            }
+        if ($totalTime >= 59) {
 
-            $curl = curl_init();
-            // 2020-05-04
-            $txnQueryDate = date('Y-m-d',strtotime(now()));
-            $query = "select * from SalesReceipt where TxnDate=" . $txnQueryDate;
-            // $query = "select * from SalesReceipt where TxnDate='2020-05-04'";
-            $query_enc = urlencode($query);
-            $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    "Accept: application/json",
-                    "Authorization: Bearer " . $token,
-                    "Cache-Control: no-cache",
-                    "Content-Type: application/json"
-                ),
+            $ClientID = env('QB_APP_ID');
+            $ClientSecretKey = env('QB_APP_SECRET');
+            $dataService = DataService::Configure(array(
+                        'auth_mode' => 'oauth2',
+                        'ClientID' => $ClientID,
+                        'ClientSecret' => $ClientSecretKey,
+                        'RedirectURI' => $this->projectBaseUrl() . "/public/qbauth",
+//dev                    'RedirectURI' => "http://dev.sprigstack.com/TalevationPayment/public/qbauth",
+//live                    'RedirectURI' => "https://talevation.com/payments/public/qbauth",
+                        'scope' => "com.intuit.quickbooks.accounting",
+                        'baseUrl' => "Development"
             ));
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            $response = json_decode($response, true);
-            // var_dump($response);return;
+            $OAuth2Login_Helper = $dataService->getOAuth2LoginHelper();
+
+
+
+            //$this->OAuth2LoginHelper;
+            //if (isset($QbToken) && !empty($QbToken)) {
+            if ($QbTokenFirst) {
+                $accessTokenObj = $OAuth2Login_Helper->refreshAccessTokenWithRefreshToken($QbTokenFirst->refresh_token);
+                $accessTokenValue = $accessTokenObj->getAccessToken();
+                $refreshTokenValue = $accessTokenObj->getRefreshToken();
+                $QbTokenFirst->exists = true;
+                $QbTokenFirst->id = $QbTokenFirst->id;
+                $QbTokenFirst->access_token = $accessTokenValue;
+                $QbTokenFirst->refresh_token = $refreshTokenValue;
+                $QbTokenFirst->save();
+                //return redirect()->route('invoice');
+            } 
+        }
+
+        $curl = curl_init();
+        // 2020-05-04
+        $txnQueryDate = date('Y-m-d', strtotime(now()));
+        $query = "select * from SalesReceipt where TxnDate=" . $txnQueryDate;
+        // $query = "select * from SalesReceipt where TxnDate='2020-05-04'";
+        $query_enc = urlencode($query);
+        $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Authorization: Bearer " . $token,
+                "Cache-Control: no-cache",
+                "Content-Type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        $response = json_decode($response, true);
+        // var_dump($response);return;
 
         try {
             // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
-
             // $data = (object) array("TotalAmt" => 20.0, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
             $salesReceiptData = $response['QueryResponse']['SalesReceipt'];
-            foreach($salesReceiptData as $receiptData){
+            foreach ($salesReceiptData as $receiptData) {
                 $lineItemDetail = $receiptData['TotalAmt'];
                 $salesReceiptId = $receiptData['Id'];
                 // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')] , 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
-                $arr[] = (object)array('Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')]);
+                $arr[] = (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]);
             }
             // var_dump($arr); return;
-            
-            $data = (object) array('Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Savings','value'=>'36'));
+
+            $data = (object) array('Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
 
             $data_json = json_encode($data);
             $curl = curl_init(); // URL of the call
@@ -204,7 +219,6 @@ class Utility {
             $result = curl_exec($curl);
             $response = json_decode($result, true);
             // var_dump($response);
-
         } catch (Exception $e) {
 //            return response()->json([
 //                        'error' => $e
