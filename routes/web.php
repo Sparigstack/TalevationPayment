@@ -15,9 +15,7 @@
 
 
 Route::get('/', 'HomeController@invoicePage');
-Route::get('/test2', function(){
-    return view('test_2');
-});
+Route::get('/test2', 'HomeController@test');
 
 Auth::routes();
 

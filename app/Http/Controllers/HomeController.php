@@ -231,6 +231,39 @@ class HomeController extends Controller {
         $QbToken->save();
         return redirect()->route('invoice');
     }
+    
+    public function test(){
+        $tax = '';
+
+        $invoice = Invoice::where("id", 44)->first();
+        if (isset($invoice->state_tax_id)) {
+            $stateTaxes = StateTax::find($invoice->state_tax_id);
+        }
+        //return $stateTaxes->tax_rate;
+        
+        $invoice_items = InvoiceItem::where("invoice_id", 44)->get();
+        foreach ($invoice_items as $items) {
+            if ($items->is_taxable == 1) {
+                // $tax = 'TAX';
+                $unitPrice = round($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
+                $totalAmt = $unitPrice*$items->quantity;
+                //return $unitPrice;
+                $tax = 'NON';
+                $arr[] = (object) array("Description" => $items->discription . " Sales Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
+                        "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+                            "Qty" => $items->quantity, "UnitPrice" => $unitPrice, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $totalAmt, "Id" => 0);
+            } else {
+                $tax = 'NON';
+                $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
+                        "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+                            "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+            }
+            // $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
+            //             "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
+            //                 "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+        }
+        return view('test_2');
+    }
 
 }
 
