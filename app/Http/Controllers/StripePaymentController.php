@@ -803,10 +803,10 @@ class StripePaymentController extends Controller {
             ),
         ));
         $response = curl_exec($curl);
-        var_dump($response);return;
+        return $response;
         $err = curl_error($curl);
         $response = json_decode($response, true);
-            
+
         $tax = '';
 
         $invoice = Invoice::where("id", 48)->first();
@@ -819,15 +819,15 @@ class StripePaymentController extends Controller {
         foreach ($invoice_items as $items) {
             if ($items->is_taxable == 1) {
 
-                // $tax = 'TAX';
+                $tax = 'TAX';
                 // $unitPrice = number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
                 $totalTax += round($items->rate * $items->quantity * $stateTaxes->tax_rate/100, 2);
-                $tax = 'NON';
+                // $tax = 'NON';
                 $arr[] = (object) array("Description" => $items->discription . " State Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
                             "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate , "Id" => 0);
                 // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
-                $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
+                // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
                 // var_dump(number_format($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2));return;
                 // number_format(($items->quantity * $items->rate) + ($items->quantity * $items->rate * $stateTaxes->tax_rate/100),2)
             } else {
@@ -836,13 +836,14 @@ class StripePaymentController extends Controller {
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
                             "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
                 // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
-                $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
+                // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
             }
         }
         // return $totalTax;
 
         // $data = (object) array("TotalAmt" => 69.88, "CustomerRef" => (object) array("value" => 12), "CustomerMemo" => (object) array("value" => "abc"), "Line" => $arr);
-        $data = (object) array("TotalAmt" =>  1245.4, "CustomerRef" => (object) array("value" => 1), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => 3)) , "CustomerMemo" => (object) array("value" => "test"), "Line" => $arr);
+        // $data = (object) array("TotalAmt" =>  1245.4, "CustomerRef" => (object) array("value" => 1), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => 3)) , "CustomerMemo" => (object) array("value" => "test"), "Line" => $arr);
+        $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => $stateTaxes->qb_tax_code)) , "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
         $data_json = json_encode($data);
        // var_dump($arr);return;
        // return $data_json;
