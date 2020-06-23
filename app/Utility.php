@@ -130,7 +130,6 @@ class Utility {
 
     // public function createDepositAPI($totalPrice, $invoice_id, $customerRef, $appId, $token){
     public function createDepositAPI($webhookRequest) {
-
         $appId = '';
         $token = '';
 
@@ -209,28 +208,40 @@ class Utility {
             ),
         ));
         $response = curl_exec($curl);
-        
+        // var_dump($response);return;
         $err = curl_error($curl);
         $response = json_decode($response, true);
-        // var_dump($response);return;
+        
 
         try {
             // (object)array('Line' => (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>20.0, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Unapplied Cash Payment Income', 'value' => "87") )))
             // $data = (object) array("TotalAmt" => 20.0, 'Line' => $arr, 'DepositToAccountRef'=>(object)array('name'=>'Checking','value'=>'35'));
+            $subTotalAmount = 0;
             $salesReceiptData = $response['QueryResponse']['SalesReceipt'];
             foreach ($salesReceiptData as $receiptData) {
                 $lineItemDetail = $receiptData['TotalAmt'];
                 $salesReceiptId = $receiptData['Id'];
+                $subTotalAmount = $subTotalAmount + $lineItemDetail;
                 // $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=>$lineItemDetail, 'LinkedTxn' => [(object)array('TxnId'=>$salesReceiptId, 'TxnType'=>'SalesReceipt')] , 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Billable Expense Income', 'value' => "85")));
                 $arr[] = (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnLineId'=> 0, 'TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]);
+                // $arr[] = (object) array('LineLinkedTxn' => (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnLineId'=> 0, 'TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]));
             }
-            // var_dump($arr); return;
-
+            // return $lineItemDetail . ' ' . $salesReceiptId . ' ' . $subTotalAmount;
+            
+            $totalAmount =  $webhookRequest['data']['object']['amount'] - $subTotalAmount;
+            // $arr[] = (object) array('Amount' => $lineItemDetail, 'LinkedTxn' => [(object) array('TxnLineId'=> 0, 'TxnId' => $salesReceiptId, 'TxnType' => 'SalesReceipt')]);
+            $arr[] = (object)array('DetailType' => 'DepositLineDetail', 'Amount'=> $totalAmount, 'DepositLineDetail'=>(object)array('AccountRef' => (object)array('name'=>'Stripe Processing Fees', 'value' => '5')));
+            
+            // $arr1 = (object) array('Amount' => $subTotalAmount - $webhookRequest['data']['object']['amount'], 'LinkedTxn' => [(object) array('TxnLineId'=> 0, 'TxnId' => 0, 'TxnType' => 'SalesReceipt')]);
             // $data = (object) array('Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
+            $data = (object) array('Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
+            
+            
 
-            $data = (object) array('TotalAmt'=>$webhookRequest['data']['object']['amount'], 'Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
+            // $data = (object) array('TotalAmt'=>$webhookRequest['data']['object']['amount'], 'Line' => $arr, 'DepositToAccountRef' => (object) array('name' => 'Savings', 'value' => '36'));
 
             $data_json = json_encode($data);
+            // return $data_json;
             $curl = curl_init(); // URL of the call
             // Disable SSL verification
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -241,13 +252,13 @@ class Utility {
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
-            //return $result;
+            // return $result;
             $response = json_decode($result, true);
-            // var_dump($response);
+            // var_dump($response);return;
         } catch (Exception $e) {
-//            return response()->json([
-//                        'error' => $e
-//                            ], 200);
+            // return response()->json([
+            //             'error' => $e
+            //                 ], 200);
         }
         return "success";
     }

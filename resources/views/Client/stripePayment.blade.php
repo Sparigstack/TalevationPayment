@@ -1031,7 +1031,7 @@
                                                                         <div class="row pull-right" >
                                                                             <input type="hidden" name="paymentMethodCredit" id="paymentMethodCredit" value="credit">
                                                                             <a class="m-2 mr-3" href="javascript:void(0);" onclick="return invoicePayment(this, 'back');"><i class="icon-lock"></i> Back</a>
-                                                                            <button type="submit" class="btn btn-info mr-1 px-5" id="buttonDisableCard" disabled="disabled"><i class="icon-lock"></i> Pay Now</button>
+                                                                            <button type="submit" class="btn btn-info mr-1 px-5" id="buttonDisableCard"><i class="icon-lock"></i> Pay Now</button>
                                                         
                                                                         </div>
                                                                     </div>                                                        
