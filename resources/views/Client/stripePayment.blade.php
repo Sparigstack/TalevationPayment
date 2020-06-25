@@ -892,7 +892,8 @@
 
                                                     <input type="hidden" name="GUID" id="GUID" value="{{$_GET['token']}}">
                                                     <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id">
-                                                    <input type="hidden" name="recurValue" id="recurValue" value="">
+                                                    <input type="hidden" class="recurValue" name="recurValue" id="recurValue" value="">
+                                                    <input type="hidden" class="recurOption" name="recurOption" id="recurOption" value="{{$invoiceData->RecurringOption}}">
                                                     <div class="form-group">
                                                         <label for="input-1">Name on Card</label>
                                                         <input type="text" class="form-control" required id="name_on_card" name="name_on_card" placeholder="Enter Your Name" value="{{$invoiceData->first_name}} {{$invoiceData->last_name}}">
@@ -1073,7 +1074,8 @@
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="source" />
                                                     <input type="hidden" name="email" value="{{$invoiceData->email}}" />
-                                                    <input type="hidden" name="recurValue" id="recurValue" value="">
+                                                    <input type="hidden" class="recurValue" name="recurValue" id="recurValue" value="">
+                                                    <input type="hidden" class="recurOption" name="recurOption" id="recurOption" value="{{$invoiceData->RecurringOption}}">
                                                     <input type="hidden" value="{{$invoiceData->id}}" name="invoice_id_verify" id="invoice_id_verify">
                                                     <input type="hidden" value="{{$invoiceData->customer->id}}" name="stripe_customer_id_verify" id="stripe_customer_id_verify">
                                                     <input type="hidden" name="invoiceToken" value="<?php echo $_GET['token']; ?>" />
@@ -1279,20 +1281,24 @@
                                                                 $("#stripePaymentUI").addClass('hidden');
                                                             }
                                                             if ($("#yesRecur").is(':checked')) {
-                                                                if ($(".creditCardDiv").hasClass("hidden")) {
-                                                                    $(".creditCardDiv").find("#recurValue").val('1');
-                                                                    $(".bankPaymentDiv").find("#recurValue").val('1');
-                                                                } else {
-                                                                    $(".bankPaymentDiv").find("#recurValue").val('1');
-                                                                    $(".creditCardDiv").find("#recurValue").val('1');
+                                                                if($(".recurOption").val() != ""){
+                                                                    if ($(".creditCardDiv").hasClass("hidden")) {
+                                                                        $(".creditCardDiv").find(".recurValue").val('1');
+                                                                        $(".bankPaymentDiv").find(".recurValue").val('1');
+                                                                    } else {
+                                                                        $(".bankPaymentDiv").find(".recurValue").val('1');
+                                                                        $(".creditCardDiv").find(".recurValue").val('1');
+                                                                    }
                                                                 }
-                                                            } else {
-                                                                if ($(".creditCardDiv").hasClass("hidden")) {
-                                                                    $(".creditCardDiv").find("#recurValue").val('0');
-                                                                    $(".bankPaymentDiv").find("#recurValue").val('0');
-                                                                } else {
-                                                                    $(".bankPaymentDiv").find("#recurValue").val('0');
-                                                                    $(".creditCardDiv").find("#recurValue").val('0');
+                                                            } else if($("#noRecur").is(':checked')){
+                                                                if($(".recurOption").val() != ""){
+                                                                    if ($(".creditCardDiv").hasClass("hidden")) {
+                                                                        $(".creditCardDiv").find(".recurValue").val('');
+                                                                        $(".bankPaymentDiv").find(".recurValue").val('');
+                                                                    } else {
+                                                                        $(".bankPaymentDiv").find(".recurValue").val('');
+                                                                        $(".creditCardDiv").find(".recurValue").val('');
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -1487,6 +1493,7 @@
 //                                                                    var errorElement = document.querySelector('.error');
 //                                                                    successElement.classList.remove('visible');
 //                                                                    errorElement.classList.remove('visible');
+                                                            // console.log(result.token.id);
                                                             if (result.token.id) {
                                                                 // Use the token to create a charge or a customer
                                                                 // https://stripe.com/docs/charges
@@ -1502,7 +1509,6 @@
                                                                 // Submit the form
                                                                 form3.submit();
                                                                 $("#buttonDisableBank").attr("disabled", true);
-                                                                // $("#buttonDisableBank").attr("disabled", true);
                                                             } else if (result.error) {
                                                                 $("#buttonDisableBank").attr("disabled", false);
 //                                                                        errorElement.textContent = result.error.message;
