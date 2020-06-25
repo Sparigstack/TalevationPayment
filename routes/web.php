@@ -15,7 +15,7 @@
 
 
 Route::get('/', 'HomeController@invoicePage');
-Route::get('/test2', 'HomeController@test');
+Route::get('/test', 'HomeController@test');
 
 Auth::routes();
 
@@ -101,7 +101,7 @@ Route::get('recurInvoices', 'InvoiceController@recurInvoices');
 Route::stripeWebhooks('stripePayout');
 Route::get('payoutcheck', 'StripePaymentController@createDepositAPI');
 
-Route::get('mansi', 'StripePaymentController@salesreceipt');
+//Route::get('mansi', 'StripePaymentController@salesreceipt');
 // Route::get('payoutcheck', function (){
 //    return view('stripePayout');
 // });

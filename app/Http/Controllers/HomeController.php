@@ -233,6 +233,44 @@ class HomeController extends Controller {
     }
     
     public function test(){
+        $appId = '';
+        $token = '';
+
+        $QbToken = QbToken::all();
+        for ($i = 0; $i < count($QbToken); $i++) {
+            $id = $QbToken[$i]->id;
+            $token = $QbToken[$i]->access_token;
+            $appId = $QbToken[$i]->realm_id;
+        }
+        
+        
+        $curl = curl_init();
+        $query = "select * from Customer Where PrimaryEmailAddr like '%local.contact@test1.com%'";
+                $query_enc = urlencode($query);
+                $url = "https://quickbooks.api.intuit.com/v3/company/" . $appId . "/query?query=" . $query_enc . "&minorversion=40";
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_HTTPHEADER => array(
+                        "Accept: application/json",
+                        "Authorization: Bearer " . $token,
+                        "Cache-Control: no-cache",
+                        "Content-Type: application/json"
+                    ),
+                ));
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                $response = json_decode($response, true);
+        return $response;
+        
+        
+        
+        
         $tax = '';
 
         $invoice = Invoice::where("id", 44)->first();

@@ -117,6 +117,7 @@ class StripePaymentController extends Controller {
         $customer_id = '';
         $appId = '';
         $token = '';
+        $qb_api_url = env('QB_API_URL');
 
         $QbToken = QbToken::all();
         for ($i = 0; $i < count($QbToken); $i++) {
@@ -247,7 +248,7 @@ class StripePaymentController extends Controller {
                     $QbTokenFirst->access_token = $accessTokenValue;
                     $QbTokenFirst->refresh_token = $refreshTokenValue;
                     $QbTokenFirst->save();
-                    return redirect()->route('invoice');
+                    
                 } else {
                     $authorizationCodeUrl = $OAuth2Login_Helper->getAuthorizationCodeURL();
                     return Redirect::to($authorizationCodeUrl);
@@ -282,7 +283,7 @@ class StripePaymentController extends Controller {
                 $curl = curl_init();
                 $query = "select * from Customer Where PrimaryEmailAddr like '%" . $request->email . "%'";
                 $query_enc = urlencode($query);
-                $url = "https://sandbox-quickbooks.api.intuit.com/v3/company/" . $appId . "/query?query=" . $query_enc . "&minorversion=40";
+                $url = $qb_api_url . $appId . "/query?query=" . $query_enc . "&minorversion=40";
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => $url,
                     CURLOPT_RETURNTRANSFER => true,
@@ -329,7 +330,7 @@ class StripePaymentController extends Controller {
                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                     // Will return the response, if false it print the response
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_URL, "https://sandbox-quickbooks.api.intuit.com/v3/company/" . $appId . "/customer?minorversion=40");
+                    curl_setopt($curl, CURLOPT_URL, $qb_api_url . $appId . "/customer?minorversion=40");
                     curl_setopt($curl, CURLOPT_POST, 1);
                     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/json', 'Authorization: Bearer ' . $token));
                     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
