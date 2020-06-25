@@ -68,8 +68,32 @@ class Utility {
     }
 
     public function createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token) {
+        $curl = curl_init();
+        $query = "select * From TaxCode";
+        $query_enc = urlencode($query);
+        $url = env('QB_API_URL') . $appId . "/query?query=" . $query_enc . "&minorversion=47";
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "Accept: application/json",
+                "Authorization: Bearer " . $token,
+                "Cache-Control: no-cache",
+                "Content-Type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        // var_dump($response);return;
+        $err = curl_error($curl);
+        $response = json_decode($response, true);
+        
         $tax = '';
-
+        $totalTax = 0;
         $invoice = Invoice::where("id", $invoice_id)->first();
         if (isset($invoice->state_tax_id)) {
             $stateTaxes = StateTax::find($invoice->state_tax_id);
@@ -78,27 +102,33 @@ class Utility {
         $invoice_items = InvoiceItem::where("invoice_id", $invoice_id)->get();
         foreach ($invoice_items as $items) {
             if ($items->is_taxable == 1) {
-                // $tax = 'TAX';
-                $unitPrice = round($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
-                $tax = 'NON';
+                $tax = 'TAX';
+                // $unitPrice = round($items->rate + ($items->rate * $stateTaxes->tax_rate/100),2);
+                $totalTax += round($items->rate * $items->quantity * $stateTaxes->tax_rate/100, 2);
+                // $tax = 'NON';
                 $arr[] = (object) array("Description" => $items->discription . " Sales Tax: ". $stateTaxes->state_name . '(' . $stateTaxes->tax_rate . '%)', "DetailType" => "SalesItemLineDetail",
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
-                            "Qty" => $items->quantity, "UnitPrice" => $unitPrice, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $unitPrice, "Id" => 0);
+                            "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+                // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
+                // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
             } else {
                 $tax = 'NON';
                 $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
                         "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
                             "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
+               // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
+                // $arr1[] = (object) array("DetailType" => "TaxLineDetail", "TaxLineDetail" => (object) array("TaxRateRef" => (object) array("value" => 4, "name" => "Sales Tax 1 Percent"), "PercentBased" => "True", "TaxPercent" => $stateTaxes->tax_rate));
             }
             // $arr[] = (object) array("Description" => $items->discription, "DetailType" => "SalesItemLineDetail",
             //             "SalesItemLineDetail" => (object) array("TaxCodeRef" => (object) array("value" => $tax),
             //                 "Qty" => $items->quantity, "UnitPrice" => $items->rate, "ItemRef" => (object) array("name" => $items->part_number, "value" => 1)), "Amount" => $items->quantity * $items->rate, "Id" => 0);
         }
 
-        $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
+        // $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
+        $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => $stateTaxes->qb_tax_code)) , "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
         $data_json = json_encode($data);
        // var_dump($arr);return;
-//        return $data_json;
+        // return $data_json;
 
         try {
             $curl = curl_init(); // URL of the call
@@ -112,7 +142,7 @@ class Utility {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_json);
             $result = curl_exec($curl);
             $response = json_decode($result, true);
-           // return $response;
+            // return $response;
 
             if (isset($response['SalesReceipt']['Id'])) {
                 $Invoice = new Invoice;

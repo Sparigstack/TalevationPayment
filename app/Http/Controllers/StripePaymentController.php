@@ -338,14 +338,7 @@ class StripePaymentController extends Controller {
                     // var_dump($response); return;
                     $totalPrice = $request->totalPrice;
                     $invoice_id = $request->invoice_id;
-                    $memo = '';
-                    if(!is_null($Invoice->memo)){
-                        $memo = $Invoice->memo;
-                    }
-                    else{
-                        $memo = '';
-                    }
-                    // $memo = $Invoice->memo;
+                    
                     $customerRef = $response['Customer']['Id'];
                     $flash_msg .= " 12";
                     $Customer = new Customer;
@@ -355,6 +348,14 @@ class StripePaymentController extends Controller {
                     $Customer->save();
                 }
                 $flash_msg .= " 13";
+                $memo = '';
+                if(!is_null($Invoice->memo)){
+                    $memo = $Invoice->memo;
+                }
+                else{
+                    $memo = '';
+                }
+                $memo = $Invoice->memo;
                 $utility = new Utility;
 //                $utility->createPaymentAPI($totalPrice, $invoice_id, $customerRef, $appId, $token);
                 $utility->createSalesReceiptAPI($totalPrice, $invoice_id, $memo, $customerRef, $appId, $token);
@@ -803,7 +804,7 @@ class StripePaymentController extends Controller {
             ),
         ));
         $response = curl_exec($curl);
-        return $response;
+        // return $response;
         $err = curl_error($curl);
         $response = json_decode($response, true);
 
@@ -843,7 +844,7 @@ class StripePaymentController extends Controller {
 
         // $data = (object) array("TotalAmt" => 69.88, "CustomerRef" => (object) array("value" => 12), "CustomerMemo" => (object) array("value" => "abc"), "Line" => $arr);
         // $data = (object) array("TotalAmt" =>  1245.4, "CustomerRef" => (object) array("value" => 1), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => 3)) , "CustomerMemo" => (object) array("value" => "test"), "Line" => $arr);
-        $data = (object) array("TotalAmt" => $totalPrice, "CustomerRef" => (object) array("value" => $customerRef), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => $stateTaxes->qb_tax_code)) , "CustomerMemo" => (object) array("value" => $memo), "Line" => $arr);
+        $data = (object) array("TotalAmt" => 1245.4, "CustomerRef" => (object) array("value" => 1), "TxnTaxDetail" => (object) array("TxnTaxCodeRef" =>(object) array("value" => $stateTaxes->qb_tax_code)) , "CustomerMemo" => (object) array("value" => 'test'), "Line" => $arr);
         $data_json = json_encode($data);
        // var_dump($arr);return;
        // return $data_json;

@@ -1358,9 +1358,9 @@
 
                                                             // Submit the form with the token ID.
                                                             form2.addEventListener('submit', function (event2) {
-                                                                if(!$("#buttonDisableBank").hasClass("disabled")){
-                                                                    return false;
-                                                                }
+                                                                // if(!$("#buttonDisableBank").hasClass("disabled")){
+                                                                //     return false;
+                                                                // }
                                                                 event2.preventDefault();
                                                                 var bankAccountData = {
                                                                     country: 'us',
@@ -1501,8 +1501,10 @@
                                                                 form3.appendChild(hiddenInput);
                                                                 // Submit the form
                                                                 form3.submit();
+                                                                $("#buttonDisableBank").attr("disabled", true);
                                                                 // $("#buttonDisableBank").attr("disabled", true);
                                                             } else if (result.error) {
+                                                                $("#buttonDisableBank").attr("disabled", false);
 //                                                                        errorElement.textContent = result.error.message;
 //                                                                        errorElement.classList.add('visible');
                                                             }
